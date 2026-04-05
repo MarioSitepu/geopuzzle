@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="id" className={`${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <Navbar />
-        <main className="flex-grow flex flex-col relative overflow-hidden">
+        <main className="flex-grow flex flex-col relative text-earth-900">
           {children}
         </main>
       </body>

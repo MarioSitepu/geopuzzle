@@ -32,7 +32,7 @@ export default function LandingPage() {
             className="flex flex-wrap gap-4"
           >
             <Link
-              href="/regions"
+              href="/intro"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-leaf-600 text-white rounded-full font-semibold text-lg shadow-lg shadow-leaf-600/30 hover:bg-leaf-700 hover:scale-105 transition-all duration-300 active:scale-95"
             >
               <Play className="w-5 h-5 fill-current" />

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Timer, Trophy } from 'lucide-react';
+import { ArrowLeft, Timer, Trophy, ChevronDown } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import ClassificationPuzzle from '../components/puzzles/ClassificationPuzzle';
 import FillBlankPuzzle from '../components/puzzles/FillBlankPuzzle';
@@ -104,7 +104,6 @@ export default function PuzzleGame() {
             transition={{ duration: 0.5 }}
           />
         </div>
-
         <div className="flex-grow relative">
           <AnimatePresence mode="wait">
             {!isGameOver ? (
@@ -114,7 +113,7 @@ export default function PuzzleGame() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="absolute inset-0"
+                className="relative w-full pb-20"
               >
                 <CurrentPuzzle onComplete={handleStageComplete} />
               </motion.div>
@@ -123,13 +122,27 @@ export default function PuzzleGame() {
                 key="game-over"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="absolute inset-0 flex flex-col items-center justify-center text-center"
+                className="relative w-full py-20 flex flex-col items-center justify-center text-center"
               >
                 <h2 className="text-3xl font-bold text-earth-900 mb-2">Menyimpan Hasil...</h2>
                 <div className="w-12 h-12 border-4 border-leaf-200 border-t-leaf-600 rounded-full animate-spin mt-4" />
               </motion.div>
             )}
           </AnimatePresence>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-earth-400 pointer-events-none md:hidden"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Scroll Down</span>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            >
+              <ChevronDown className="w-6 h-6" />
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </PageTransition>
