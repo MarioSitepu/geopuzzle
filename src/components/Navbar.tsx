@@ -25,7 +25,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-lg bg-leaf-500 text-white flex items-center justify-center font-bold text-xl shadow-inner group-hover:bg-leaf-600 transition-colors">
               G
             </div>
-            <span className="font-bold text-xl tracking-tight text-earth-900 uppercase">GEOPUZZLE</span>
+            <span className="font-bold text-xl tracking-tight text-earth-900 uppercase">GEOLOGICALPUZZLE</span>
           </Link>
           
           <div className="hidden md:flex items-center gap-4 pl-4 border-l border-earth-200">

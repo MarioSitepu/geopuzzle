@@ -9,7 +9,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "GeoPuzzle - Jelajahi Bencana Geologi",
+  title: "GeologicalPuzzle - Jelajahi Bencana Geologi",
   description: "Platform pembelajaran interaktif untuk memahami fenomena geologi melalui pendekatan gamifikasi.",
 };
 
