@@ -6,10 +6,32 @@ import { motion } from 'motion/react';
 import { ArrowLeft, Play, FileText, ExternalLink } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
+const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size: string; url: string }[]>> = {
+  'lampung-selatan': {
+    'banjir': [
+      {
+        title: 'Jurnal Geologi Vol. 1',
+        size: '3.9 MB',
+        url: '/journal/banjir/1.pdf'
+      },
+      {
+        title: 'Jurnal Geologi Vol. 2',
+        size: '365 KB',
+        url: '/journal/banjir/2.pdf'
+      }
+    ]
+  }
+};
+
 export default function LearningModule() {
   const params = useParams();
   const regionId = params?.regionId as string;
   const disasterId = params?.disasterId as string;
+
+  const materials = SUPPORTING_MATERIALS[regionId]?.[disasterId] || [
+    { title: 'Jurnal Geologi Vol. 1', size: '2.4 MB', url: '#' },
+    { title: 'Jurnal Geologi Vol. 2', size: '2.4 MB', url: '#' }
+  ];
 
   return (
     <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full">
@@ -79,18 +101,20 @@ export default function LearningModule() {
             </div>
 
             <div className="space-y-4">
-              {[1, 2].map((item) => (
+              {materials.map((material, index) => (
                 <a 
-                  key={item}
-                  href="#" 
+                  key={index}
+                  href={material.url}
+                  target={material.url !== '#' ? "_blank" : undefined}
+                  rel={material.url !== '#' ? "noopener noreferrer" : undefined}
                   className="flex items-start gap-3 p-4 rounded-2xl hover:bg-white/50 transition-colors border border-transparent hover:border-earth-200"
                 >
                   <div className="p-2 bg-white rounded-lg shadow-sm">
                     <ExternalLink className="w-4 h-4 text-earth-500" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-earth-900 text-sm">Jurnal Geologi Vol. {item}</h4>
-                    <p className="text-xs text-earth-500 mt-1">PDF Document • 2.4 MB</p>
+                    <h4 className="font-medium text-earth-900 text-sm">{material.title}</h4>
+                    <p className="text-xs text-earth-500 mt-1">PDF Document • {material.size}</p>
                   </div>
                 </a>
               ))}

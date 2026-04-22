@@ -1,13 +1,59 @@
 'use client';
 
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { motion } from 'motion/react';
-import { Play, BookOpen, Puzzle, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Play, BookOpen, Puzzle, MapPin, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+
+const GEOLOGY_FACTS = [
+  {
+    title: "Cincin Api Pasifik",
+    content: "Indonesia berada di pertemuan tiga lempeng tektonik besar, menjadikannya bagian dari Ring of Fire yang sangat aktif.",
+    image: "/images/facts/ring-of-fire.png"
+  },
+  {
+    title: "Benteng Alami",
+    content: "Hutan mangrove bertindak sebagai pemecah gelombang alami yang efektif mengurangi dampak tsunami dan banjir rob.",
+    image: "/images/facts/mangrove.png"
+  },
+  {
+    title: "Pemicu Longsor",
+    content: "Pergerakan tanah sering dipicu oleh curah hujan tinggi pada lereng gundul dengan material vulkanik yang labil.",
+    image: "/images/facts/landslide.png"
+  },
+  {
+    title: "Sesar Semangko",
+    content: "Pulau Sumatera dilalui oleh Sesar Semangko yang memanjang hingga Lampung, menjadi sumber potensi gempa darat.",
+    image: "/images/facts/sesar-semangko.png"
+  },
+  {
+    title: "Anak Krakatau",
+    content: "Aktivitas vulkanik Gunung Anak Krakatau di Selat Sunda berpotensi memicu tsunami akibat longsoran bawah laut.",
+    image: "/images/facts/krakatau.png"
+  }
+];
 export default function LandingPage() {
+  const [currentFact, setCurrentFact] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const nextFact = useCallback(() => {
+    setCurrentFact((prev) => (prev + 1) % GEOLOGY_FACTS.length);
+  }, []);
+
+  const prevFact = useCallback(() => {
+    setCurrentFact((prev) => (prev - 1 + GEOLOGY_FACTS.length) % GEOLOGY_FACTS.length);
+  }, []);
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const interval = setInterval(nextFact, 5000);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, nextFact]);
+
   return (
     <PageTransition className="justify-center items-center p-4 sm:p-8">
-      <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
+      <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -78,21 +124,82 @@ export default function LandingPage() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="relative hidden md:block"
+          className="relative w-full"
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-leaf-400/20 to-earth-400/20 rounded-[3rem] blur-3xl -z-10" />
-          <div className="glass rounded-[2.5rem] p-4 aspect-square relative overflow-hidden shadow-2xl border-white/50">
-            <img 
-              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200" 
-              alt="Geological landscape" 
-              className="w-full h-full object-cover rounded-[2rem]"
-              referrerPolicy="no-referrer"
-            />
+          <div className="glass rounded-[2.5rem] p-3 sm:p-4 aspect-square relative overflow-hidden shadow-2xl border-white/50">
+            <AnimatePresence mode="wait">
+              <motion.img 
+                key={currentFact}
+                src={GEOLOGY_FACTS[currentFact].image} 
+                initial={{ opacity: 0, scale: 1.1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                transition={{ duration: 0.8 }}
+                alt={GEOLOGY_FACTS[currentFact].title} 
+                className="absolute inset-0 w-full h-full object-cover rounded-[2rem]"
+                referrerPolicy="no-referrer"
+              />
+            </AnimatePresence>
             <div className="absolute inset-0 bg-gradient-to-t from-earth-900/60 via-transparent to-transparent rounded-[2rem]" />
-            <div className="absolute bottom-10 left-10 right-10">
-              <div className="glass-dark p-4 rounded-2xl text-white">
-                <p className="text-sm font-medium text-white/80 mb-1">Fakta Geologi</p>
-                <p className="font-semibold">Pergerakan tanah dapat dipicu oleh curah hujan tinggi dan kemiringan lereng.</p>
+            
+            <div 
+              className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-8 sm:right-8"
+              onMouseEnter={() => setIsAutoPlaying(false)}
+              onMouseLeave={() => setIsAutoPlaying(true)}
+            >
+              <div className="glass-dark p-5 rounded-[2rem] text-white relative overflow-hidden group">
+                <div className="flex justify-between items-center mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-leaf-500/30 rounded-lg">
+                      <Info className="w-4 h-4 text-leaf-300" />
+                    </div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-leaf-200">Fakta Geologi</p>
+                  </div>
+                  <div className="flex gap-1">
+                    {GEOLOGY_FACTS.map((_, i) => (
+                      <div 
+                        key={i} 
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentFact ? 'bg-leaf-400 w-4' : 'bg-white/20'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="relative h-20 sm:h-24">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentFact}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute inset-0"
+                    >
+                      <h4 className="font-bold text-lg mb-1 text-leaf-50">{GEOLOGY_FACTS[currentFact].title}</h4>
+                      <p className="text-sm sm:text-base text-white/90 leading-relaxed line-clamp-3">
+                        {GEOLOGY_FACTS[currentFact].content}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <div className="flex justify-end gap-2 mt-2">
+                  <button 
+                    onClick={prevFact}
+                    className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors active:scale-90"
+                    aria-label="Previous fact"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={nextFact}
+                    className="p-2 rounded-full bg-leaf-500/80 hover:bg-leaf-600 transition-colors active:scale-90"
+                    aria-label="Next fact"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
