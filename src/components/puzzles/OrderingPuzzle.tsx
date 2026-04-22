@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -72,8 +72,12 @@ export default function OrderingPuzzle({ onComplete }: { onComplete: (score: num
     { id: '4', content: 'Lampung Timur (Rendah)' },
   ];
 
-  // Shuffle initially
-  const [items, setItems] = useState(() => [...initialItems].sort(() => Math.random() - 0.5));
+  const [items, setItems] = useState(initialItems);
+
+  useEffect(() => {
+    // Shuffle only on client side to avoid hydration mismatch
+    setItems([...initialItems].sort(() => Math.random() - 0.5));
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

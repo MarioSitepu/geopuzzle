@@ -30,6 +30,40 @@ export default function PuzzleGame() {
   ];
 
   useEffect(() => {
+    // Only play background music for the flood (banjir) puzzle as requested
+    if (disasterId !== 'banjir') return;
+
+    const musicFiles = [
+      '/sound/MUSIC QUIZ 1.mp3',
+      '/sound/BACKGROUND MUSIC 1.mp3',
+      '/sound/BACKGROUND MUSIC 2.mp3'
+    ];
+    
+    // Pick a random track
+    const randomMusic = musicFiles[Math.floor(Math.random() * musicFiles.length)];
+    const audio = new Audio(randomMusic);
+    audio.loop = true;
+    audio.volume = 0.4; // Set comfortable background volume
+    
+    const playAudio = async () => {
+      try {
+        await audio.play();
+      } catch (err) {
+        // Autoplay might be blocked by browser until user interacts
+        console.warn("Background music autoplay was blocked:", err);
+      }
+    };
+
+    playAudio();
+
+    // Cleanup: stop music when leaving the puzzle page
+    return () => {
+      audio.pause();
+      audio.src = ''; // Clear source to stop loading
+    };
+  }, [disasterId]);
+
+  useEffect(() => {
     if (timeLeft > 0 && !isGameOver) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
