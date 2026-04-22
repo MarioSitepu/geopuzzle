@@ -68,7 +68,7 @@ export default function FillBlankPuzzle({ onComplete }: { onComplete: (score: nu
             answer.toLowerCase().trim() === correctAnswer ? "bg-leaf-100 text-leaf-700" : "bg-red-50 text-red-600"
           )}
         >
-          {answer.toLowerCase().trim() === correctAnswer ? "Tepat Sekali!" : `Kurang tepat. Jawaban yang benar adalah "${correctAnswer}".`}
+          {answer.toLowerCase().trim() === correctAnswer ? "Tepat Sekali!" : "Kurang tepat. Coba lagi!"}
         </motion.div>
       )}
     </div>

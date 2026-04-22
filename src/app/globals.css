@@ -31,8 +31,34 @@
   }
 }
 
+:root {
+  --bg-gradient-from: #eef4ec;
+  --bg-gradient-to: #f4f1ea;
+}
+
+.theme-flood {
+  /* Premium Deep Water Palette */
+  --color-earth-100: #f0f7ff; /* Very light sky */
+  --color-earth-200: #e0f2fe; /* Light sky */
+  --color-earth-300: #bae6fd; /* Sky 200 */
+  --color-earth-400: #7dd3fc; /* Sky 300 */
+  --color-earth-500: #3b82f6; /* Vibrant blue */
+  --color-earth-600: #2563eb; /* Royal blue */
+  --color-earth-700: #1d4ed8; /* Deep blue */
+  --color-earth-800: #1e3a8a; /* Navy */
+  --color-earth-900: #0f172a; /* Midnight navy */
+
+  --color-leaf-100: #ecfeff; /* Light cyan */
+  --color-leaf-500: #06b6d4; /* Vibrant cyan (water accent) */
+  --color-leaf-600: #0891b2; /* Deep cyan */
+  --color-leaf-800: #164e63; /* Navy cyan */
+  
+  --bg-gradient-from: #e0f2fe; /* Sky 100 */
+  --bg-gradient-to: #f0f7ff;   /* Sky 50ish */
+}
+
 body {
-  @apply bg-earth-100 text-earth-900 antialiased selection:bg-leaf-300 selection:text-leaf-900;
-  background-image: radial-gradient(circle at 50% 0%, #eef4ec 0%, #f4f1ea 100%);
+  @apply bg-earth-100 text-earth-900 antialiased selection:bg-leaf-300 selection:text-leaf-900 transition-colors duration-500;
+  background-image: radial-gradient(circle at 50% 0%, var(--bg-gradient-from) 0%, var(--bg-gradient-to) 100%);
   background-attachment: fixed;
 }
