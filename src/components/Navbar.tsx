@@ -69,7 +69,7 @@ export default function Navbar() {
               </div>
               <div className="relative group">
                 <div className="w-10 h-10 rounded-full border-2 border-leaf-200 overflow-hidden shadow-sm">
-                  <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+                  <img src={user.image || ''} alt={user.name || 'User'} className="w-full h-full object-cover" />
                 </div>
                 <button
                   onClick={() => signOut()}
