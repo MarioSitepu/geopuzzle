@@ -3,6 +3,8 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ThemeHandler from "@/components/ThemeHandler";
+import AuthGuard from "@/components/AuthGuard";
+import Providers from "@/components/Providers";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -22,11 +24,15 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        <ThemeHandler />
-        <Navbar />
-        <main className="flex-grow flex flex-col relative text-earth-900">
-          {children}
-        </main>
+        <Providers>
+          <AuthGuard>
+            <ThemeHandler />
+            <Navbar />
+            <main className="flex-grow flex flex-col relative text-earth-900">
+              {children}
+            </main>
+          </AuthGuard>
+        </Providers>
       </body>
     </html>
   );
