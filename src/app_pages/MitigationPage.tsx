@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { ShieldAlert, Home, Trees, AlertTriangle, Users } from 'lucide-react';
+import { ShieldAlert, Home, Trees, AlertTriangle, Users, PhoneCall, Ambulance, Flame, LifeBuoy, Tent } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 const MITIGATION_TIPS = [
@@ -94,14 +94,49 @@ export default function MitigationPage() {
         <div className="relative z-10">
           <h2 className="text-2xl font-bold mb-4">Siap Menghadapi Bencana?</h2>
           <p className="text-white/80 mb-8 max-w-xl mx-auto">
-            Pengetahuan adalah kunci utama dalam mitigasi bencana. Mari terus belajar dan bagikan informasi ini kepada orang terdekat.
+            Pengetahuan adalah kunci utama dalam mitigasi bencana. Mari terus belajar dan simpan nomor-nomor darurat berikut:
           </p>
-          <a 
-            href="tel:112" 
-            className="inline-flex items-center gap-2 px-8 py-4 bg-red-500 hover:bg-red-600 text-white rounded-full font-bold transition-colors shadow-lg shadow-red-500/30"
-          >
-            Panggilan Darurat (112)
-          </a>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8">
+            <a href="tel:112" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <PhoneCall className="w-6 h-6" />
+              </div>
+              <span className="font-bold text-white mb-1">Darurat Umum</span>
+              <span className="text-sm text-white/70">112</span>
+            </a>
+            
+            <a href="tel:119" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <Ambulance className="w-6 h-6" />
+              </div>
+              <span className="font-bold text-white mb-1">Ambulans</span>
+              <span className="text-sm text-white/70">118 / 119</span>
+            </a>
+
+            <a href="tel:113" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <Flame className="w-6 h-6" />
+              </div>
+              <span className="font-bold text-white mb-1">Pemadam</span>
+              <span className="text-sm text-white/70">113 / 1131</span>
+            </a>
+
+            <a href="tel:115" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-leaf-500/20 text-leaf-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <LifeBuoy className="w-6 h-6" />
+              </div>
+              <span className="font-bold text-white mb-1">Basarnas</span>
+              <span className="text-sm text-white/70">115</span>
+            </a>
+
+            <a href="tel:129" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center col-span-2 md:col-span-1 lg:col-span-1">
+              <div className="w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <Tent className="w-6 h-6" />
+              </div>
+              <span className="font-bold text-white mb-1">Posko Bencana</span>
+              <span className="text-sm text-white/70">129</span>
+            </a>
+          </div>
         </div>
       </motion.div>
     </PageTransition>
