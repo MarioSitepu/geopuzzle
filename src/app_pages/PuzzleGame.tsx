@@ -149,7 +149,7 @@ export default function PuzzleGame() {
                 transition={{ duration: 0.3 }}
                 className="relative w-full pb-20"
               >
-                <CurrentPuzzle onComplete={handleStageComplete} />
+                <CurrentPuzzle onComplete={handleStageComplete} disasterId={disasterId} />
               </motion.div>
             ) : (
               <motion.div

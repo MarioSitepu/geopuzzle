@@ -71,15 +71,27 @@ function DroppableZone({ category, items }: { category: Category, items: Item[],
 }
 
 // --- Main Component ---
-export default function ClassificationPuzzle({ onComplete }: { onComplete: (score: number) => void }) {
-  const categories: Category[] = [
+export default function ClassificationPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
+  const isFlood = disasterId === 'banjir';
+
+  const categories: Category[] = isFlood ? [
+    { id: 'bandang', title: 'Banjir Bandang' },
+    { id: 'rob', title: 'Banjir Rob' },
+    { id: 'sungai', title: 'Banjir Sungai' },
+    { id: 'genangan', title: 'Banjir Genangan' },
+  ] : [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
     { id: 'flows', title: 'Flows (Aliran)' },
     { id: 'creep', title: 'Creep (Rayapan)' },
   ];
 
-  const initialItems: Item[] = [
+  const initialItems: Item[] = isFlood ? [
+    { id: 'item-1', content: 'Datang tiba-tiba dengan arus air deras', category: 'bandang' },
+    { id: 'item-2', content: 'Genangan daratan pesisir akibat air laut pasang', category: 'rob' },
+    { id: 'item-3', content: 'Meluapnya air melebihi kapasitas badan sungai', category: 'sungai' },
+    { id: 'item-4', content: 'Air tergenang akibat sistem drainase yang buruk', category: 'genangan' },
+  ] : [
     { id: 'item-1', content: 'Batu jatuh bebas dari tebing', category: 'falls' },
     { id: 'item-2', content: 'Pergerakan massa tanah lambat', category: 'creep' },
     { id: 'item-3', content: 'Lumpur mengalir cepat di lembah', category: 'flows' },
@@ -87,8 +99,10 @@ export default function ClassificationPuzzle({ onComplete }: { onComplete: (scor
   ];
 
   const [unassignedItems, setUnassignedItems] = useState<Item[]>(initialItems);
-  const [assignedItems, setAssignedItems] = useState<Record<string, Item[]>>({
-    falls: [], slides: [], flows: [], creep: []
+  const [assignedItems, setAssignedItems] = useState<Record<string, Item[]>>(() => {
+    const initial: Record<string, Item[]> = {};
+    categories.forEach(c => initial[c.id] = []);
+    return initial;
   });
 
   const sensors = useSensors(
@@ -143,7 +157,7 @@ export default function ClassificationPuzzle({ onComplete }: { onComplete: (scor
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-earth-900">Klasifikasi Pergerakan Tanah</h2>
+        <h2 className="text-2xl font-bold text-earth-900">{isFlood ? "Klasifikasi Jenis Banjir" : "Klasifikasi Pergerakan Tanah"}</h2>
         <p className="text-earth-600 mt-2">Tarik dan letakkan deskripsi ke kategori yang tepat.</p>
       </div>
 

@@ -21,9 +21,13 @@ export default function ResultPage() {
 
   useEffect(() => {
     if (isSuccess && regionId) {
-      // Logic to unlock next disaster or region could go here
-      // For now, we just ensure current is unlocked
+      // Ensure current is unlocked (in case of re-plays)
       unlockDisaster(regionId, disasterId || '');
+      
+      // Unlock banjir if longsor is successfully passed
+      if (disasterId === 'longsor') {
+        unlockDisaster(regionId, 'banjir');
+      }
     }
   }, [isSuccess, regionId, disasterId, unlockDisaster]);
 

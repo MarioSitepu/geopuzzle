@@ -63,8 +63,15 @@ function SortableItem({ id, content }: SortableItemProps) {
   );
 }
 
-export default function OrderingPuzzle({ onComplete }: { onComplete: (score: number) => void }) {
-  const initialItems = [
+export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
+  const isFlood = disasterId === 'banjir';
+
+  const initialItems = isFlood ? [
+    { id: '1', content: 'Curah Hujan Ekstrem' },
+    { id: '2', content: 'Kapasitas Saluran Sungai Mengecil' },
+    { id: '3', content: 'Sistem Drainase yang Buruk' },
+    { id: '4', content: 'Tumpukan Sampah di Saluran Air' },
+  ] : [
     { id: '1', content: 'Lampung Barat (Sangat Tinggi)' },
     { id: '2', content: 'Lampung Selatan (Tinggi)' },
     { id: '3', content: 'Lampung Tengah (Sedang)' },
@@ -120,8 +127,8 @@ export default function OrderingPuzzle({ onComplete }: { onComplete: (score: num
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-earth-900">Urutkan Wilayah</h2>
-        <p className="text-earth-600 mt-2">Urutkan wilayah berdasarkan tingkat kerawanan longsor (dari yang paling rawan di atas).</p>
+        <h2 className="text-2xl font-bold text-earth-900">{isFlood ? "Urutkan Penyebab" : "Urutkan Wilayah"}</h2>
+        <p className="text-earth-600 mt-2">{isFlood ? "Urutkan faktor penyebab banjir dari yang paling berdampak besar (di atas)." : "Urutkan wilayah berdasarkan tingkat kerawanan longsor (dari yang paling rawan di atas)."}</p>
       </div>
 
       <div className="glass p-6 rounded-3xl">

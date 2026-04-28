@@ -10,15 +10,6 @@ import { cn } from '../lib/utils';
 
 const DISASTERS = [
   {
-    id: 'banjir',
-    name: 'Banjir',
-    icon: Droplets,
-    description: 'Pelajari penyebab, dampak, dan mitigasi bencana banjir.',
-    color: 'from-blue-500 to-cyan-400',
-    bgLight: 'bg-blue-50',
-    textColor: 'text-blue-600',
-  },
-  {
     id: 'longsor',
     name: 'Tanah Longsor',
     icon: Mountain,
@@ -26,6 +17,15 @@ const DISASTERS = [
     color: 'from-earth-600 to-earth-400',
     bgLight: 'bg-earth-100',
     textColor: 'text-earth-700',
+  },
+  {
+    id: 'banjir',
+    name: 'Banjir',
+    icon: Droplets,
+    description: 'Pelajari penyebab, dampak, dan mitigasi bencana banjir.',
+    color: 'from-blue-500 to-cyan-400',
+    bgLight: 'bg-blue-50',
+    textColor: 'text-blue-600',
   },
 ];
 

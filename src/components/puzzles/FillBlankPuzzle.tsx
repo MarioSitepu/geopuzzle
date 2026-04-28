@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { cn } from '../../lib/utils';
 
-export default function FillBlankPuzzle({ onComplete }: { onComplete: (score: number) => void }) {
+export default function FillBlankPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
   const [answer, setAnswer] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   
-  const correctAnswer = "mitigasi";
+  const isFlood = disasterId === 'banjir';
+  const correctAnswer = isFlood ? "bandang" : "mitigasi";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +31,10 @@ export default function FillBlankPuzzle({ onComplete }: { onComplete: (score: nu
       </div>
 
       <div className="glass p-8 rounded-3xl text-xl leading-relaxed text-earth-800">
-        Serangkaian upaya untuk mengurangi risiko bencana, baik melalui pembangunan fisik maupun penyadaran dan peningkatan kemampuan menghadapi ancaman bencana disebut dengan 
+        {isFlood 
+          ? "Aliran air dalam jumlah besar dan cepat yang membawa lumpur, batu, serta material lainnya, biasanya terjadi akibat hujan deras di daerah pegunungan disebut banjir "
+          : "Serangkaian upaya untuk mengurangi risiko bencana, baik melalui pembangunan fisik maupun penyadaran dan peningkatan kemampuan menghadapi ancaman bencana disebut dengan "
+        }
         <form onSubmit={handleSubmit} className="inline-block mx-2">
           <input
             type="text"
@@ -46,7 +50,7 @@ export default function FillBlankPuzzle({ onComplete }: { onComplete: (score: nu
             autoFocus
           />
         </form>
-        bencana.
+        {isFlood ? "." : "bencana."}
       </div>
 
       {!isSubmitted && (

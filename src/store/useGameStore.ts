@@ -15,7 +15,7 @@ export const useGameStore = create<GameState>()(
     (set) => ({
       unlockedRegions: ['lampung-selatan'], // Default unlocked
       unlockedDisasters: {
-        'lampung-selatan': ['banjir'], // Default unlocked
+        'lampung-selatan': ['longsor'], // Default unlocked
       },
       scores: {},
       unlockRegion: (regionId) =>
