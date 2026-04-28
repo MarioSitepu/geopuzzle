@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { DndContext, DragEndEvent, useDraggable, useDroppable } from '@dnd-kit/core';
+import { 
+  DndContext, 
+  DragEndEvent, 
+  useDraggable, 
+  useDroppable,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor
+} from '@dnd-kit/core';
 import { motion } from 'motion/react';
 import { cn } from '../../lib/utils';
 
@@ -27,7 +36,7 @@ function DraggableItem({ item }: { item: Item, key?: string | number }) {
       {...listeners}
       {...attributes}
       className={cn(
-        "p-3 bg-white rounded-xl shadow-sm border border-earth-200 cursor-grab active:cursor-grabbing text-sm font-medium text-earth-800",
+        "p-3 bg-white rounded-xl shadow-sm border border-earth-200 cursor-grab active:cursor-grabbing text-sm font-medium text-earth-800 touch-none",
         isDragging && "opacity-50 shadow-md ring-2 ring-leaf-500 z-50"
       )}
     >
@@ -82,6 +91,20 @@ export default function ClassificationPuzzle({ onComplete }: { onComplete: (scor
     falls: [], slides: [], flows: [], creep: []
   });
 
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      },
+    })
+  );
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
@@ -124,7 +147,7 @@ export default function ClassificationPuzzle({ onComplete }: { onComplete: (scor
         <p className="text-earth-600 mt-2">Tarik dan letakkan deskripsi ke kategori yang tepat.</p>
       </div>
 
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map(cat => (
             <DroppableZone key={cat.id} category={cat} items={assignedItems[cat.id]} />
