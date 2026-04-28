@@ -5,7 +5,8 @@ import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -47,19 +48,17 @@ function SortableItem({ id, content }: SortableItemProps) {
     <div
       ref={setNodeRef}
       style={style}
+      {...attributes}
+      {...listeners}
       className={cn(
-        "flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-earth-200 mb-3",
+        "flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-earth-200 mb-3 cursor-grab active:cursor-grabbing touch-none",
         isDragging && "opacity-50 shadow-lg ring-2 ring-leaf-500 z-50 relative"
       )}
     >
-      <button
-        {...attributes}
-        {...listeners}
-        className="p-1 text-earth-400 hover:text-earth-600 cursor-grab active:cursor-grabbing"
-      >
+      <div className="p-1 text-earth-400">
         <GripVertical className="w-5 h-5" />
-      </button>
-      <span className="font-medium text-earth-800">{content}</span>
+      </div>
+      <span className="font-medium text-earth-800 pointer-events-none">{content}</span>
     </div>
   );
 }
@@ -80,7 +79,17 @@ export default function OrderingPuzzle({ onComplete }: { onComplete: (score: num
   }, []);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
