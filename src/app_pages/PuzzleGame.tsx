@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Timer, Trophy, ChevronDown } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import PageTransition from '../components/PageTransition';
 import ClassificationPuzzle from '../components/puzzles/ClassificationPuzzle';
 import FillBlankPuzzle from '../components/puzzles/FillBlankPuzzle';
@@ -18,10 +19,19 @@ export default function PuzzleGame() {
   const router = useRouter();
   const { setScore } = useGameStore();
   
+  const { data: session } = useSession();
+  const [hasStarted, setHasStarted] = useState(false);
+  const [playerName, setPlayerName] = useState("");
   const [currentStage, setCurrentStage] = useState(0);
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
   const [isGameOver, setIsGameOver] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
+
+  useEffect(() => {
+    if (session?.user?.name && !playerName) {
+      setPlayerName(session.user.name);
+    }
+  }, [session, playerName]);
 
   const stages = [
     { id: 'classification', component: ClassificationPuzzle },
@@ -31,7 +41,7 @@ export default function PuzzleGame() {
 
   useEffect(() => {
     // Only play background music for the flood (banjir) puzzle as requested
-    if (disasterId !== 'banjir') return;
+    if (!hasStarted || disasterId !== 'banjir') return;
 
     const musicFiles = [
       '/sound/MUSIC QUIZ 1.mp3',
@@ -61,9 +71,10 @@ export default function PuzzleGame() {
       audio.pause();
       audio.src = ''; // Clear source to stop loading
     };
-  }, [disasterId]);
+  }, [disasterId, hasStarted]);
 
   useEffect(() => {
+    if (!hasStarted) return;
     if (timeLeft > 0 && !isGameOver) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
@@ -83,6 +94,19 @@ export default function PuzzleGame() {
       const finalScore = Math.round(newTotalScore / stages.length);
       setScore(`${regionId}-${disasterId}`, finalScore);
       setIsGameOver(true);
+
+      // Save to database
+      fetch('/api/quiz-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          playerName: playerName || session?.user?.name || 'Anonim',
+          regionId,
+          disasterId,
+          score: finalScore
+        })
+      }).catch(console.error);
+
       setTimeout(() => {
         router.push(`/regions/${regionId}/${disasterId}/result?score=${finalScore}`);
       }, 1500);
@@ -93,6 +117,19 @@ export default function PuzzleGame() {
     setIsGameOver(true);
     const finalScore = Math.round(totalScore / stages.length);
     setScore(`${regionId}-${disasterId}`, finalScore);
+
+    // Save to database
+    fetch('/api/quiz-history', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        playerName: playerName || session?.user?.name || 'Anonim',
+        regionId,
+        disasterId,
+        score: finalScore
+      })
+    }).catch(console.error);
+
     setTimeout(() => {
       router.push(`/regions/${regionId}/${disasterId}/result?score=${finalScore}&timeout=true`);
     }, 1500);
@@ -105,6 +142,42 @@ export default function PuzzleGame() {
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
+
+  if (!hasStarted) {
+    return (
+      <PageTransition className="p-4 sm:p-8 max-w-xl mx-auto w-full flex flex-col items-center justify-center min-h-[80vh]">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass p-8 sm:p-12 rounded-[2rem] w-full text-center"
+        >
+          <div className="w-16 h-16 bg-leaf-100 text-leaf-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Trophy className="w-8 h-8" />
+          </div>
+          <h2 className="text-3xl font-bold text-earth-900 mb-2">Siap Memulai?</h2>
+          <p className="text-earth-600 mb-8">Masukkan namamu untuk dicatat di riwayat kuis.</p>
+          
+          <form onSubmit={(e) => { e.preventDefault(); if(playerName.trim()) setHasStarted(true); }}>
+            <input 
+              type="text" 
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              placeholder="Nama Pemain"
+              className="w-full px-6 py-4 rounded-xl border-2 border-earth-200 focus:border-leaf-500 focus:outline-none mb-6 text-center font-bold text-earth-800 text-xl"
+              required
+            />
+            <button 
+              type="submit"
+              disabled={!playerName.trim()}
+              className="w-full py-4 bg-leaf-600 hover:bg-leaf-700 text-white rounded-xl font-bold transition-colors disabled:opacity-50"
+            >
+              Mulai Kuis
+            </button>
+          </form>
+        </motion.div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full flex flex-col">

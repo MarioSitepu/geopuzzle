@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { Map, ShieldAlert, Home, LogOut, LogIn, User as UserIcon } from 'lucide-react';
+import { Map, ShieldAlert, Home, LogOut, LogIn, User as UserIcon, History } from 'lucide-react';
 import { cn } from '../lib/utils';
 import iteraLogo from './itera.png';
 import tgeologiLogo from './tgeologi.png';
@@ -18,6 +18,7 @@ export default function Navbar() {
     { path: '/', label: 'Beranda', icon: Home },
     { path: '/regions', label: 'Peta', icon: Map },
     { path: '/mitigation', label: 'Mitigasi', icon: ShieldAlert },
+    { path: '/history', label: 'Riwayat', icon: History },
   ];
 
   return (
