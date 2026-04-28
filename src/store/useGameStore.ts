@@ -44,7 +44,7 @@ export const useGameStore = create<GameState>()(
         })),
     }),
     {
-      name: 'geologicalpuzzle-storage',
+      name: 'geologicalpuzzle-storage-v2',
     }
   )
 );
