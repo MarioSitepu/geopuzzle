@@ -42,8 +42,9 @@ export default function FillBlankPuzzle({ onComplete, disasterId }: { onComplete
             onChange={(e) => setAnswer(e.target.value)}
             disabled={isSubmitted}
             className={cn(
-              "border-b-2 border-earth-400 bg-transparent px-2 py-1 w-32 text-center focus:outline-none focus:border-leaf-500 transition-colors font-bold",
-              isSubmitted && answer.toLowerCase().trim() === correctAnswer && "border-leaf-500 text-leaf-600",
+              "border-b-2 border-earth-400 bg-transparent px-2 py-1 w-32 text-center focus:outline-none transition-colors font-bold",
+              isFlood ? "focus:border-blue-500" : "focus:border-earth-600",
+              isSubmitted && answer.toLowerCase().trim() === correctAnswer && (isFlood ? "border-blue-500 text-blue-600" : "border-earth-600 text-earth-700"),
               isSubmitted && answer.toLowerCase().trim() !== correctAnswer && "border-red-500 text-red-600"
             )}
             placeholder="..."
@@ -57,7 +58,9 @@ export default function FillBlankPuzzle({ onComplete, disasterId }: { onComplete
         <button
           onClick={handleSubmit}
           disabled={!answer.trim()}
-          className="px-8 py-3 bg-leaf-600 text-white rounded-full font-bold shadow-lg hover:bg-leaf-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`px-8 py-3 text-white rounded-full font-bold shadow-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+            isFlood ? "bg-blue-600 hover:bg-blue-700" : "bg-earth-700 hover:bg-earth-800"
+          }`}
         >
           Kirim Jawaban
         </button>
@@ -69,7 +72,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId }: { onComplete
           animate={{ opacity: 1, scale: 1 }}
           className={cn(
             "p-4 rounded-2xl font-bold text-lg",
-            answer.toLowerCase().trim() === correctAnswer ? "bg-leaf-100 text-leaf-700" : "bg-red-50 text-red-600"
+            answer.toLowerCase().trim() === correctAnswer ? (isFlood ? "bg-blue-50 text-blue-700" : "bg-earth-100 text-earth-800") : "bg-red-50 text-red-600"
           )}
         >
           {answer.toLowerCase().trim() === correctAnswer ? "Tepat Sekali!" : "Kurang tepat. Coba lagi!"}

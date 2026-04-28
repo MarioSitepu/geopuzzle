@@ -18,6 +18,7 @@ export default function ResultPage() {
   
   const { unlockDisaster } = useGameStore();
   const isSuccess = score >= 70;
+  const isFlood = disasterId === 'banjir';
 
   useEffect(() => {
     if (isSuccess && regionId) {
@@ -39,7 +40,7 @@ export default function ResultPage() {
         className="glass w-full rounded-[2.5rem] p-8 sm:p-12 text-center relative overflow-hidden"
       >
         {isSuccess && (
-          <div className="absolute inset-0 bg-gradient-to-b from-leaf-400/20 to-transparent -z-10" />
+          <div className={`absolute inset-0 bg-gradient-to-b ${isFlood ? 'from-blue-400/20' : 'from-earth-400/20'} to-transparent -z-10`} />
         )}
 
         <motion.div
@@ -47,10 +48,10 @@ export default function ResultPage() {
           animate={{ scale: 1 }}
           transition={{ type: "spring", delay: 0.2 }}
           className="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 shadow-xl"
-          style={{ backgroundColor: isSuccess ? '#eef4ec' : '#fef2f2' }}
+          style={{ backgroundColor: isSuccess ? (isFlood ? '#eff6ff' : '#f5f5f4') : '#fef2f2' }}
         >
           {isSuccess ? (
-            <Trophy className="w-12 h-12 text-leaf-600" />
+            <Trophy className={`w-12 h-12 ${isFlood ? 'text-blue-600' : 'text-earth-700'}`} />
           ) : (
             <XCircle className="w-12 h-12 text-red-500" />
           )}
@@ -70,7 +71,7 @@ export default function ResultPage() {
 
         <div className="inline-block bg-white px-8 py-4 rounded-2xl shadow-sm border border-earth-100 mb-10">
           <p className="text-sm text-earth-500 font-medium uppercase tracking-wider mb-1">Skor Akhir</p>
-          <p className={`text-5xl font-black ${isSuccess ? 'text-leaf-600' : 'text-earth-800'}`}>
+          <p className={`text-5xl font-black ${isSuccess ? (isFlood ? 'text-blue-600' : 'text-earth-700') : 'text-earth-800'}`}>
             {score}
           </p>
         </div>
@@ -87,7 +88,9 @@ export default function ResultPage() {
               </Link>
               <Link
                 href={`/regions/${regionId}/${disasterId}/puzzle`}
-                className="w-full sm:w-auto px-8 py-4 bg-leaf-600 text-white rounded-full font-semibold shadow-lg hover:bg-leaf-700 transition-colors flex items-center justify-center gap-2"
+                className={`w-full sm:w-auto px-8 py-4 text-white rounded-full font-semibold shadow-lg transition-colors flex items-center justify-center gap-2 ${
+                  isFlood ? 'bg-blue-600 hover:bg-blue-700' : 'bg-earth-700 hover:bg-earth-800'
+                }`}
               >
                 Coba Lagi
               </Link>
@@ -102,7 +105,9 @@ export default function ResultPage() {
               </Link>
               <Link
                 href="/regions"
-                className="w-full sm:w-auto px-8 py-4 bg-leaf-600 text-white rounded-full font-semibold shadow-lg hover:bg-leaf-700 transition-colors flex items-center justify-center gap-2"
+                className={`w-full sm:w-auto px-8 py-4 text-white rounded-full font-semibold shadow-lg transition-colors flex items-center justify-center gap-2 ${
+                  isFlood ? 'bg-blue-600 hover:bg-blue-700' : 'bg-earth-700 hover:bg-earth-800'
+                }`}
               >
                 Pilih Wilayah Lain
                 <ArrowRight className="w-5 h-5" />

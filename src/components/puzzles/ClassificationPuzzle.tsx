@@ -19,7 +19,7 @@ type Item = { id: string; content: string; category: string };
 type Category = { id: string; title: string };
 
 // --- Components ---
-function DraggableItem({ item }: { item: Item, key?: string | number }) {
+function DraggableItem({ item, isFlood }: { item: Item, key?: string | number, isFlood: boolean }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: item,
@@ -37,7 +37,7 @@ function DraggableItem({ item }: { item: Item, key?: string | number }) {
       {...attributes}
       className={cn(
         "p-3 bg-white rounded-xl shadow-sm border border-earth-200 cursor-grab active:cursor-grabbing text-sm font-medium text-earth-800 touch-none",
-        isDragging && "opacity-50 shadow-md ring-2 ring-leaf-500 z-50"
+        isDragging && `opacity-50 shadow-md ring-2 z-50 ${isFlood ? 'ring-blue-500' : 'ring-earth-600'}`
       )}
     >
       {item.content}
@@ -45,7 +45,7 @@ function DraggableItem({ item }: { item: Item, key?: string | number }) {
   );
 }
 
-function DroppableZone({ category, items }: { category: Category, items: Item[], key?: string | number }) {
+function DroppableZone({ category, items, isFlood }: { category: Category, items: Item[], key?: string | number, isFlood: boolean }) {
   const { setNodeRef, isOver } = useDroppable({
     id: category.id,
   });
@@ -55,7 +55,7 @@ function DroppableZone({ category, items }: { category: Category, items: Item[],
       ref={setNodeRef}
       className={cn(
         "p-4 rounded-2xl min-h-[150px] transition-colors border-2 border-dashed",
-        isOver ? "bg-leaf-50 border-leaf-400" : "bg-earth-50/50 border-earth-200"
+        isOver ? (isFlood ? "bg-blue-50 border-blue-400" : "bg-earth-100 border-earth-400") : "bg-earth-50/50 border-earth-200"
       )}
     >
       <h3 className="font-semibold text-earth-900 mb-3 text-center">{category.title}</h3>
@@ -164,7 +164,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId }: { onCom
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map(cat => (
-            <DroppableZone key={cat.id} category={cat} items={assignedItems[cat.id]} />
+            <DroppableZone key={cat.id} category={cat} items={assignedItems[cat.id]} isFlood={isFlood} />
           ))}
         </div>
 
@@ -172,7 +172,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId }: { onCom
           <h3 className="text-sm font-medium text-earth-500 mb-4 uppercase tracking-wider">Item yang belum diklasifikasi</h3>
           <div className="flex flex-wrap gap-3">
             {unassignedItems.map(item => (
-              <DraggableItem key={item.id} item={item} />
+              <DraggableItem key={item.id} item={item} isFlood={isFlood} />
             ))}
             {unassignedItems.length === 0 && (
               <p className="text-earth-400 italic text-sm w-full text-center">Semua item telah diklasifikasi.</p>
@@ -189,7 +189,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId }: { onCom
         >
           <button
             onClick={checkAnswers}
-            className="px-8 py-3 bg-leaf-600 text-white rounded-full font-bold shadow-lg hover:bg-leaf-700 transition-colors"
+            className={`px-8 py-3 text-white rounded-full font-bold shadow-lg transition-colors ${
+              isFlood ? "bg-blue-600 hover:bg-blue-700" : "bg-earth-700 hover:bg-earth-800"
+            }`}
           >
             Periksa Jawaban
           </button>

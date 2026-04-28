@@ -29,7 +29,7 @@ interface SortableItemProps {
   key?: string | number;
 }
 
-function SortableItem({ id, content }: SortableItemProps) {
+function SortableItem({ id, content, isFlood }: SortableItemProps & { isFlood: boolean }) {
   const {
     attributes,
     listeners,
@@ -52,7 +52,7 @@ function SortableItem({ id, content }: SortableItemProps) {
       {...listeners}
       className={cn(
         "flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-earth-200 mb-3 cursor-grab active:cursor-grabbing touch-none",
-        isDragging && "opacity-50 shadow-lg ring-2 ring-leaf-500 z-50 relative"
+        isDragging && `opacity-50 shadow-lg ring-2 z-50 relative ${isFlood ? 'ring-blue-500' : 'ring-earth-600'}`
       )}
     >
       <div className="p-1 text-earth-400">
@@ -142,7 +142,7 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
             strategy={verticalListSortingStrategy}
           >
             {items.map((item) => (
-              <SortableItem key={item.id} id={item.id} content={item.content} />
+              <SortableItem key={item.id} id={item.id} content={item.content} isFlood={isFlood} />
             ))}
           </SortableContext>
         </DndContext>
@@ -155,7 +155,9 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
       >
         <button
           onClick={checkAnswers}
-          className="px-8 py-3 bg-leaf-600 text-white rounded-full font-bold shadow-lg hover:bg-leaf-700 transition-colors"
+          className={`px-8 py-3 text-white rounded-full font-bold shadow-lg transition-colors ${
+            isFlood ? "bg-blue-600 hover:bg-blue-700" : "bg-earth-700 hover:bg-earth-800"
+          }`}
         >
           Periksa Jawaban
         </button>

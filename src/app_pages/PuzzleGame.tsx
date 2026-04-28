@@ -132,7 +132,7 @@ export default function PuzzleGame() {
       <div className="flex-grow flex flex-col">
         <div className="w-full bg-earth-200 h-2 rounded-full mb-8 overflow-hidden">
           <motion.div 
-            className="h-full bg-leaf-500"
+            className={`h-full ${disasterId === 'banjir' ? 'bg-blue-500' : 'bg-earth-600'}`}
             initial={{ width: 0 }}
             animate={{ width: `${((currentStage) / stages.length) * 100}%` }}
             transition={{ duration: 0.5 }}
@@ -159,7 +159,7 @@ export default function PuzzleGame() {
                 className="relative w-full py-20 flex flex-col items-center justify-center text-center"
               >
                 <h2 className="text-3xl font-bold text-earth-900 mb-2">Menyimpan Hasil...</h2>
-                <div className="w-12 h-12 border-4 border-leaf-200 border-t-leaf-600 rounded-full animate-spin mt-4" />
+                <div className={`w-12 h-12 border-4 rounded-full animate-spin mt-4 ${disasterId === 'banjir' ? 'border-blue-200 border-t-blue-600' : 'border-earth-200 border-t-earth-600'}`} />
               </motion.div>
             )}
           </AnimatePresence>
