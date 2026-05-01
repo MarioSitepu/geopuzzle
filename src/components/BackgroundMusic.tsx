@@ -37,18 +37,30 @@ export default function BackgroundMusic() {
   }, [isPuzzlePage, hasInteracted, isMuted]);
 
   useEffect(() => {
+    const clickAudio = new Audio('/sound/CLICK BUTTON.mp3');
+    clickAudio.volume = 0.4;
+
     const handleInteraction = () => {
       setHasInteracted(true);
       window.removeEventListener('click', handleInteraction);
       window.removeEventListener('keydown', handleInteraction);
     };
 
+    const handleClick = () => {
+      // Clone and play to allow rapid multiple clicks
+      const sound = clickAudio.cloneNode() as HTMLAudioElement;
+      sound.volume = 0.4;
+      sound.play().catch(() => {});
+    };
+
     window.addEventListener('click', handleInteraction);
     window.addEventListener('keydown', handleInteraction);
+    window.addEventListener('click', handleClick);
 
     return () => {
       window.removeEventListener('click', handleInteraction);
       window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('click', handleClick);
     };
   }, []);
 
