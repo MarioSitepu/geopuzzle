@@ -6,6 +6,7 @@ import ThemeHandler from "@/components/ThemeHandler";
 import AuthGuard from "@/components/AuthGuard";
 import Providers from "@/components/Providers";
 import GlobalBackground from "@/components/GlobalBackground";
+import BackgroundMusic from "@/components/BackgroundMusic";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
           <AuthGuard>
             <ThemeHandler />
             <GlobalBackground />
+            <BackgroundMusic />
             <Navbar />
             <main className="flex-grow flex flex-col relative text-earth-900">
               {children}

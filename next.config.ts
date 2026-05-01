@@ -15,6 +15,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/sound/:path*",
+        headers: [
+          {
+            key: "Content-Disposition",
+            value: "inline",
+          },
+        ],
+      },
     ];
   },
 };
