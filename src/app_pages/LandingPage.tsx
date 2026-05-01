@@ -25,12 +25,12 @@ const GEOLOGY_FACTS = [
   {
     title: "Sesar Semangko",
     content: "Pulau Sumatera dilalui oleh Sesar Semangko yang memanjang hingga Lampung, menjadi sumber potensi gempa darat.",
-    image: "/images/facts/sesar-semangko.png"
+    image: "/images/facts/sesar-semangko.jpg"
   },
   {
     title: "Anak Krakatau",
     content: "Aktivitas vulkanik Gunung Anak Krakatau di Selat Sunda berpotensi memicu tsunami akibat longsoran bawah laut.",
-    image: "/images/facts/krakatau.png"
+    image: "/images/facts/krakatau.jpg"
   }
 ];
 export default function LandingPage() {
@@ -52,8 +52,8 @@ export default function LandingPage() {
   }, [isAutoPlaying, nextFact]);
 
   return (
-    <PageTransition className="justify-center items-center p-4 sm:p-8">
-      <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-12 items-center">
+    <PageTransition className="justify-center items-center p-4 sm:p-8 relative min-h-screen">
+      <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
         <div className="space-y-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}

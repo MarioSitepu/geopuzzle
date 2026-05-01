@@ -38,8 +38,8 @@ export default function RegionSelection() {
   const { unlockedRegions } = useGameStore();
 
   return (
-    <PageTransition className="p-4 sm:p-8 max-w-7xl mx-auto">
-      <div className="mb-10 text-center">
+    <PageTransition className="p-4 sm:p-8 max-w-7xl mx-auto relative">
+      <div className="mb-10 text-center relative z-10">
         <motion.h1 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

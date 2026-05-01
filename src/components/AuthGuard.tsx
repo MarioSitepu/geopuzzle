@@ -13,7 +13,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (status === 'loading') return;
 
     // If not logged in and trying to access protected routes
-    const isProtectedRoute = pathname.startsWith('/regions') || pathname.startsWith('/mitigation');
+    const isProtectedRoute = pathname.startsWith('/regions');
     
     if (!session && isProtectedRoute) {
       router.push('/login');

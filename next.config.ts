@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  allowedDevOrigins: ['inequilateral-burnoused-lesli.ngrok-free.dev'],
   async headers() {
     return [
       {
