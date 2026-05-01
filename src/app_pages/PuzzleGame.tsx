@@ -40,8 +40,8 @@ export default function PuzzleGame() {
   ];
 
   useEffect(() => {
-    // Only play background music for the flood (banjir) puzzle as requested
-    if (!hasStarted || disasterId !== 'banjir') return;
+    // Play background music for all puzzles
+    if (!hasStarted) return;
 
     const musicFiles = [
       '/sound/MUSIC QUIZ 1.mp3',

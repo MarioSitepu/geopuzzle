@@ -10,14 +10,40 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
   'lampung-selatan': {
     'banjir': [
       {
-        title: 'Jurnal Geologi Vol. 1',
+        title: 'Jurnal Geologi Banjir Vol. 1',
         size: '3.9 MB',
         url: '/journal/banjir/1.pdf'
       },
       {
-        title: 'Jurnal Geologi Vol. 2',
+        title: 'Jurnal Geologi Banjir Vol. 2',
         size: '365 KB',
         url: '/journal/banjir/2.pdf'
+      }
+    ],
+    'longsor': [
+      {
+        title: 'Jurnal Geologi Longsor Vol. 1',
+        size: '365 KB',
+        url: '/journal/longsor/1.pdf'
+      },
+      {
+        title: 'Jurnal Geologi Longsor Vol. 2',
+        size: '3.9 MB',
+        url: '/journal/longsor/2.pdf'
+      }
+    ]
+  },
+  'lampung-barat': {
+    'longsor': [
+      {
+        title: 'Jurnal Geologi Longsor Vol. 1',
+        size: '365 KB',
+        url: '/journal/longsor/1.pdf'
+      },
+      {
+        title: 'Jurnal Geologi Longsor Vol. 2',
+        size: '3.9 MB',
+        url: '/journal/longsor/2.pdf'
       }
     ]
   }
