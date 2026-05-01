@@ -12,25 +12,25 @@ const REGIONS = [
     id: 'lampung-selatan',
     name: 'Lampung Selatan',
     description: 'Kawasan pesisir dan perbukitan',
-    image: 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&q=80&w=800',
+    image: '/images/quizregion/lampung-selatan(menara-siger-kalianda).jpg',
   },
   {
     id: 'lampung-barat',
     name: 'Lampung Barat',
     description: 'Kawasan pegunungan rawan longsor',
-    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800',
+    image: '/images/quizregion/lampung-barat-(danau-suoh).png',
   },
   {
     id: 'lampung-tengah',
     name: 'Lampung Tengah',
     description: 'Kawasan dataran rendah',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800',
+    image: '/images/quizregion/lampung-tengah(bukit-batubara).jpg',
   },
   {
     id: 'lampung-timur',
     name: 'Lampung Timur',
     description: 'Kawasan pesisir timur',
-    image: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&q=80&w=800',
+    image: '/images/quizregion/lampung-timur(way-kambas).jpg',
   },
 ];
 
