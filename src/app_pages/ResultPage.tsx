@@ -17,11 +17,16 @@ export default function ResultPage() {
   const isTimeout = searchParams?.get('timeout') === 'true';
   
   const { unlockDisaster } = useGameStore();
-  const isSuccess = score >= 70;
+  const isSuccess = score >= 75;
   const isFlood = disasterId === 'banjir';
 
   useEffect(() => {
     if (isSuccess && regionId) {
+      // Play success sound
+      const clapAudio = new Audio('/sound/HAND CLAP SOUND EFFECT.mp3');
+      clapAudio.volume = 0.5;
+      clapAudio.play().catch(err => console.warn("Audio play blocked:", err));
+
       // Ensure current is unlocked (in case of re-plays)
       unlockDisaster(regionId, disasterId || '');
       
