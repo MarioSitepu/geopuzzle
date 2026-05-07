@@ -4,20 +4,21 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Timer, Trophy, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Timer, Trophy, ChevronDown, Volume2, VolumeX } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import PageTransition from '../components/PageTransition';
 import ClassificationPuzzle from '../components/puzzles/ClassificationPuzzle';
 import FillBlankPuzzle from '../components/puzzles/FillBlankPuzzle';
 import OrderingPuzzle from '../components/puzzles/OrderingPuzzle';
 import { useGameStore } from '../store/useGameStore';
+import { useRef } from 'react';
 
 export default function PuzzleGame() {
   const params = useParams();
   const regionId = params?.regionId as string;
   const disasterId = params?.disasterId as string;
   const router = useRouter();
-  const { setScore } = useGameStore();
+  const { setScore, isMuted, toggleMute } = useGameStore();
   
   const { data: session } = useSession();
   const [hasStarted, setHasStarted] = useState(false);
@@ -26,6 +27,7 @@ export default function PuzzleGame() {
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
   const [isGameOver, setIsGameOver] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (session?.user?.name && !playerName) {
@@ -43,35 +45,33 @@ export default function PuzzleGame() {
     // Play background music for all puzzles
     if (!hasStarted) return;
 
-    const musicFiles = [
-      '/sound/MUSIC QUIZ 1.mp3',
-      '/sound/BACKGROUND MUSIC 1.mp3',
-      '/sound/BACKGROUND MUSIC 2.mp3'
-    ];
+    if (!audioRef.current) {
+      const musicFiles = [
+        '/sound/MUSIC QUIZ 1.mp3',
+        '/sound/BACKGROUND MUSIC 1.mp3',
+        '/sound/BACKGROUND MUSIC 2.mp3'
+      ];
+      
+      // Pick a random track
+      const randomMusic = musicFiles[Math.floor(Math.random() * musicFiles.length)];
+      audioRef.current = new Audio(randomMusic);
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.4;
+    }
     
-    // Pick a random track
-    const randomMusic = musicFiles[Math.floor(Math.random() * musicFiles.length)];
-    const audio = new Audio(randomMusic);
-    audio.loop = true;
-    audio.volume = 0.4; // Set comfortable background volume
+    const audio = audioRef.current;
     
-    const playAudio = async () => {
-      try {
-        await audio.play();
-      } catch (err) {
-        // Autoplay might be blocked by browser until user interacts
-        console.warn("Background music autoplay was blocked:", err);
-      }
-    };
-
-    playAudio();
+    if (!isMuted) {
+      audio.play().catch(err => console.warn("Background music autoplay was blocked:", err));
+    } else {
+      audio.pause();
+    }
 
     // Cleanup: stop music when leaving the puzzle page
     return () => {
       audio.pause();
-      audio.src = ''; // Clear source to stop loading
     };
-  }, [disasterId, hasStarted]);
+  }, [hasStarted, isMuted]);
 
   useEffect(() => {
     if (!hasStarted) return;
@@ -199,6 +199,13 @@ export default function PuzzleGame() {
             <Timer className="w-4 h-4" />
             {formatTime(timeLeft)}
           </div>
+          <button
+            onClick={toggleMute}
+            className="p-2 bg-white rounded-full shadow-sm text-earth-600 hover:text-earth-900 transition-all hover:scale-110 active:scale-95 border border-earth-100"
+            title={isMuted ? "Unmute Music" : "Mute Music"}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 

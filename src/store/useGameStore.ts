@@ -5,6 +5,8 @@ interface GameState {
   unlockedRegions: string[];
   unlockedDisasters: Record<string, string[]>; // regionId -> disasterIds
   scores: Record<string, number>; // puzzleId -> score
+  isMuted: boolean;
+  toggleMute: () => void;
   unlockRegion: (regionId: string) => void;
   unlockDisaster: (regionId: string, disasterId: string) => void;
   setScore: (puzzleId: string, score: number) => void;
@@ -18,6 +20,8 @@ export const useGameStore = create<GameState>()(
         'lampung-selatan': ['longsor'], // Default unlocked
       },
       scores: {},
+      isMuted: false,
+      toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
       unlockRegion: (regionId) =>
         set((state) => ({
           unlockedRegions: state.unlockedRegions.includes(regionId)

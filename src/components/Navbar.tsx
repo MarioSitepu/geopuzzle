@@ -33,8 +33,8 @@ export default function Navbar() {
           </Link>
           
           <div className="hidden md:flex items-center gap-4 pl-4 border-l border-earth-200">
-            <Image src={iteraLogo} alt="ITERA Logo" className="h-8 w-auto object-contain" />
-            <Image src={tgeologiLogo} alt="Teknik Geologi Logo" className="h-8 w-auto object-contain" />
+            <Image src={iteraLogo} alt="ITERA Logo" className="h-12 w-auto object-contain" />
+            <Image src={tgeologiLogo} alt="Teknik Geologi Logo" className="h-12 w-auto object-contain" />
           </div>
         </div>
 

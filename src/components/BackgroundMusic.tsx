@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Volume2, VolumeX } from 'lucide-react';
+import { useGameStore } from '../store/useGameStore';
 
 export default function BackgroundMusic() {
   const pathname = usePathname();
+  const { isMuted, toggleMute } = useGameStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
   // Check if current path is a puzzle or result page
@@ -29,6 +30,8 @@ export default function BackgroundMusic() {
     } else if (hasInteracted && !isMuted) {
       // Play if not on puzzle page and user has interacted
       audio.play().catch(err => console.warn("Global music autoplay blocked:", err));
+    } else if (isMuted) {
+      audio.pause();
     }
 
     return () => {
@@ -47,6 +50,7 @@ export default function BackgroundMusic() {
     };
 
     const handleClick = () => {
+      if (isMuted) return; // Don't play click sound if muted
       // Clone and play to allow rapid multiple clicks
       const sound = clickAudio.cloneNode() as HTMLAudioElement;
       sound.volume = 0.4;
@@ -62,18 +66,7 @@ export default function BackgroundMusic() {
       window.removeEventListener('keydown', handleInteraction);
       window.removeEventListener('click', handleClick);
     };
-  }, []);
-
-  const toggleMute = () => {
-    if (!audioRef.current) return;
-    const newMuted = !isMuted;
-    setIsMuted(newMuted);
-    if (newMuted) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch(console.error);
-    }
-  };
+  }, [isMuted]);
 
   if (isPuzzlePage) return null;
 
