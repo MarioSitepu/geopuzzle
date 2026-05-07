@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion } from 'motion/react';
@@ -34,6 +35,14 @@ export default function DisasterSelection() {
   const regionId = params?.regionId as string;
   const { unlockedDisasters } = useGameStore();
   
+  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+
+  const levels = [
+    { id: 'awal', name: 'Awal', description: 'Konsep dasar geologi' },
+    { id: 'menengah', name: 'Menengah', description: 'Analisis fenomena' },
+    { id: 'atas', name: 'Atas', description: 'Mitigasi kompleks' },
+  ];
+  
   const regionDisasters = unlockedDisasters[regionId || ''] || [];
 
   const regionNames: Record<string, string> = {
@@ -45,7 +54,7 @@ export default function DisasterSelection() {
   const displayName = regionNames[regionId] || regionId?.replace(/-/g, ' ');
 
   return (
-    <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full">
+    <PageTransition className="p-4 sm:p-8 max-w-7xl mx-auto w-full">
       <Link 
         href="/regions" 
         className="inline-flex items-center gap-2 text-earth-600 hover:text-earth-900 mb-8 transition-colors"
@@ -68,53 +77,105 @@ export default function DisasterSelection() {
           transition={{ delay: 0.1 }}
           className="text-earth-600"
         >
-          Pilih jenis bencana geologi yang ingin Anda pelajari di Kecamatan {displayName}.
+          Pilih tingkatan terlebih dahulu, lalu pilih jenis bencana geologi yang ingin Anda pelajari.
         </motion.p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        {DISASTERS.map((disaster, index) => {
-          const isUnlocked = regionDisasters.includes(disaster.id);
-          const Icon = disaster.icon;
-
-          return (
-            <motion.div
-              key={disaster.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 + 0.2 }}
-            >
-              <Link
-                href={isUnlocked ? `/regions/${regionId}/${disaster.id}/learn` : '#'}
+      <div className="flex flex-col lg:flex-row gap-12">
+        {/* Sidebar: Tingkatan */}
+        <div className="lg:w-1/4 space-y-4">
+          <h2 className="text-xl font-bold text-earth-900 mb-6 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-leaf-100 text-leaf-600 flex items-center justify-center text-sm">1</span>
+            Pilih Tingkatan
+          </h2>
+          <div className="grid grid-cols-1 gap-3">
+            {levels.map((level) => (
+              <button
+                key={level.id}
+                onClick={() => setSelectedLevel(level.id)}
                 className={cn(
-                  "block relative overflow-hidden rounded-3xl p-8 transition-all duration-300",
-                  isUnlocked 
-                    ? `glass hover:shadow-2xl hover:-translate-y-1 cursor-pointer` 
-                    : "bg-earth-200/50 cursor-not-allowed opacity-70"
+                  "flex flex-col items-start p-5 rounded-2xl border-2 transition-all duration-300 text-left",
+                  selectedLevel === level.id 
+                    ? "border-leaf-500 bg-leaf-50 ring-4 ring-leaf-500/10" 
+                    : "border-earth-100 bg-white hover:border-earth-300"
                 )}
               >
-                <div className={cn(
-                  "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg",
-                  isUnlocked ? `bg-gradient-to-br ${disaster.color} text-white` : "bg-earth-300 text-earth-500"
+                <span className={cn(
+                  "font-bold text-lg mb-1",
+                  selectedLevel === level.id ? "text-leaf-700" : "text-earth-900"
                 )}>
-                  {isUnlocked ? <Icon className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
-                </div>
-                
-                <h3 className="text-2xl font-bold text-earth-900 mb-3">{disaster.name}</h3>
-                <p className="text-earth-600 mb-8">{disaster.description}</p>
-                
-                <div className={cn(
-                  "inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold transition-colors",
-                  isUnlocked 
-                    ? `${disaster.bgLight} ${disaster.textColor} group-hover:bg-white` 
-                    : "bg-earth-300 text-earth-600"
-                )}>
-                  {isUnlocked ? 'Mulai Belajar' : 'Terkunci'}
-                </div>
-              </Link>
-            </motion.div>
-          );
-        })}
+                  Tingkat {level.name}
+                </span>
+                <span className="text-sm text-earth-500">{level.description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main: Bencana */}
+        <div className="lg:w-3/4">
+          <h2 className={cn(
+            "text-xl font-bold mb-6 flex items-center gap-2 transition-opacity duration-300",
+            !selectedLevel ? "opacity-30" : "opacity-100"
+          )}>
+            <span className="w-8 h-8 rounded-lg bg-leaf-100 text-leaf-600 flex items-center justify-center text-sm">2</span>
+            Pilih Jenis Bencana
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 relative">
+            {!selectedLevel && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/40 backdrop-blur-[2px] rounded-3xl border-2 border-dashed border-earth-200">
+                <p className="font-bold text-earth-500 bg-white px-6 py-3 rounded-full shadow-lg">
+                  Silakan pilih tingkatan di sebelah kiri
+                </p>
+              </div>
+            )}
+            
+            {DISASTERS.map((disaster, index) => {
+              const isUnlocked = regionDisasters.includes(disaster.id);
+              const Icon = disaster.icon;
+              const canClick = selectedLevel && isUnlocked;
+
+              return (
+                <motion.div
+                  key={disaster.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 + 0.2 }}
+                >
+                  <Link
+                    href={canClick ? `/regions/${regionId}/${disaster.id}/learn?level=${selectedLevel}` : '#'}
+                    className={cn(
+                      "block relative overflow-hidden rounded-3xl p-8 transition-all duration-500",
+                      canClick 
+                        ? `glass hover:shadow-2xl hover:-translate-y-1 cursor-pointer` 
+                        : "bg-earth-200/50 cursor-not-allowed opacity-70"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg",
+                      canClick ? `bg-gradient-to-br ${disaster.color} text-white` : "bg-earth-300 text-earth-500"
+                    )}>
+                      {isUnlocked ? <Icon className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-earth-900 mb-3">{disaster.name}</h3>
+                    <p className="text-earth-600 mb-8">{disaster.description}</p>
+                    
+                    <div className={cn(
+                      "inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold transition-colors",
+                      canClick 
+                        ? `${disaster.bgLight} ${disaster.textColor} group-hover:bg-white` 
+                        : "bg-earth-300 text-earth-600"
+                    )}>
+                      {canClick ? 'Mulai Belajar' : (!selectedLevel ? 'Pilih Level Dulu' : 'Terkunci')}
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </PageTransition>
   );
