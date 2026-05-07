@@ -40,7 +40,7 @@ export default function DisasterSelection() {
   const levels = [
     { id: 'awal', name: 'Awal', description: 'Konsep dasar geologi', color: 'leaf' },
     { id: 'menengah', name: 'Menengah', description: 'Analisis fenomena', color: 'earth' },
-    { id: 'atas', name: 'Atas', description: 'Mitigasi kompleks', color: 'red' },
+    { id: 'atas', name: 'Lanjutan', description: 'Mitigasi kompleks', color: 'red' },
   ];
   
   const regionDisasters = unlockedDisasters[regionId || ''] || [];
