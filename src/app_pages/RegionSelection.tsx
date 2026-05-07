@@ -39,7 +39,7 @@ export default function RegionSelection() {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-bold text-earth-900 mb-4"
         >
-          Pilih Kecamatan
+          Pilih Kecamatan di Lampung Selatan
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}

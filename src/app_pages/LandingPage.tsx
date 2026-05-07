@@ -61,13 +61,16 @@ export default function LandingPage() {
             transition={{ delay: 0.2 }}
           >
             <h1 className="text-5xl sm:text-6xl font-extrabold text-earth-900 leading-tight tracking-tight">
-              Jelajahi <br />
+              Memahami <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-leaf-600 to-earth-600">
                 Bencana Geologi
               </span>
             </h1>
+            <div className="mt-4 inline-block px-4 py-1.5 bg-leaf-100 text-leaf-700 rounded-lg text-sm font-bold border border-leaf-200 uppercase tracking-wider">
+              Sub Wilayah Lampung Selatan
+            </div>
             <p className="mt-6 text-lg text-earth-700 max-w-md leading-relaxed">
-              Platform pembelajaran interaktif untuk memahami fenomena geologi seperti longsor dan banjir melalui pendekatan gamifikasi.
+              Platform Edukatif dan Interaktif melalui gamifikasi puzzle untuk memahami bencana geologi dari pemahaman sisi keilmuan geologis.
             </p>
           </motion.div>
 
@@ -82,7 +85,7 @@ export default function LandingPage() {
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-leaf-600 text-white rounded-full font-semibold text-lg shadow-lg shadow-leaf-600/30 hover:bg-leaf-700 hover:scale-105 transition-all duration-300 active:scale-95"
             >
               <Play className="w-5 h-5 fill-current" />
-              Mulai Menjelajah
+              Mulai Belajar
             </Link>
             <Link
               href="/mitigation"
@@ -105,7 +108,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-earth-900">Puzzle Interaktif</h3>
-                <p className="text-sm text-earth-600 mt-1">Belajar sambil bermain</p>
+                <p className="text-sm text-earth-600 mt-1">Belajar Sambil Bermain Puzzle bertema Kebencanaan</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -114,7 +117,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-earth-900">Studi Kasus</h3>
-                <p className="text-sm text-earth-600 mt-1">Fokus area Lampung</p>
+                <p className="text-sm text-earth-600 mt-1">Berfokus Pada Wilayah Lampung Selatan</p>
               </div>
             </div>
           </motion.div>
@@ -154,7 +157,7 @@ export default function LandingPage() {
                     <div className="p-1.5 bg-leaf-500/30 rounded-lg">
                       <Info className="w-4 h-4 text-leaf-300" />
                     </div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-leaf-200">Fakta Geologi</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-leaf-200">Fakta Geologi Singkat</p>
                   </div>
                   <div className="flex gap-1">
                     {GEOLOGY_FACTS.map((_, i) => (

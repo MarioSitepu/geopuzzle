@@ -25,7 +25,7 @@ export default function IntroPage() {
     { icon: HeartPulse, text: "Kematian massal & korban jiwa", color: "text-red-500", bg: "bg-red-50" },
     { icon: Building, text: "Kerusakan infrastruktur & hunian", color: "text-blue-500", bg: "bg-blue-50" },
     { icon: Activity, text: "Gangguan aktivitas & ekonomi", color: "text-amber-500", bg: "bg-amber-50" },
-    { icon: ShieldCheck, text: "Penularan wabah & krisis lingkungan", color: "text-leaf-600", bg: "bg-leaf-50" },
+    { icon: ShieldCheck, text: "Risiko gangguan kesehatan & krisis lingkungan", color: "text-leaf-600", bg: "bg-leaf-50" },
   ];
 
   return (
@@ -42,10 +42,10 @@ export default function IntroPage() {
             <Globe className="w-12 h-12 animate-pulse" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-earth-900 tracking-tight">
-            APA SIH <span className="text-leaf-600">BENCANA GEOLOGI</span> ITU?
+            APA ITU PENGERTIAN <span className="text-leaf-600">BENCANA GEOLOGI?</span>
           </h1>
           <p className="text-xl text-earth-700 leading-relaxed max-w-3xl mx-auto">
-            Bencana geologi merupakan peristiwa alam yang berhubungan dengan proses-proses di dalam bumi dan dapat menyebabkan dampak buruk pada kehidupan manusia, harta benda, dan lingkungan.
+            Bencana geologi merupakan peristiwa alam yang berhubungan dengan proses yang ada di bawah permukaan atau diatas permukaan bumi, yang mengakibatkan korban jiwa, kerusakan lingkungan, kerugian harta benda, dan dampak psikologis.
           </p>
         </motion.div>
 
@@ -59,7 +59,7 @@ export default function IntroPage() {
             <div className="p-3 bg-red-100 text-red-600 rounded-2xl">
               <AlertTriangle className="w-8 h-8" />
             </div>
-            <h2 className="text-3xl font-bold text-earth-900">DAMPAK BURUKNYA APA AJA?</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-earth-900">APA SAJA BENTUK KERUGIAN BENCANA GEOLOGI?</h2>
           </div>
 
           <p className="text-lg text-earth-700 italic border-l-4 border-red-400 pl-4">
@@ -91,7 +91,7 @@ export default function IntroPage() {
               href="/regions"
               className="group inline-flex items-center justify-center gap-3 px-10 py-5 bg-leaf-600 text-white rounded-full font-bold text-xl shadow-xl shadow-leaf-600/30 hover:bg-leaf-700 hover:scale-105 transition-all duration-300 active:scale-95"
             >
-              Mulai Menjelajah Peta
+              MULAI BERMAIN DAN BELAJAR
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
