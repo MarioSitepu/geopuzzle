@@ -38,9 +38,9 @@ export default function DisasterSelection() {
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
 
   const levels = [
-    { id: 'awal', name: 'Awal', description: 'Konsep dasar geologi' },
-    { id: 'menengah', name: 'Menengah', description: 'Analisis fenomena' },
-    { id: 'atas', name: 'Atas', description: 'Mitigasi kompleks' },
+    { id: 'awal', name: 'Awal', description: 'Konsep dasar geologi', color: 'leaf' },
+    { id: 'menengah', name: 'Menengah', description: 'Analisis fenomena', color: 'earth' },
+    { id: 'atas', name: 'Atas', description: 'Mitigasi kompleks', color: 'red' },
   ];
   
   const regionDisasters = unlockedDisasters[regionId || ''] || [];
@@ -52,6 +52,42 @@ export default function DisasterSelection() {
   };
 
   const displayName = regionNames[regionId] || regionId?.replace(/-/g, ' ');
+
+  // Helper to get color classes based on level and state
+  const getLevelStyles = (levelId: string, color: string, isActive: boolean) => {
+    if (!isActive) {
+      switch (color) {
+        case 'leaf': return "border-leaf-200 bg-leaf-50/50 hover:bg-leaf-100 hover:border-leaf-300";
+        case 'earth': return "border-earth-200 bg-earth-50/50 hover:bg-earth-100 hover:border-earth-300";
+        case 'red': return "border-red-200 bg-red-50/50 hover:bg-red-100 hover:border-red-300";
+        default: return "border-earth-200 bg-earth-50";
+      }
+    }
+    
+    switch (color) {
+      case 'leaf': return "border-leaf-500 bg-leaf-600 text-white shadow-lg shadow-leaf-600/20 -translate-y-1";
+      case 'earth': return "border-earth-700 bg-earth-800 text-white shadow-lg shadow-earth-800/20 -translate-y-1";
+      case 'red': return "border-red-500 bg-red-600 text-white shadow-lg shadow-red-600/20 -translate-y-1";
+      default: return "border-leaf-600 bg-leaf-600 text-white";
+    }
+  };
+
+  const getLevelTextStyles = (levelId: string, color: string, isActive: boolean) => {
+    if (!isActive) {
+      switch (color) {
+        case 'leaf': return "text-leaf-700";
+        case 'earth': return "text-earth-800";
+        case 'red': return "text-red-700";
+        default: return "text-earth-900";
+      }
+    }
+    return "text-white"; 
+  };
+
+  const getDescStyles = (levelId: string, color: string, isActive: boolean) => {
+    if (!isActive) return "text-earth-500";
+    return "text-white/80";
+  };
 
   return (
     <PageTransition className="p-4 sm:p-8 max-w-7xl mx-auto w-full">
@@ -89,26 +125,43 @@ export default function DisasterSelection() {
             Pilih Tingkatan
           </h2>
           <div className="grid grid-cols-1 gap-3">
-            {levels.map((level) => (
-              <button
-                key={level.id}
-                onClick={() => setSelectedLevel(level.id)}
-                className={cn(
-                  "flex flex-col items-start p-5 rounded-2xl border-2 transition-all duration-300 text-left",
-                  selectedLevel === level.id 
-                    ? "border-leaf-500 bg-leaf-50 ring-4 ring-leaf-500/10" 
-                    : "border-earth-100 bg-white hover:border-earth-300"
-                )}
-              >
-                <span className={cn(
-                  "font-bold text-lg mb-1",
-                  selectedLevel === level.id ? "text-leaf-700" : "text-earth-900"
-                )}>
-                  Tingkat {level.name}
-                </span>
-                <span className="text-sm text-earth-500">{level.description}</span>
-              </button>
-            ))}
+            {levels.map((level) => {
+              const isActive = selectedLevel === level.id;
+              return (
+                <button
+                  key={level.id}
+                  onClick={() => setSelectedLevel(level.id)}
+                  className={cn(
+                    "group flex flex-col items-start p-5 rounded-2xl border-[3px] transition-all duration-300 text-left w-full relative overflow-hidden",
+                    getLevelStyles(level.id, level.color, isActive)
+                  )}
+                >
+                  <div className="flex items-center justify-between w-full mb-1">
+                    <span className={cn(
+                      "font-bold text-lg transition-colors duration-300",
+                      getLevelTextStyles(level.id, level.color, isActive)
+                    )}>
+                      Tingkat {level.name}
+                    </span>
+                    {isActive && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center"
+                      >
+                        <div className="w-2 h-2 bg-white rounded-full" />
+                      </motion.div>
+                    )}
+                  </div>
+                  <span className={cn(
+                    "text-xs font-medium transition-colors duration-300",
+                    getDescStyles(level.id, level.color, isActive)
+                  )}>
+                    {level.description}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
