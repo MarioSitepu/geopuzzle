@@ -25,16 +25,20 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full glass border-b-0 border-white/40">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-leaf-500 text-white flex items-center justify-center font-bold text-xl shadow-inner group-hover:bg-leaf-600 transition-colors">
-              G
-            </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image 
+              src="/images/logo.png" 
+              alt="GeoPuzzle Logo" 
+              width={56} 
+              height={56} 
+              className="w-14 h-14 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" 
+            />
             <span className="font-bold text-xl tracking-tight text-earth-900 uppercase">GEOLOGICALPUZZLE</span>
           </Link>
           
           <div className="hidden md:flex items-center gap-4 pl-4 border-l border-earth-200">
-            <Image src={iteraLogo} alt="ITERA Logo" className="h-12 w-auto object-contain" />
-            <Image src={tgeologiLogo} alt="Teknik Geologi Logo" className="h-12 w-auto object-contain" />
+            <Image src={iteraLogo} alt="ITERA Logo" className="h-12 w-auto object-contain brightness-110" />
+            <Image src={tgeologiLogo} alt="Teknik Geologi Logo" className="h-12 w-auto object-contain brightness-110" />
           </div>
         </div>
 
