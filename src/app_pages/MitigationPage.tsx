@@ -92,9 +92,9 @@ export default function MitigationPage() {
       >
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200')] opacity-10 object-cover" />
         <div className="relative z-10">
-          <h2 className="text-2xl font-bold mb-4">Siap Menghadapi Bencana?</h2>
+          <h2 className="text-2xl font-bold mb-4">Layanan Tanggap Darurat & Informasi Bencana</h2>
           <p className="text-white/80 mb-8 max-w-xl mx-auto">
-            Pengetahuan adalah kunci utama dalam mitigasi bencana. Mari terus belajar dan simpan nomor-nomor darurat berikut:
+            Keselamatan publik bergantung pada kecepatan informasi dan ketepatan tindakan. Simpan dan hubungi kontak darurat resmi berikut jika Anda menemukan indikasi bahaya atau memerlukan bantuan segera di lapangan.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8">
             <a href="tel:112" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
