@@ -8,6 +8,8 @@ import Providers from "@/components/Providers";
 import GlobalBackground from "@/components/GlobalBackground";
 import BackgroundMusic from "@/components/BackgroundMusic";
 
+import SplashWrapper from "@/components/SplashWrapper";
+
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
@@ -33,7 +35,9 @@ export default function RootLayout({
             <BackgroundMusic />
             <Navbar />
             <main className="flex-grow flex flex-col relative text-earth-900">
-              {children}
+              <SplashWrapper>
+                {children}
+              </SplashWrapper>
             </main>
           </AuthGuard>
         </Providers>
