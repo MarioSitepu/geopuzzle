@@ -36,6 +36,14 @@ export default function DisasterSelection() {
   
   const regionDisasters = unlockedDisasters[regionId || ''] || [];
 
+  const regionNames: Record<string, string> = {
+    'bandar-lampung': 'Bandar Lampung',
+    'pidada': 'Pidada',
+    'panjang': 'Panjang'
+  };
+
+  const displayName = regionNames[regionId] || regionId?.replace(/-/g, ' ');
+
   return (
     <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full">
       <Link 
@@ -43,16 +51,16 @@ export default function DisasterSelection() {
         className="inline-flex items-center gap-2 text-earth-600 hover:text-earth-900 mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Kembali ke Peta
+        Kembali ke Pilih Kecamatan
       </Link>
 
       <div className="mb-10">
         <motion.h1 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold text-earth-900 mb-4 capitalize"
+          className="text-4xl font-bold text-earth-900 mb-4"
         >
-          {regionId?.replace('-', ' ')}
+          Kecamatan {displayName}
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
@@ -60,7 +68,7 @@ export default function DisasterSelection() {
           transition={{ delay: 0.1 }}
           className="text-earth-600"
         >
-          Pilih jenis bencana geologi yang ingin Anda pelajari di wilayah ini.
+          Pilih jenis bencana geologi yang ingin Anda pelajari di Kecamatan {displayName}.
         </motion.p>
       </div>
 
