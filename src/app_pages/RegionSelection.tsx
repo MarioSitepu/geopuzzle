@@ -9,28 +9,22 @@ import { cn } from '../lib/utils';
 
 const REGIONS = [
   {
-    id: 'lampung-selatan',
-    name: 'Lampung Selatan',
-    description: 'Kawasan pesisir dan perbukitan',
+    id: 'bandar-lampung',
+    name: 'Bandar Lampung',
+    description: 'Pusat kota dengan kepadatan tinggi',
     image: '/images/quizregion/lampung-selatan(menara-siger-kalianda).jpg',
   },
   {
-    id: 'lampung-barat',
-    name: 'Lampung Barat',
-    description: 'Kawasan pegunungan rawan longsor',
+    id: 'pidada',
+    name: 'Pidada',
+    description: 'Kawasan industri dan pemukiman',
     image: '/images/quizregion/lampung-barat-(danau-suoh).png',
   },
   {
-    id: 'lampung-tengah',
-    name: 'Lampung Tengah',
-    description: 'Kawasan dataran rendah',
+    id: 'panjang',
+    name: 'Panjang',
+    description: 'Kawasan pelabuhan dan pesisir',
     image: '/images/quizregion/lampung-tengah(bukit-batubara).jpg',
-  },
-  {
-    id: 'lampung-timur',
-    name: 'Lampung Timur',
-    description: 'Kawasan pesisir timur',
-    image: '/images/quizregion/lampung-timur(way-kambas).jpg',
   },
 ];
 
@@ -45,7 +39,7 @@ export default function RegionSelection() {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-bold text-earth-900 mb-4"
         >
-          Pilih Wilayah
+          Pilih Kecamatan
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
@@ -53,11 +47,11 @@ export default function RegionSelection() {
           transition={{ delay: 0.1 }}
           className="text-earth-600 max-w-2xl mx-auto"
         >
-          Pilih wilayah di Provinsi Lampung untuk mempelajari potensi bencana geologi yang ada di daerah tersebut.
+          Pilih kecamatan di kabupaten Lampung Selatan untuk mempelajari potensi bencana geologi yang ada di daerah tersebut.
         </motion.p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {REGIONS.map((region, index) => {
           const isUnlocked = unlockedRegions.includes(region.id);
           

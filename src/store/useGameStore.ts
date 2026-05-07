@@ -15,9 +15,11 @@ interface GameState {
 export const useGameStore = create<GameState>()(
   persist(
     (set) => ({
-      unlockedRegions: ['lampung-selatan'], // Default unlocked
+      unlockedRegions: ['bandar-lampung', 'pidada', 'panjang'], // Default unlocked
       unlockedDisasters: {
-        'lampung-selatan': ['longsor'], // Default unlocked
+        'bandar-lampung': ['longsor', 'banjir'],
+        'pidada': ['longsor', 'banjir'],
+        'panjang': ['longsor', 'banjir'],
       },
       scores: {},
       isMuted: false,
@@ -48,7 +50,7 @@ export const useGameStore = create<GameState>()(
         })),
     }),
     {
-      name: 'geologicalpuzzle-storage-v2',
+      name: 'geologicalpuzzle-storage-v3',
     }
   )
 );

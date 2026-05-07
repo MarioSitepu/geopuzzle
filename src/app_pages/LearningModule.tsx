@@ -7,7 +7,7 @@ import { ArrowLeft, Play, FileText, ExternalLink } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size: string; url: string }[]>> = {
-  'lampung-selatan': {
+  'bandar-lampung': {
     'banjir': [
       {
         title: 'Jurnal Geologi Banjir Vol. 1',
@@ -33,18 +33,24 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
       }
     ]
   },
-  'lampung-barat': {
+  'pidada': {
+    'banjir': [
+      { title: 'Jurnal Geologi Banjir Vol. 1', size: '3.9 MB', url: '/journal/banjir/1.pdf' },
+      { title: 'Jurnal Geologi Banjir Vol. 2', size: '365 KB', url: '/journal/banjir/2.pdf' }
+    ],
     'longsor': [
-      {
-        title: 'Jurnal Geologi Longsor Vol. 1',
-        size: '365 KB',
-        url: '/journal/longsor/1.pdf'
-      },
-      {
-        title: 'Jurnal Geologi Longsor Vol. 2',
-        size: '3.9 MB',
-        url: '/journal/longsor/2.pdf'
-      }
+      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '/journal/longsor/1.pdf' },
+      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '/journal/longsor/2.pdf' }
+    ]
+  },
+  'panjang': {
+    'banjir': [
+      { title: 'Jurnal Geologi Banjir Vol. 1', size: '3.9 MB', url: '/journal/banjir/1.pdf' },
+      { title: 'Jurnal Geologi Banjir Vol. 2', size: '365 KB', url: '/journal/banjir/2.pdf' }
+    ],
+    'longsor': [
+      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '/journal/longsor/1.pdf' },
+      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '/journal/longsor/2.pdf' }
     ]
   }
 };
