@@ -8,6 +8,7 @@ import { ArrowLeft, Timer, Trophy, ChevronDown, Volume2, VolumeX } from 'lucide-
 import { useSession } from 'next-auth/react';
 import PageTransition from '../components/PageTransition';
 import ClassificationPuzzle from '../components/puzzles/ClassificationPuzzle';
+import MatchingPuzzle from '../components/puzzles/MatchingPuzzle';
 import FillBlankPuzzle from '../components/puzzles/FillBlankPuzzle';
 import OrderingPuzzle from '../components/puzzles/OrderingPuzzle';
 import { useGameStore } from '../store/useGameStore';
@@ -37,7 +38,7 @@ export default function PuzzleGame() {
 
   const stages = [
     { id: 'classification', component: ClassificationPuzzle },
-    { id: 'ordering', component: OrderingPuzzle },
+    { id: 'matching', component: disasterId === 'longsor' ? MatchingPuzzle : OrderingPuzzle },
     { id: 'fill-blank', component: FillBlankPuzzle },
   ];
 
