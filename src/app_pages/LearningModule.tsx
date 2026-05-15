@@ -72,7 +72,6 @@ export default function LearningModule() {
   // Map level ID to display name and color
   const levelData: Record<string, { name: string, color: string }> = {
     'awal': { name: 'Awal', color: 'bg-leaf-100 text-leaf-700' },
-    'menengah': { name: 'Menengah', color: 'bg-earth-200 text-earth-800' },
     'atas': { name: 'Lanjutan', color: 'bg-red-100 text-red-700' },
     'lanjutan': { name: 'Lanjutan', color: 'bg-red-100 text-red-700' }
   };
@@ -108,7 +107,7 @@ export default function LearningModule() {
           </div>
           
           <div className="flex lg:flex-col gap-2 items-center">
-            {['awal', 'menengah', 'lanjutan'].map((l) => (
+            {['awal', 'lanjutan'].map((l) => (
               <div 
                 key={l}
                 className={cn(
