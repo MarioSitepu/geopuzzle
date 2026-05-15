@@ -21,7 +21,7 @@ const MITIGATION_TIPS = [
   },
   {
     title: 'Konstruksi Aman',
-    description: 'Hindari membangun rumah di tepi tebing atau di daerah rawan banjir. Gunakan konstruksi yang tahan bencana.',
+    description: 'Hindari membangun rumah di tepi tebing atau di daerah rawan bencana. Gunakan konstruksi yang tahan bencana.',
     icon: Home,
     color: 'text-blue-600',
     bg: 'bg-blue-100',

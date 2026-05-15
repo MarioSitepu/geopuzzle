@@ -52,7 +52,7 @@ function SortableItem({ id, content, isFlood }: SortableItemProps & { isFlood: b
       {...listeners}
       className={cn(
         "flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-earth-200 mb-3 cursor-grab active:cursor-grabbing touch-none",
-        isDragging && `opacity-50 shadow-lg ring-2 z-50 relative ${isFlood ? 'ring-blue-500' : 'ring-earth-600'}`
+        isDragging && `opacity-50 shadow-lg ring-2 z-50 relative ${isFlood ? 'ring-blue-500' : (id === 'volcano' ? 'ring-orange-500' : 'ring-earth-600')}`
       )}
     >
       <div className="p-1 text-earth-400">
@@ -64,13 +64,19 @@ function SortableItem({ id, content, isFlood }: SortableItemProps & { isFlood: b
 }
 
 export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
-  const isFlood = disasterId === 'banjir';
+  const isVolcano = disasterId === 'gunung-api';
+  const isTsunami = disasterId === 'tsunami';
 
-  const initialItems = isFlood ? [
-    { id: '1', content: 'Curah Hujan Ekstrem' },
-    { id: '2', content: 'Kapasitas Saluran Sungai Mengecil' },
-    { id: '3', content: 'Sistem Drainase yang Buruk' },
-    { id: '4', content: 'Tumpukan Sampah di Saluran Air' },
+  const initialItems = isVolcano ? [
+    { id: '1', content: 'Guncangan Gempa Vulkanik' },
+    { id: '2', content: 'Erupsi Abu Vulkanik' },
+    { id: '3', content: 'Aliran Lava' },
+    { id: '4', content: 'Awan Panas (Pyroclastic Flow)' },
+  ] : isTsunami ? [
+    { id: '1', content: 'Gempa Tektonik Bawah Laut' },
+    { id: '2', content: 'Air Laut Surut Tiba-tiba' },
+    { id: '3', content: 'Gelombang Pertama Datang' },
+    { id: '4', content: 'Gelombang Susulan yang Lebih Besar' },
   ] : [
     { id: '1', content: 'Lampung Barat (Sangat Tinggi)' },
     { id: '2', content: 'Lampung Selatan (Tinggi)' },
@@ -127,8 +133,8 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-earth-900">{isFlood ? "Urutkan Penyebab" : "Urutkan Wilayah"}</h2>
-        <p className="text-earth-600 mt-2">{isFlood ? "Urutkan faktor penyebab banjir dari yang paling berdampak besar (di atas)." : "Urutkan wilayah berdasarkan tingkat kerawanan longsor (dari yang paling rawan di atas)."}</p>
+        <h2 className="text-2xl font-bold text-earth-900">{isVolcano ? "Urutkan Dampak" : isTsunami ? "Urutkan Kejadian" : "Urutkan Wilayah"}</h2>
+        <p className="text-earth-600 mt-2">{isVolcano ? "Urutkan dampak erupsi dari yang paling awal terjadi." : isTsunami ? "Urutkan kronologi tsunami dari awal gempa hingga gelombang datang." : "Urutkan wilayah berdasarkan tingkat kerawanan longsor (dari yang paling rawan di atas)."}</p>
       </div>
 
       <div className="glass p-6 rounded-3xl">
@@ -142,7 +148,7 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
             strategy={verticalListSortingStrategy}
           >
             {items.map((item) => (
-              <SortableItem key={item.id} id={item.id} content={item.content} isFlood={isFlood} />
+              <SortableItem key={item.id} id={item.id} content={item.content} isFlood={isTsunami} />
             ))}
           </SortableContext>
         </DndContext>
@@ -156,7 +162,7 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
         <button
           onClick={checkAnswers}
           className={`px-8 py-3 text-white rounded-full font-bold shadow-lg transition-colors ${
-            isFlood ? "bg-blue-600 hover:bg-blue-700" : "bg-earth-700 hover:bg-earth-800"
+            isVolcano ? "bg-orange-600 hover:bg-orange-700" : isTsunami ? "bg-blue-600 hover:bg-blue-700" : "bg-earth-700 hover:bg-earth-800"
           }`}
         >
           Periksa Jawaban

@@ -9,49 +9,45 @@ import { cn } from '../lib/utils';
 
 const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size: string; url: string }[]>> = {
   'bandar-lampung': {
-    'banjir': [
-      {
-        title: 'Jurnal Geologi Banjir Vol. 1',
-        size: '3.9 MB',
-        url: '/journal/banjir/1.pdf'
-      },
-      {
-        title: 'Jurnal Geologi Banjir Vol. 2',
-        size: '365 KB',
-        url: '/journal/banjir/2.pdf'
-      }
+    'gunung-api': [
+      { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
+      { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
+    ],
+    'tsunami': [
+      { title: 'Jurnal Geologi Tsunami Vol. 1', size: '1.2 MB', url: '#' },
+      { title: 'Jurnal Geologi Tsunami Vol. 2', size: '2.5 MB', url: '#' }
     ],
     'longsor': [
-      {
-        title: 'Jurnal Geologi Longsor Vol. 1',
-        size: '365 KB',
-        url: '/journal/longsor/1.pdf'
-      },
-      {
-        title: 'Jurnal Geologi Longsor Vol. 2',
-        size: '3.9 MB',
-        url: '/journal/longsor/2.pdf'
-      }
+      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
+      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
     ]
   },
   'pidada': {
-    'banjir': [
-      { title: 'Jurnal Geologi Banjir Vol. 1', size: '3.9 MB', url: '/journal/banjir/1.pdf' },
-      { title: 'Jurnal Geologi Banjir Vol. 2', size: '365 KB', url: '/journal/banjir/2.pdf' }
+    'gunung-api': [
+      { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
+      { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
+    ],
+    'tsunami': [
+      { title: 'Jurnal Geologi Tsunami Vol. 1', size: '1.2 MB', url: '#' },
+      { title: 'Jurnal Geologi Tsunami Vol. 2', size: '2.5 MB', url: '#' }
     ],
     'longsor': [
-      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '/journal/longsor/1.pdf' },
-      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '/journal/longsor/2.pdf' }
+      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
+      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
     ]
   },
   'panjang': {
-    'banjir': [
-      { title: 'Jurnal Geologi Banjir Vol. 1', size: '3.9 MB', url: '/journal/banjir/1.pdf' },
-      { title: 'Jurnal Geologi Banjir Vol. 2', size: '365 KB', url: '/journal/banjir/2.pdf' }
+    'gunung-api': [
+      { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
+      { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
+    ],
+    'tsunami': [
+      { title: 'Jurnal Geologi Tsunami Vol. 1', size: '1.2 MB', url: '#' },
+      { title: 'Jurnal Geologi Tsunami Vol. 2', size: '2.5 MB', url: '#' }
     ],
     'longsor': [
-      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '/journal/longsor/1.pdf' },
-      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '/journal/longsor/2.pdf' }
+      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
+      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
     ]
   }
 };
@@ -177,9 +173,11 @@ export default function LearningModule() {
 
               {/* Thumbnail Image */}
               <img 
-                src={disasterId === 'banjir' 
-                  ? "https://images.unsplash.com/photo-1547683905-f686c993b65e?auto=format&fit=crop&q=80&w=1000"
-                  : "https://images.unsplash.com/photo-1622542796254-5b9c46ab0d2f?auto=format&fit=crop&q=80&w=1000"
+                src={disasterId === 'gunung-api' 
+                  ? "https://images.unsplash.com/photo-1518414911976-95e2ba07aa4c?auto=format&fit=crop&q=80&w=1000"
+                  : disasterId === 'tsunami'
+                    ? "https://images.unsplash.com/photo-1502933691298-84fc14542831?auto=format&fit=crop&q=80&w=1000"
+                    : "https://images.unsplash.com/photo-1622542796254-5b9c46ab0d2f?auto=format&fit=crop&q=80&w=1000"
                 } 
                 alt="Video thumbnail" 
                 className="w-full h-full object-cover opacity-80 group-hover/video:scale-105 transition-transform duration-700"
@@ -243,7 +241,7 @@ export default function LearningModule() {
             transition={{ delay: 0.4 }}
           >
             <Link
-              href={`/regions/${regionId}/${disasterId}/puzzle`}
+              href={`/regions/${regionId}/${disasterId}/puzzle?level=${level}`}
               className="w-full flex items-center justify-center gap-3 px-8 py-5 bg-leaf-600 text-white rounded-[2rem] font-black text-lg shadow-xl shadow-leaf-600/30 hover:bg-leaf-700 hover:scale-[1.03] hover:-rotate-1 transition-all duration-300 active:scale-95"
             >
               Mulai Puzzle

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Timer, Trophy, ChevronDown, Volume2, VolumeX } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -19,6 +19,8 @@ export default function PuzzleGame() {
   const regionId = params?.regionId as string;
   const disasterId = params?.disasterId as string;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const level = searchParams.get('level') || 'awal';
   const { setScore, isMuted, toggleMute } = useGameStore();
   
   const { data: session } = useSession();
@@ -36,11 +38,15 @@ export default function PuzzleGame() {
     }
   }, [session, playerName]);
 
-  const stages = [
-    { id: 'classification', component: ClassificationPuzzle },
-    { id: 'matching', component: disasterId === 'longsor' ? MatchingPuzzle : OrderingPuzzle },
-    { id: 'fill-blank', component: FillBlankPuzzle },
-  ];
+  const stages = disasterId === 'longsor' && level === 'awal' 
+    ? [
+        { id: 'classification', component: ClassificationPuzzle },
+      ]
+    : [
+        { id: 'classification', component: ClassificationPuzzle },
+        { id: 'matching', component: disasterId === 'longsor' ? MatchingPuzzle : OrderingPuzzle },
+        { id: 'fill-blank', component: FillBlankPuzzle },
+      ];
 
   useEffect(() => {
     // Play background music for all puzzles
@@ -213,7 +219,7 @@ export default function PuzzleGame() {
       <div className="flex-grow flex flex-col">
         <div className="w-full bg-earth-200 h-2 rounded-full mb-8 overflow-hidden">
           <motion.div 
-            className={`h-full ${disasterId === 'banjir' ? 'bg-blue-500' : 'bg-earth-600'}`}
+            className={`h-full ${disasterId === 'gunung-api' ? 'bg-orange-500' : disasterId === 'tsunami' ? 'bg-blue-500' : 'bg-earth-600'}`}
             initial={{ width: 0 }}
             animate={{ width: `${((currentStage) / stages.length) * 100}%` }}
             transition={{ duration: 0.5 }}
@@ -230,7 +236,7 @@ export default function PuzzleGame() {
                 transition={{ duration: 0.3 }}
                 className="relative w-full pb-20"
               >
-                <CurrentPuzzle onComplete={handleStageComplete} disasterId={disasterId} />
+                <CurrentPuzzle onComplete={handleStageComplete} disasterId={disasterId} level={level} />
               </motion.div>
             ) : (
               <motion.div
@@ -240,7 +246,7 @@ export default function PuzzleGame() {
                 className="relative w-full py-20 flex flex-col items-center justify-center text-center"
               >
                 <h2 className="text-3xl font-bold text-earth-900 mb-2">Menyimpan Hasil...</h2>
-                <div className={`w-12 h-12 border-4 rounded-full animate-spin mt-4 ${disasterId === 'banjir' ? 'border-blue-200 border-t-blue-600' : 'border-earth-200 border-t-earth-600'}`} />
+                <div className={`w-12 h-12 border-4 rounded-full animate-spin mt-4 ${disasterId === 'gunung-api' ? 'border-orange-200 border-t-orange-600' : disasterId === 'tsunami' ? 'border-blue-200 border-t-blue-600' : 'border-earth-200 border-t-earth-600'}`} />
               </motion.div>
             )}
           </AnimatePresence>

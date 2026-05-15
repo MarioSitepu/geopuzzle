@@ -111,12 +111,13 @@ function DropZone({ droppedWord, isFlood, isCorrect, isSubmitted, onReset }: {
   );
 }
 
-export default function FillBlankPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
+export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onComplete: (score: number) => void, disasterId?: string, level?: string }) {
   const [activeWord, setActiveWord] = useState<string | null>(null);
   const [droppedWord, setDroppedWord] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   
-  const isFlood = disasterId === 'banjir';
+  const isVolcano = disasterId === 'gunung-api';
+  const isTsunami = disasterId === 'tsunami';
   const correctAnswer = "Mitigasi";
 
   const choices = [
@@ -178,23 +179,35 @@ export default function FillBlankPuzzle({ onComplete, disasterId }: { onComplete
           <div className="lg:w-3/4 w-full space-y-8">
             <div className="bg-white p-10 sm:p-14 rounded-[3rem] text-xl sm:text-2xl leading-[2] text-earth-800 shadow-2xl shadow-earth-900/5 relative border border-earth-100">
               <div className="relative z-10">
-                {isFlood 
+                {isVolcano 
                   ? <>
-                      Upaya struktural maupun non-struktural yang dilakukan untuk meminimalisir dampak kerugian akibat bencana air bah dikenal dengan istilah
+                      Upaya pemantauan aktivitas magma dan pemberian peringatan dini kepada masyarakat di sekitar lereng dikenal dengan istilah
                       <DropZone 
                         droppedWord={droppedWord} 
-                        isFlood={isFlood} 
+                        isFlood={false} 
                         isCorrect={isSubmitted ? isCorrect : undefined}
                         isSubmitted={isSubmitted}
                         onReset={() => setDroppedWord(null)}
                       />
                       bencana demi keselamatan penduduk.
                     </>
+                  : isTsunami
+                  ? <>
+                      Sistem peringatan dini yang mendeteksi gelombang besar akibat gempa tektonik di dasar laut bertujuan untuk mempercepat proses
+                      <DropZone 
+                        droppedWord={droppedWord} 
+                        isFlood={true} 
+                        isCorrect={isSubmitted ? isCorrect : undefined}
+                        isSubmitted={isSubmitted}
+                        onReset={() => setDroppedWord(null)}
+                      />
+                      bencana di wilayah pesisir.
+                    </>
                   : <>
                       Serangkaian upaya untuk mengurangi risiko bencana, baik melalui pembangunan fisik maupun penyadaran kemampuan menghadapi ancaman disebut
                       <DropZone 
                         droppedWord={droppedWord} 
-                        isFlood={isFlood} 
+                        isFlood={false} 
                         isCorrect={isSubmitted ? isCorrect : undefined}
                         isSubmitted={isSubmitted}
                         onReset={() => setDroppedWord(null)}

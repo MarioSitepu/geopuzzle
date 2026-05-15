@@ -12,9 +12,9 @@ export default function ThemeHandler() {
     // Check if we are in a banjir-related route
     // We check pathname to catch navigation to the disaster selection page too if desired, 
     // but the user specifically mentioned clicking the puzzle button.
-    const isFloodRoute = disasterId === 'banjir' || pathname.includes('/banjir');
+    const isBlueTheme = disasterId === 'tsunami' || pathname.includes('/tsunami');
     
-    if (isFloodRoute) {
+    if (isBlueTheme) {
       document.documentElement.classList.add('theme-flood');
     } else {
       document.documentElement.classList.remove('theme-flood');

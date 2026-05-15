@@ -112,7 +112,7 @@ function DroppableBoard({ board, assignedOption }: { board: Board; assignedOptio
   );
 }
 
-export default function MatchingPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
+export default function MatchingPuzzle({ onComplete, disasterId, level }: { onComplete: (score: number) => void, disasterId?: string, level?: string }) {
   const isLandscapes = disasterId === 'longsor';
   
   const options: Option[] = [

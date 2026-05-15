@@ -17,9 +17,9 @@ export const useGameStore = create<GameState>()(
     (set) => ({
       unlockedRegions: ['bandar-lampung', 'pidada', 'panjang'], // Default unlocked
       unlockedDisasters: {
-        'bandar-lampung': ['longsor', 'banjir'],
-        'pidada': ['longsor', 'banjir'],
-        'panjang': ['longsor', 'banjir'],
+        'bandar-lampung': ['longsor', 'gunung-api', 'tsunami'],
+        'pidada': ['longsor', 'gunung-api', 'tsunami'],
+        'panjang': ['longsor', 'gunung-api', 'tsunami'],
       },
       scores: {},
       isMuted: false,

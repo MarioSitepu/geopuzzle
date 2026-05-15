@@ -85,8 +85,6 @@ export default function QuizHistoryPage() {
               timeStyle: 'short'
             }).format(date);
             
-            const isFlood = item.disasterId === 'banjir';
-
             return (
               <motion.div
                 key={item.id}
@@ -96,7 +94,11 @@ export default function QuizHistoryPage() {
                 className="glass p-6 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/50"
               >
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${isFlood ? 'bg-blue-100 text-blue-600' : 'bg-amber-100 text-amber-600'}`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
+                    item.disasterId === 'gunung-api' ? 'bg-orange-100 text-orange-600' : 
+                    item.disasterId === 'tsunami' ? 'bg-blue-100 text-blue-600' : 
+                    'bg-amber-100 text-amber-600'
+                  }`}>
                     <AlertTriangle className="w-6 h-6" />
                   </div>
                   <div>
