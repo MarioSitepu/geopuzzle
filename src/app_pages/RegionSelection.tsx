@@ -66,7 +66,7 @@ export default function RegionSelection() {
                 href={isUnlocked ? `/regions/${region.id}` : '#'}
                 className={cn(
                   "group relative block h-80 rounded-3xl overflow-hidden shadow-lg transition-all duration-500",
-                  isUnlocked ? "hover:shadow-2xl hover:-translate-y-2 cursor-pointer" : "cursor-not-allowed opacity-80 grayscale-[50%]"
+                  isUnlocked ? "hover:shadow-2xl hover:-translate-y-2 cursor-pointer" : "cursor-not-allowed opacity-80 grayscale-50"
                 )}
               >
                 <img 
@@ -75,7 +75,7 @@ export default function RegionSelection() {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-earth-900/90 via-earth-900/40 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-earth-900/90 via-earth-900/40 to-transparent" />
                 
                 <div className="absolute inset-0 p-6 flex flex-col justify-end">
                   <div className="flex items-center justify-between mb-2">

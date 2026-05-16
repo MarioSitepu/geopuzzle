@@ -34,7 +34,7 @@ export default function RootLayout({
             <GlobalBackground />
             <BackgroundMusic />
             <Navbar />
-            <main className="flex-grow flex flex-col relative text-earth-900">
+            <main className="grow flex flex-col relative text-earth-900">
               <SplashWrapper>
                 {children}
               </SplashWrapper>

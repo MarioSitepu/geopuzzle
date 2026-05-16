@@ -43,7 +43,7 @@ export default function ResultPage() {
         className="glass w-full rounded-[2.5rem] p-8 sm:p-12 text-center relative overflow-hidden"
       >
         {isSuccess && (
-          <div className={`absolute inset-0 bg-gradient-to-b ${isVolcano ? 'from-orange-400/20' : isTsunami ? 'from-blue-400/20' : 'from-earth-400/20'} to-transparent -z-10`} />
+          <div className={`absolute inset-0 bg-linear-to-b ${isVolcano ? 'from-orange-400/20' : isTsunami ? 'from-blue-400/20' : 'from-earth-400/20'} to-transparent -z-10`} />
         )}
 
         <motion.div

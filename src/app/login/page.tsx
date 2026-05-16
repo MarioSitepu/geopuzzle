@@ -21,7 +21,7 @@ export default function LoginPage() {
         className="glass max-w-md w-full p-8 sm:p-12 rounded-[2.5rem] text-center space-y-8"
       >
         <div className="space-y-4">
-          <div className="w-20 h-20 bg-gradient-to-br from-leaf-500 to-earth-500 rounded-3xl mx-auto flex items-center justify-center text-white text-4xl font-bold shadow-xl">
+          <div className="w-20 h-20 bg-linear-to-br from-leaf-500 to-earth-500 rounded-3xl mx-auto flex items-center justify-center text-white text-4xl font-bold shadow-xl">
             G
           </div>
           <h1 className="text-3xl font-extrabold text-earth-900 tracking-tight">

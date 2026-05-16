@@ -17,7 +17,7 @@ export default function GlobalBackground() {
         alt="Background" 
         className="w-full h-full object-cover opacity-15"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-earth-100/50 via-transparent to-earth-100/80" />
+      <div className="absolute inset-0 bg-linear-to-b from-earth-100/50 via-transparent to-earth-100/80" />
     </div>
   );
 }

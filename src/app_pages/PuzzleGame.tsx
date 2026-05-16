@@ -156,7 +156,7 @@ export default function PuzzleGame() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="glass p-8 sm:p-12 rounded-[2rem] w-full text-center"
+          className="glass p-8 sm:p-12 rounded-4xl w-full text-center"
         >
           <div className="w-16 h-16 bg-leaf-100 text-leaf-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Trophy className="w-8 h-8" />
@@ -216,7 +216,7 @@ export default function PuzzleGame() {
         </div>
       </div>
 
-      <div className="flex-grow flex flex-col">
+      <div className="grow flex flex-col">
         <div className="w-full bg-earth-200 h-2 rounded-full mb-8 overflow-hidden">
           <motion.div 
             className={`h-full ${disasterId === 'gunung-api' ? 'bg-orange-500' : disasterId === 'tsunami' ? 'bg-blue-500' : 'bg-earth-600'}`}
@@ -225,7 +225,7 @@ export default function PuzzleGame() {
             transition={{ duration: 0.5 }}
           />
         </div>
-        <div className="flex-grow relative">
+        <div className="grow relative">
           <AnimatePresence mode="wait">
             {!isGameOver ? (
               <motion.div

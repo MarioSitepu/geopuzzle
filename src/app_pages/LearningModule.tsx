@@ -99,7 +99,7 @@ export default function LearningModule() {
             )}>
               <GraduationCap className="w-7 h-7" />
             </div>
-            <div className="hidden lg:block w-px h-16 bg-gradient-to-b from-earth-200 to-transparent" />
+            <div className="hidden lg:block w-px h-16 bg-linear-to-b from-earth-200 to-transparent" />
           </div>
           
           <div className="flex lg:flex-col gap-2 items-center">
@@ -144,7 +144,7 @@ export default function LearningModule() {
 
             <div className="flex items-center gap-5 mb-10">
               <div className={cn(
-                "p-4 text-white rounded-[1.5rem] shadow-2xl transition-colors duration-500",
+                "p-4 text-white rounded-3xl shadow-2xl transition-colors duration-500",
                 currentLevel.color.replace('100', '600').replace('200', '700').split(' ')[0]
               )}>
                 <Play className="w-8 h-8 fill-current" />
@@ -159,7 +159,7 @@ export default function LearningModule() {
               </div>
             </div>
             
-            <div className="aspect-video rounded-[2rem] overflow-hidden bg-earth-900 relative group/video shadow-2xl border-4 border-white/50">
+            <div className="aspect-video rounded-4xl overflow-hidden bg-earth-900 relative group/video shadow-2xl border-4 border-white/50">
               {/* Play Button Overlay */}
               <div className="absolute inset-0 flex items-center justify-center z-20">
                 <motion.div 
@@ -185,7 +185,7 @@ export default function LearningModule() {
               />
               
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-earth-950/70 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-linear-to-t from-earth-950/70 via-transparent to-transparent pointer-events-none" />
             </div>
 
             <div className="mt-10 border-t border-earth-100 pt-10">
@@ -242,7 +242,7 @@ export default function LearningModule() {
           >
             <Link
               href={`/regions/${regionId}/${disasterId}/puzzle?level=${level}`}
-              className="w-full flex items-center justify-center gap-3 px-8 py-5 bg-leaf-600 text-white rounded-[2rem] font-black text-lg shadow-xl shadow-leaf-600/30 hover:bg-leaf-700 hover:scale-[1.03] hover:-rotate-1 transition-all duration-300 active:scale-95"
+              className="w-full flex items-center justify-center gap-3 px-8 py-5 bg-leaf-600 text-white rounded-4xl font-black text-lg shadow-xl shadow-leaf-600/30 hover:bg-leaf-700 hover:scale-[1.03] hover:-rotate-1 transition-all duration-300 active:scale-95"
             >
               Mulai Puzzle
               <Play className="w-4 h-4 fill-current" />

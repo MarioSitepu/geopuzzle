@@ -177,7 +177,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
 
           {/* Sentence Area */}
           <div className="lg:w-3/4 w-full space-y-8">
-            <div className="bg-white p-10 sm:p-14 rounded-[3rem] text-xl sm:text-2xl leading-[2] text-earth-800 shadow-2xl shadow-earth-900/5 relative border border-earth-100">
+            <div className="bg-white p-10 sm:p-14 rounded-[3rem] text-xl sm:text-2xl leading-loose text-earth-800 shadow-2xl shadow-earth-900/5 relative border border-earth-100">
               <div className="relative z-10">
                 {isVolcano 
                   ? <>
@@ -249,7 +249,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className={cn(
-                  "p-8 rounded-[2rem] font-bold text-xl text-center shadow-xl flex items-center justify-center gap-4",
+                  "p-8 rounded-4xl font-bold text-xl text-center shadow-xl flex items-center justify-center gap-4",
                   isCorrect 
                     ? "bg-leaf-500 text-white shadow-leaf-500/20" 
                     : "bg-red-500 text-white shadow-red-500/20"

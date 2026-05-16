@@ -50,7 +50,7 @@ export default function IntroPage() {
         </motion.div>
 
         {/* Impacts Section */}
-        <motion.div variants={itemVariants} className="glass rounded-[2rem] p-8 sm:p-12 space-y-8 border-white/40 shadow-2xl relative overflow-hidden">
+        <motion.div variants={itemVariants} className="glass rounded-4xl p-8 sm:p-12 space-y-8 border-white/40 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <AlertTriangle className="w-32 h-32 text-red-600" />
           </div>

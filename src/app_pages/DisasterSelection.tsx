@@ -116,7 +116,7 @@ export default function DisasterSelection() {
           transition={{ delay: 0.1 }}
           className="text-5xl sm:text-6xl font-black text-earth-900 mb-6 tracking-tight"
         >
-          Kecamatan <span className="text-transparent bg-clip-text bg-gradient-to-r from-earth-700 via-leaf-700 to-earth-500">{displayName}</span>
+          Kecamatan <span className="text-transparent bg-clip-text bg-linear-to-r from-earth-700 via-leaf-700 to-earth-500">{displayName}</span>
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
@@ -160,7 +160,7 @@ export default function DisasterSelection() {
                   transition={{ delay: 0.3 + (idx * 0.1) }}
                   onClick={() => setSelectedLevel(level.id)}
                   className={cn(
-                    "group relative p-6 rounded-[2rem] border-2 transition-all duration-500 text-left overflow-hidden",
+                    "group relative p-6 rounded-4xl border-2 transition-all duration-500 text-left overflow-hidden",
                     isActive 
                       ? "border-earth-900 bg-earth-900 text-white shadow-2xl shadow-earth-900/20 translate-x-2" 
                       : "border-white bg-white/60 backdrop-blur-md hover:border-earth-200 hover:shadow-xl hover:translate-x-1"
@@ -207,7 +207,7 @@ export default function DisasterSelection() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="p-6 rounded-[2rem] bg-amber-50 border-2 border-amber-100/50 text-amber-800"
+                className="p-6 rounded-4xl bg-amber-50 border-2 border-amber-100/50 text-amber-800"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
@@ -282,8 +282,8 @@ export default function DisasterSelection() {
                     <div className="relative z-10 p-8 flex flex-col h-full">
                       <div className="flex items-start justify-between mb-8">
                         <div className={cn(
-                          "w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 shadow-xl",
-                          canClick ? `bg-gradient-to-br ${disaster.color} text-white ${disaster.glow}` : "bg-earth-300 text-earth-500"
+                          "w-16 h-16 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-xl",
+                          canClick ? `bg-linear-to-br ${disaster.color} text-white ${disaster.glow}` : "bg-earth-300 text-earth-500"
                         )}>
                           {isUnlocked ? <Icon className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
                         </div>
@@ -297,7 +297,7 @@ export default function DisasterSelection() {
                         )}
                       </div>
                       
-                      <h3 className="text-3xl font-black text-earth-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500"
+                      <h3 className="text-3xl font-black text-earth-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r transition-all duration-500"
                         style={{ backgroundImage: canClick ? `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))` : 'none' }}>
                         {disaster.name}
                       </h3>
@@ -317,7 +317,7 @@ export default function DisasterSelection() {
                         {/* Decorative background circle */}
                         <div className={cn(
                           "absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 w-32 h-32 rounded-full transition-all duration-700 opacity-10 group-hover:scale-150 group-hover:opacity-20",
-                          canClick ? `bg-gradient-to-br ${disaster.color}` : "bg-earth-300"
+                          canClick ? `bg-linear-to-br ${disaster.color}` : "bg-earth-300"
                         )} />
                       </div>
                     </div>

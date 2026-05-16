@@ -50,7 +50,7 @@ function DraggableOption({ option, isFlood, isDragging }: DraggableOptionProps) 
       {...listeners}
       {...attributes}
       className={cn(
-        "bg-white rounded-xl shadow-md border-2 border-earth-100 overflow-hidden cursor-grab active:cursor-grabbing transition-all hover:shadow-lg w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0",
+        "bg-white rounded-xl shadow-md border-2 border-earth-100 overflow-hidden cursor-grab active:cursor-grabbing transition-all hover:shadow-lg w-28 h-28 sm:w-36 sm:h-36 shrink-0",
         isDragging && "opacity-0",
         !isDragging && "hover:scale-105"
       )}
@@ -74,7 +74,7 @@ function DroppableBoard({ board, assignedOption }: { board: Board; assignedOptio
         {board.title}
       </div>
       
-      <div className="relative aspect-[4/3]">
+      <div className="relative aspect-4/3">
         <img src={board.image} alt={board.title} className="w-full h-full object-cover" />
         
         {/* Drop Zone Overlay */}
@@ -229,7 +229,7 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
         </div>
 
         {/* Floating Dock for unassigned options */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-4xl px-4">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-full max-w-4xl px-4">
           <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-earth-100 flex flex-col items-center">
             <h3 className="text-[10px] uppercase tracking-widest font-bold text-earth-400 mb-3">Pilihan Faktor Keamanan (Target FK)</h3>
             <div className="flex gap-4 overflow-x-auto pb-2 w-full justify-center no-scrollbar">

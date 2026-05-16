@@ -13,7 +13,7 @@ export default function LoadingScreen() {
         opacity: 0, 
         transition: { duration: 0.6, ease: "easeInOut" } 
       }}
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-start bg-white overflow-hidden"
+      className="fixed inset-0 z-100 flex flex-col items-center justify-start bg-white overflow-hidden"
     >
       {/* Cinematic Background - Removed Orbs for "Putih Semua" */}
       <div className="absolute inset-0 pointer-events-none">
@@ -26,7 +26,7 @@ export default function LoadingScreen() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-8 bg-gradient-to-tr from-leaf-400/0 via-leaf-400/40 to-earth-400/0 rounded-full blur-2xl"
+            className="absolute -inset-8 bg-linear-to-tr from-leaf-400/0 via-leaf-400/40 to-earth-400/0 rounded-full blur-2xl"
           />
           
           <motion.div
@@ -86,7 +86,7 @@ export default function LoadingScreen() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="h-full w-2/3 bg-gradient-to-r from-transparent via-leaf-500 to-transparent rounded-full"
+              className="h-full w-2/3 bg-linear-to-r from-transparent via-leaf-500 to-transparent rounded-full"
             />
           </div>
         </div>

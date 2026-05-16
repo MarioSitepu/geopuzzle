@@ -62,7 +62,7 @@ export default function LandingPage() {
           >
             <h1 className="text-5xl sm:text-6xl font-extrabold text-earth-900 leading-tight tracking-tight">
               Memahami <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-leaf-600 to-earth-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-leaf-600 to-earth-600">
                 Bencana Geologi
               </span>
             </h1>
@@ -129,7 +129,7 @@ export default function LandingPage() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="relative w-full"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-leaf-400/20 to-earth-400/20 rounded-[3rem] blur-3xl -z-10" />
+          <div className="absolute inset-0 bg-linear-to-tr from-leaf-400/20 to-earth-400/20 rounded-[3rem] blur-3xl -z-10" />
           <div className="glass rounded-[2.5rem] p-3 sm:p-4 aspect-square relative overflow-hidden shadow-2xl border-white/50">
             <AnimatePresence mode="wait">
               <motion.img 
@@ -140,18 +140,18 @@ export default function LandingPage() {
                 exit={{ opacity: 0, scale: 1.05 }}
                 transition={{ duration: 0.8 }}
                 alt={GEOLOGY_FACTS[currentFact].title} 
-                className="absolute inset-0 w-full h-full object-cover rounded-[2rem]"
+                className="absolute inset-0 w-full h-full object-cover rounded-4xl"
                 referrerPolicy="no-referrer"
               />
             </AnimatePresence>
-            <div className="absolute inset-0 bg-gradient-to-t from-earth-900/60 via-transparent to-transparent rounded-[2rem]" />
+            <div className="absolute inset-0 bg-linear-to-t from-earth-900/60 via-transparent to-transparent rounded-4xl" />
             
             <div 
               className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-8 sm:right-8"
               onMouseEnter={() => setIsAutoPlaying(false)}
               onMouseLeave={() => setIsAutoPlaying(true)}
             >
-              <div className="glass-dark p-5 rounded-[2rem] text-white relative overflow-hidden group">
+              <div className="glass-dark p-5 rounded-4xl text-white relative overflow-hidden group">
                 <div className="flex justify-between items-center mb-3">
                   <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-leaf-500/30 rounded-lg">

@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { 
-  DndContext, 
-  DragEndEvent, 
+import {
+  DndContext,
+  DragEndEvent,
   DragStartEvent,
   DragOverlay,
-  useDraggable, 
+  useDraggable,
   useDroppable,
   useSensor,
   useSensors,
@@ -46,7 +46,12 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes }: { item: Ite
       )}
     >
       {isLandscapes && item.image ? (
-        <img src={item.image} alt={item.content} className="w-full h-full object-contain p-1" />
+        <div className="flex flex-col items-center w-full h-full">
+          <img src={item.image} alt={item.content} className="w-full h-3/4 object-contain p-1" />
+          <div className="w-full bg-earth-800 text-white text-[10px] py-1 px-1 text-center font-bold line-clamp-1">
+            {item.content}
+          </div>
+        </div>
       ) : (
         item.content
       )}
@@ -64,8 +69,9 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes }: 
       <div
         ref={setNodeRef}
         className={cn(
-          "relative flex items-center justify-center transition-all duration-300 rounded-xl border-2 border-dashed border-black/20 bg-black/5 hover:border-black/40 hover:bg-black/10",
-          isOver && "bg-amber-500/20 border-amber-500 scale-105 z-30",
+          "relative flex items-center justify-center transition-all duration-300 rounded-xl",
+          !items.length && "border-2 border-dashed border-black/20 bg-black/5 hover:border-black/40 hover:bg-black/10",
+          isOver && "bg-amber-500/20 border-amber-500 z-30",
           category.position && "absolute"
         )}
         style={category.position ? {
@@ -73,21 +79,24 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes }: 
           left: category.position.left,
           width: category.position.width,
           height: category.position.height,
+          transform: 'translate(-50%, -50%)',
+          position: 'absolute',
+          zIndex: 10
         } : undefined}
       >
         <div className="w-full h-full relative overflow-hidden rounded-xl">
           {items?.map(item => (
-            <motion.div 
-              key={item.id} 
+            <motion.div
+              key={item.id}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="absolute inset-0 bg-white z-20"
+              className="absolute inset-0 bg-transparent z-20"
             >
               {item.image && (
-                <img 
-                  src={item.image} 
-                  alt="Placed" 
-                  className="w-full h-full object-contain shadow-inner" 
+                <img
+                  src={item.image}
+                  alt="Placed"
+                  className="w-full h-full object-contain shadow-inner"
                 />
               )}
             </motion.div>
@@ -134,11 +143,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
     { id: 'vulkanik', title: 'Pemicu Vulkanik' },
     { id: 'meteor', title: 'Pemicu Ekstraterestrial' },
   ] : (isLandscapes && level === 'awal') ? [
-    { id: 'drainase', title: 'Drainase Air', position: { top: '27%', left: '60%', width: '18%', height: '12%' } },
-    { id: 'jaring', title: 'Jaring Kawat', position: { top: '33%', left: '36%', width: '18%', height: '12%' } },
-    { id: 'pohon-lemah', title: 'Akar Lemah', position: { top: '41%', left: '72%', width: '18%', height: '12%' } },
-    { id: 'pohon-kuat', title: 'Akar Kuat', position: { top: '73%', left: '23%', width: '18%', height: '12%' } },
-    { id: 'beton', title: 'Tembok Beton', position: { top: '71%', left: '52%', width: '18%', height: '12%' } },
+    { id: 'top-1', title: 'Slot Atas 1', position: { top: '24%', left: '76%', width: '16%', height: '11%' } },
+    { id: 'top-2', title: 'Slot Atas 2', position: { top: '30%', left: '52%', width: '16%', height: '11%' } },
+    { id: 'top-3', title: 'Slot Atas 3', position: { top: '35%', left: '88%', width: '16%', height: '11%' } },
+    { id: 'bottom-1', title: 'Slot Bawah 1', position: { top: '68%', left: '39%', width: '16%', height: '11%' } },
+    { id: 'bottom-2', title: 'Slot Bawah 2', position: { top: '66%', left: '68%', width: '16%', height: '11%' } },
   ] : [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
@@ -157,11 +166,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
     { id: 'item-3', content: 'Letusan gunung api di tengah laut atau pulau', category: 'vulkanik' },
     { id: 'item-4', content: 'Jatuhnya benda langit besar ke dalam samudra', category: 'meteor' },
   ] : (isLandscapes && level === 'awal') ? [
-    { id: 'item-1', content: 'Drainase Air', image: '/images/quiz/landscape/lanjutan/2/drainase-air.png', category: 'drainase' },
-    { id: 'item-2', content: 'Jaring Kawat', image: '/images/quiz/landscape/lanjutan/2/jaring-kawat.png', category: 'jaring' },
-    { id: 'item-3', content: 'Pohon Akar Kuat', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-cabang-akar-kuat.png', category: 'pohon-kuat' },
-    { id: 'item-4', content: 'Tembok Beton', image: '/images/quiz/landscape/lanjutan/2/tembok-beton.png', category: 'beton' },
-    { id: 'item-5', content: 'Pohon Akar Lemah', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-serabut-akar-lemah.png', category: 'pohon-lemah' },
+    { id: 'tree-1', content: 'Akar Kuat', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-cabang-akar-kuat.png', category: 'pohon' },
+    { id: 'tree-2', content: 'Akar Lemah', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-serabut-akar-lemah.png', category: 'pohon' },
+    { id: 'tree-3', content: 'Tanaman Perdu', image: '/images/quiz/landscape/lanjutan/2/jaring-kawat.png', category: 'pohon' }, // Using jaring as a placeholder for 3rd tree or as requested
+    { id: 'drain-1', content: 'Drainase Air A', image: '/images/quiz/landscape/lanjutan/2/drainase-air.png', category: 'drainase' },
+    { id: 'drain-2', content: 'Drainase Air B', image: '/images/quiz/landscape/lanjutan/2/tembok-beton.png', category: 'drainase' }, // Using beton as 2nd drainage placeholder
   ] : isLandscapes ? [
     { id: 'item-1', content: 'Runtuhan (Falls)', image: '/images/quiz/landscapes/2.png', category: 'falls' },
     { id: 'item-2', content: 'Longsoran (Slides)', image: '/images/quiz/landscapes/3.png', category: 'slides' },
@@ -213,31 +222,35 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     setActiveItem(null);
     if (!over) return;
 
     const itemId = active.id as string;
     const targetCategoryId = over.id as string;
-    
+
     const item = unassignedItems.find(i => i.id === itemId);
     if (!item) return;
 
-    // Move item
-    setUnassignedItems(prev => prev.filter(i => i.id !== itemId));
+    // Replace the item in the target category (since level awal has 1:1 mapping for slots)
     setAssignedItems(prev => ({
       ...prev,
-      [targetCategoryId]: [...prev[targetCategoryId], item]
+      [targetCategoryId]: [item] // Use array with single item to replace previous
     }));
   };
 
   const checkAnswers = () => {
     let correct = 0;
     let total = initialItems.length;
-    
+
     Object.entries(assignedItems).forEach(([catId, items]) => {
       (items as Item[]).forEach(item => {
-        if (item.category === catId) correct++;
+        if (level === 'awal' && isLandscapes) {
+          if (catId.startsWith('top') && item.category === 'pohon') correct++;
+          else if (catId.startsWith('bottom') && item.category === 'drainase') correct++;
+        } else {
+          if (item.category === catId) correct++;
+        }
       });
     });
 
@@ -245,7 +258,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
     onComplete(score);
   };
 
-  const isComplete = unassignedItems.length === 0;
+  const isComplete = Object.values(assignedItems).every(items => items.length > 0);
 
   return (
     <div className="space-y-8">
@@ -257,12 +270,12 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
           {isVolcano ? "Klasifikasi Erupsi Gunung Api" : isTsunami ? "Klasifikasi Pemicu Tsunami" : (isLandscapes && level === 'awal') ? "Kondisi lereng curam di tepi jalan raya dengan pelapukan batuan intensif yang sering hadir genangan air, kombinasi mitigasi bencana apa yang mudah dilakukan olehmu?" : isLandscapes ? "Identifikasi Jenis Pergerakan Tanah" : "Klasifikasi Pergerakan Tanah"}
         </h2>
         <p className="text-earth-600 mt-2 font-medium">
-          { (isLandscapes && level === 'awal') ? "INSTRUKSI: TARIK DAN ISI KOLOM PUZZLE DIBAWAH DENGAN MEMPERTIMBANGKAN KONDISI YANG ADA DI SOAL KAMU" : isLandscapes ? "Tarik gambar ke kotak slot yang sesuai di papan." : "Tarik dan letakkan deskripsi ke kategori yang tepat."}
+          {(isLandscapes && level === 'awal') ? "INSTRUKSI: TARIK DAN ISI KOLOM PUZZLE DIBAWAH DENGAN MEMPERTIMBANGKAN KONDISI YANG ADA DI SOAL KAMU" : isLandscapes ? "Tarik gambar ke kotak slot yang sesuai di papan." : "Tarik dan letakkan deskripsi ke kategori yang tepat."}
         </p>
       </div>
 
-      <DndContext 
-        sensors={sensors} 
+      <DndContext
+        sensors={sensors}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         collisionDetection={closestCenter}
@@ -270,23 +283,23 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
         {isLandscapes ? (
           <div className="relative w-full max-w-5xl mx-auto rounded-3xl shadow-2xl border-4 border-earth-200 overflow-hidden">
             {/* Background Board - Stacks in first cell */}
-            <img 
-              src={ (isLandscapes && level === 'awal') ? "/images/quiz/landscape/lanjutan/2/1.png" : "/images/quiz/landscapes/1.png" } 
-              alt="Board" 
+            <img
+              src={(isLandscapes && level === 'awal') ? "/images/quiz/landscape/lanjutan/2/1.png" : "/images/quiz/landscapes/1.png"}
+              alt="Board"
               className="w-full h-auto pointer-events-none z-0"
             />
-            
+
             {/* Overlay Drop Zones - Stacks on top of image */}
             <div className={cn(
               "absolute inset-0 z-50 pointer-events-auto",
               (isLandscapes && level !== 'awal') && "grid grid-cols-4 px-[6%] pb-[6%] pt-[13%] gap-[3%]"
             )}>
               {categories.map(cat => (
-                <DroppableZone 
-                  key={cat.id} 
-                  category={cat} 
-                  items={assignedItems[cat.id] || []} 
-                  isTsunami={isTsunami} 
+                <DroppableZone
+                  key={cat.id}
+                  category={cat}
+                  items={assignedItems[cat.id] || []}
+                  isTsunami={isTsunami}
                   isVolcano={isVolcano}
                   isLandscapes={true}
                 />
@@ -296,11 +309,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {categories.map(cat => (
-              <DroppableZone 
-                key={cat.id} 
-                category={cat} 
-                items={assignedItems[cat.id] || []} 
-                isTsunami={isTsunami} 
+              <DroppableZone
+                key={cat.id}
+                category={cat}
+                items={assignedItems[cat.id] || []}
+                isTsunami={isTsunami}
                 isVolcano={isVolcano}
                 isLandscapes={false}
               />
@@ -312,17 +325,17 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
           "mt-8 p-6 glass rounded-2xl min-h-[120px] z-0",
           isLandscapes && "bg-white/40"
         )}>
-          <h3 className="text-sm font-medium text-earth-500 mb-4 uppercase tracking-wider">
-            {isLandscapes ? "Geser Gambar ke Papan" : "Item yang belum diklasifikasi"}
+          <h3 className="text-sm font-black text-earth-600 mb-4 uppercase tracking-widest text-center">
+            {isLandscapes ? "PILIH DAN TARIK KEDALAM KOTAK ELEMENT DIBAWAH INI" : "Item yang belum diklasifikasi"}
           </h3>
           <div className="flex flex-wrap justify-center gap-4">
             {unassignedItems.map(item => (
-              <DraggableItem 
-                key={item.id} 
-                item={item} 
-                isTsunami={isTsunami} 
+              <DraggableItem
+                key={item.id}
+                item={item}
+                isTsunami={isTsunami}
                 isVolcano={isVolcano}
-                isLandscapes={isLandscapes} 
+                isLandscapes={isLandscapes}
               />
             ))}
             {unassignedItems.length === 0 && (
@@ -334,11 +347,16 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
         <DragOverlay zIndex={1000} dropAnimation={null}>
           {activeItem ? (
             <div className={cn(
-              "bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-leaf-500 overflow-hidden cursor-grabbing scale-110 z-[1000]",
+              "bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-leaf-500 overflow-hidden cursor-grabbing scale-110 z-1000",
               isLandscapes ? "w-24 h-24 sm:w-32 sm:h-32" : "p-3"
             )}>
               {isLandscapes && activeItem.image ? (
-                <img src={activeItem.image} alt={activeItem.content} className="w-full h-full object-contain p-1" />
+                <div className="flex flex-col items-center w-full h-full">
+                  <img src={activeItem.image} alt={activeItem.content} className="w-full h-3/4 object-contain p-1" />
+                  <div className="w-full bg-earth-800 text-white text-[10px] py-1 px-1 text-center font-bold">
+                    {activeItem.content}
+                  </div>
+                </div>
               ) : (
                 <span className="text-sm font-medium text-earth-800">{activeItem.content}</span>
               )}
@@ -348,16 +366,15 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level }: 
       </DndContext>
 
       {isComplete && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-center"
         >
           <button
             onClick={checkAnswers}
-            className={`px-8 py-3 text-white rounded-full font-bold shadow-lg transition-colors ${
-              (isVolcano || isTsunami) ? (isVolcano ? "bg-orange-600 hover:bg-orange-700" : "bg-blue-600 hover:bg-blue-700") : "bg-earth-700 hover:bg-earth-800"
-            }`}
+            className={`px-8 py-3 text-white rounded-full font-bold shadow-lg transition-colors ${(isVolcano || isTsunami) ? (isVolcano ? "bg-orange-600 hover:bg-orange-700" : "bg-blue-600 hover:bg-blue-700") : "bg-earth-700 hover:bg-earth-800"
+              }`}
           >
             Periksa Jawaban
           </button>
