@@ -71,7 +71,9 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level }: { it
           </div>
         </div>
       ) : (
-        <span className="relative z-10">{item.content}</span>
+        <div className="w-full h-full flex items-center justify-center px-4 py-2 text-center text-xs sm:text-sm font-black text-earth-900 leading-snug">
+          {item.content}
+        </div>
       )}
     </motion.div>
   );
@@ -87,10 +89,10 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
       <div
         ref={setNodeRef}
         className={cn(
-          "relative flex items-center justify-center transition-all duration-300 rounded-xl",
-          !items.length && "border-2 border-dashed border-black/20 bg-black/5 hover:border-black/40 hover:bg-black/10",
-          isOver && "bg-amber-500/20 border-amber-500 z-30",
-          category.position && "absolute"
+          "relative flex items-center justify-center transition-all duration-500 rounded-2xl overflow-hidden",
+          !items.length && "border border-white/40 bg-white/5 hover:bg-white/10 shadow-[inset_0_2px_8px_rgba(0,0,0,0.02)]",
+          isOver && "bg-white/20 border-orange-400 ring-4 ring-orange-400/10 z-30 scale-[1.02]",
+          category.position ? "absolute" : "min-h-[70px] w-full"
         )}
         style={category.position ? {
           top: category.position.top,
@@ -102,15 +104,18 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
           zIndex: 10
         } : undefined}
       >
-        <div className="w-full h-full relative overflow-hidden rounded-xl">
+        <div className="w-full h-full relative flex items-center justify-center p-2">
           {items?.map(item => (
             <motion.div
               key={item.id}
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="absolute inset-0 z-20"
+              className={cn(
+                "z-20 shadow-sm transition-all duration-300",
+                item.image ? "absolute inset-0" : "w-full h-full flex items-center justify-center bg-white rounded-xl border border-earth-100 px-4"
+              )}
             >
-              {item.image && (
+              {item.image ? (
                 item.crop ? (
                   <div 
                     className="w-full h-full bg-no-repeat"
@@ -124,9 +129,13 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
                   <img
                     src={item.image}
                     alt="Placed"
-                    className="w-full h-full object-contain shadow-inner"
+                    className="w-full h-full object-contain"
                   />
                 )
+              ) : (
+                <span className="text-xs font-bold text-earth-800 text-center leading-snug">
+                  {item.content}
+                </span>
               )}
             </motion.div>
           ))}
@@ -421,50 +430,49 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
               </div>
             )}
 
-            <div className={cn(
-              "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
-              (isVolcano && level === 'awal' && stageIndex === 2) ? "flex flex-col gap-6 max-w-2xl mx-auto py-8 px-4" : (!isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8")
-            )}>
-              {categories.map((category, idx) => (
-                <div key={category.id} className={cn(
-                  (isVolcano && level === 'awal' && stageIndex === 2) ? "flex items-center gap-6 group" : "contents"
-                )}>
-                  {isVolcano && level === 'awal' && stageIndex === 2 && (
-                    <>
-                      {/* Level Label */}
-                      <div className={cn(
-                        "w-40 sm:w-56 py-3 sm:py-5 px-3 sm:px-6 rounded-2xl shadow-lg border-2 text-center font-black text-xs sm:text-base tracking-wider transition-all duration-300 group-hover:scale-105",
-                        idx === 0 ? "bg-emerald-100 border-emerald-300 text-emerald-700 shadow-emerald-200/50" :
-                        idx === 1 ? "bg-amber-100 border-amber-300 text-amber-700 shadow-amber-200/50" :
-                        idx === 2 ? "bg-orange-100 border-orange-300 text-orange-700 shadow-orange-200/50" :
-                        "bg-red-100 border-red-300 text-red-700 shadow-red-200/50"
-                      )}>
-                        {category.title}
-                      </div>
+              <div className="flex flex-col gap-6 relative z-10 w-full max-w-4xl mx-auto py-10 px-8 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl mt-4">
+                {categories.map((category, idx) => (
+                  <div key={category.id} className="flex items-center gap-8 group">
+                    {/* Level Label */}
+                    <div className={cn(
+                      "w-44 sm:w-56 py-4 sm:py-5 px-4 sm:px-6 rounded-2xl shadow-md border-t-2 border-white/50 text-center font-bold text-xs sm:text-sm tracking-widest transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg",
+                      idx === 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white" :
+                      idx === 1 ? "bg-gradient-to-br from-amber-500 to-yellow-600 text-white" :
+                      idx === 2 ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white" :
+                      "bg-gradient-to-br from-rose-600 to-red-700 text-white"
+                    )}>
+                      {category.title}
+                      <div className="mt-0.5 opacity-70 text-[8px] uppercase font-bold tracking-[0.1em]">Mitigasi</div>
+                    </div>
 
-                      {/* Arrow */}
-                      <div className="flex-shrink-0 animate-pulse text-earth-300 hidden sm:block">
-                        <svg className="w-12 h-8" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={4}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M18 7l5 5-5 5" />
-                          <line x1="0" y1="12" x2="18" y2="12" stroke="currentColor" strokeWidth="4" />
+                    {/* Elegant Single Arrow */}
+                    <div className="flex-shrink-0">
+                      <motion.div 
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ repeat: Infinity, duration: 2.5 }}
+                        className="text-earth-300 hidden sm:block opacity-60"
+                      >
+                        <svg className="w-12 h-6" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M30 7l5 5-5 5" />
+                          <line x1="0" y1="12" x2="35" y2="12" />
                         </svg>
-                      </div>
-                    </>
-                  )}
+                      </motion.div>
+                    </div>
 
-                  <div className="flex-grow">
-                    <DroppableZone 
-                      category={category} 
-                      items={assignedItems[category.id] || []} 
-                      isTsunami={isTsunami}
-                      isVolcano={isVolcano}
-                      isLandscapes={isLandscapes}
-                      level={level}
-                    />
+                    {/* Drop Zone */}
+                    <div className="flex-grow">
+                      <DroppableZone 
+                        category={category} 
+                        items={assignedItems[category.id] || []} 
+                        isTsunami={isTsunami}
+                        isVolcano={isVolcano}
+                        isLandscapes={isLandscapes}
+                        level={level}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
           </div>
         </div>
 

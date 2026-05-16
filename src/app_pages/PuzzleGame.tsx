@@ -43,6 +43,12 @@ export default function PuzzleGame() {
         { id: 'classification-1', component: ClassificationPuzzle },
         { id: 'classification-2', component: ClassificationPuzzle },
       ]
+    : (disasterId === 'gunung-api' && level === 'awal')
+    ? [
+        { id: 'fill-blank', component: FillBlankPuzzle },
+        { id: 'classification-1', component: ClassificationPuzzle },
+        { id: 'classification-2', component: ClassificationPuzzle },
+      ]
     : level === 'awal'
     ? [
         { id: 'fill-blank', component: FillBlankPuzzle },
