@@ -40,7 +40,14 @@ export default function PuzzleGame() {
 
   const stages = disasterId === 'longsor' && level === 'awal' 
     ? [
+        { id: 'classification-1', component: ClassificationPuzzle },
+        { id: 'classification-2', component: ClassificationPuzzle },
+      ]
+    : level === 'awal'
+    ? [
+        { id: 'fill-blank', component: FillBlankPuzzle },
         { id: 'classification', component: ClassificationPuzzle },
+        { id: 'ordering', component: OrderingPuzzle },
       ]
     : [
         { id: 'classification', component: ClassificationPuzzle },
@@ -236,7 +243,7 @@ export default function PuzzleGame() {
                 transition={{ duration: 0.3 }}
                 className="relative w-full pb-20"
               >
-                <CurrentPuzzle onComplete={handleStageComplete} disasterId={disasterId} level={level} />
+                <CurrentPuzzle onComplete={handleStageComplete} disasterId={disasterId} level={level} stageIndex={currentStage} />
               </motion.div>
             ) : (
               <motion.div
