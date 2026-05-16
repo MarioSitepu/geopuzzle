@@ -161,13 +161,18 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   const isTsunami = disasterId === 'tsunami';
   const isLandscapes = disasterId === 'longsor';
 
-  const categories: Category[] = (isVolcano && level === 'awal') ? [
+  const categories: Category[] = (isVolcano && level === 'awal') ? (stageIndex === 2 ? [
+    { id: 'level-1', title: 'LEVEL 1 NORMAL' },
+    { id: 'level-2', title: 'LEVEL 2 (WASPADA)' },
+    { id: 'level-3', title: 'LEVEL 3 (SIAGA)' },
+    { id: 'level-4', title: 'LEVEL 4 (AWAS)' },
+  ] : [
     { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
     { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
     { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '19.5%', width: '23.3%', height: '24.3%' } },
     { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '43.3%', width: '20.0%', height: '24.3%' } },
     { id: 'slot-5', title: 'Tahap 5', position: { top: '78.6%', left: '65.2%', width: '19.4%', height: '24.3%' } },
-  ] : isVolcano ? [
+  ]) : isVolcano ? [
     { id: 'magmatik', title: 'Erupsi Magmatik' },
     { id: 'freatik', title: 'Erupsi Freatik' },
     { id: 'freatomagmatik', title: 'Erupsi Freatomagmatik' },
@@ -196,13 +201,19 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'creep', title: 'Creep (Rayapan)' },
   ] : [];
 
-  const initialItems: Item[] = (isVolcano && level === 'awal') ? [
+  const initialItems: Item[] = (isVolcano && level === 'awal') ? (stageIndex === 2 ? [
+    { id: 'mit-1', content: 'Tetap tenang. Beraktivitas seperti biasa', category: 'level-1' },
+    { id: 'mit-2', content: 'Tingkatkan kewaspadaan dan menjaga radius aman', category: 'level-2' },
+    { id: 'mit-3', content: 'Mulai bersiap Evakuasi', category: 'level-3' },
+    { id: 'mit-4', content: 'Segera evakuasi/mengungsi ke tempat yang lebih aman', category: 'level-4' },
+    { id: 'mit-5', content: 'Pergi Melihat Langsung Kawah', category: 'wrong' },
+  ] : [
     { id: 'vol-1', content: 'Subduksi', image: '/images/quiz/eruption/awal/2/5.png', category: 'slot-1' },
     { id: 'vol-2', content: 'Akumulasi', image: '/images/quiz/eruption/awal/2/2.png', category: 'slot-2' },
     { id: 'vol-3', content: 'Erupsi Awal', image: '/images/quiz/eruption/awal/2/4.png', category: 'slot-3' },
     { id: 'vol-4', content: 'Pertumbuhan', image: '/images/quiz/eruption/awal/2/3.png', category: 'slot-4' },
     { id: 'vol-5', content: 'Aktif', image: '/images/quiz/eruption/awal/2/1.png', category: 'slot-5' },
-  ] : isVolcano ? [
+  ]) : isVolcano ? [
     { id: 'item-1', content: 'Melibatkan keluarnya magma segar ke permukaan', category: 'magmatik' },
     { id: 'item-2', content: 'Ledakan akibat interaksi air dengan batuan panas tanpa magma baru', category: 'freatik' },
     { id: 'item-3', content: 'Interaksi langsung antara magma dengan air eksternal', category: 'freatomagmatik' },
@@ -312,12 +323,13 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
       });
     });
 
-    const score = Math.round((correct / total) * 100);
+    // Total score should be based on number of categories (slots) to fill
+    const score = Math.round((correct / categories.length) * 100);
     onComplete(score);
   };
 
-  const isComplete = unassignedItems.length === 0;
-  const isBoardStyle = (isLandscapes && level === 'awal') || (isVolcano && level === 'awal');
+  const isComplete = Object.values(assignedItems).every(items => items.length > 0);
+  const isBoardStyle = ((isLandscapes && level === 'awal') || (isVolcano && level === 'awal')) && stageIndex !== 2;
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
@@ -327,7 +339,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
         </h2>
         <p className="text-earth-600 mt-2 font-medium italic">
           {isVolcano && level === 'awal' 
-            ? "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi."
+            ? (stageIndex === 2 
+                ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
+                : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
             : isBoardStyle 
             ? "Tarik kepingan puzzle ke posisi yang tepat pada papan." 
             : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
@@ -409,18 +423,46 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
             <div className={cn(
               "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
-              !isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8"
+              (isVolcano && level === 'awal' && stageIndex === 2) ? "flex flex-col gap-6 max-w-2xl mx-auto py-8 px-4" : (!isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8")
             )}>
-              {categories.map((category) => (
-                <DroppableZone 
-                  key={category.id} 
-                  category={category} 
-                  items={assignedItems[category.id] || []} 
-                  isTsunami={isTsunami}
-                  isVolcano={isVolcano}
-                  isLandscapes={isLandscapes}
-                  level={level}
-                />
+              {categories.map((category, idx) => (
+                <div key={category.id} className={cn(
+                  (isVolcano && level === 'awal' && stageIndex === 2) ? "flex items-center gap-6 group" : "contents"
+                )}>
+                  {isVolcano && level === 'awal' && stageIndex === 2 && (
+                    <>
+                      {/* Level Label */}
+                      <div className={cn(
+                        "w-40 sm:w-56 py-3 sm:py-5 px-3 sm:px-6 rounded-2xl shadow-lg border-2 text-center font-black text-xs sm:text-base tracking-wider transition-all duration-300 group-hover:scale-105",
+                        idx === 0 ? "bg-emerald-100 border-emerald-300 text-emerald-700 shadow-emerald-200/50" :
+                        idx === 1 ? "bg-amber-100 border-amber-300 text-amber-700 shadow-amber-200/50" :
+                        idx === 2 ? "bg-orange-100 border-orange-300 text-orange-700 shadow-orange-200/50" :
+                        "bg-red-100 border-red-300 text-red-700 shadow-red-200/50"
+                      )}>
+                        {category.title}
+                      </div>
+
+                      {/* Arrow */}
+                      <div className="flex-shrink-0 animate-pulse text-earth-300 hidden sm:block">
+                        <svg className="w-12 h-8" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={4}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M18 7l5 5-5 5" />
+                          <line x1="0" y1="12" x2="18" y2="12" stroke="currentColor" strokeWidth="4" />
+                        </svg>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="flex-grow">
+                    <DroppableZone 
+                      category={category} 
+                      items={assignedItems[category.id] || []} 
+                      isTsunami={isTsunami}
+                      isVolcano={isVolcano}
+                      isLandscapes={isLandscapes}
+                      level={level}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
           </div>
