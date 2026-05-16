@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GeoPuzzle: Disaster Mitigation & Geology Educational Game 🌋🌊⛰️
 
-## Getting Started
+**GeoPuzzle** adalah sebuah platform edukasi interaktif berbasis web yang dirancang untuk meningkatkan kesadaran dan pengetahuan masyarakat Indonesia mengenai mitigasi bencana geologi melalui pengalaman bermain puzzle yang seru dan edukatif.
 
-First, run the development server:
+![GeoPuzzle Banner](public/images/quiz/eruption/awal/2/board.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Fitur Utama
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Modul Bencana Lengkap**:
+  - **Gunung Api (Volcano)**: Pelajari proses subduksi, akumulasi magma, hingga tahap-tahap erupsi dan level mitigasi PVMBG.
+  - **Tsunami**: Memahami mekanisme pemicu tsunami dari gempa bumi hingga longsor bawah laut.
+  - **Tanah Longsor (Landslide)**: Strategi pencegahan longsor melalui rekayasa landscape dan vegetasi.
+- **Mekanik Puzzle Interaktif**:
+  - **Fill-in-the-Blank**: Menguji pemahaman istilah-istilah geologi.
+  - **Board-Style Drag & Drop**: Menyusun kepingan puzzle langsung di atas papan infografis dengan presisi tinggi.
+  - **Matching & Classification**: Memasangkan tindakan mitigasi dengan level kesiagaan bencana yang tepat.
+- **Visual Premium & Responsif**:
+  - Desain bertema *Earth-Tone* yang menyejukkan mata.
+  - Efek *Glassmorphism* dan animasi mikro yang modern.
+  - Sepenuhnya responsif untuk perangkat mobile, tablet, dan desktop.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: [Next.js 14 (App Router)](https://nextjs.org/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Drag & Drop**: [@dnd-kit](https://dnd-kit.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
 
-## Learn More
+## 📦 Instalasi & Penggunaan
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone repositori**:
+   ```bash
+   git clone https://github.com/MarioSitepu/geopuzzle.git
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install dependensi**:
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Jalankan server pengembangan**:
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+4. **Buka di browser**:
+   Akses [http://localhost:3000](http://localhost:3000) untuk mulai bermain.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📂 Struktur Proyek
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/src/app`: Routing dan layouting utama menggunakan Next.js App Router.
+- `/src/components`: Komponen UI modular, termasuk engine puzzle utama.
+- `/src/components/puzzles`: Implementasi logika khusus untuk berbagai tipe puzzle (Fill-the-blank, Classification, dll).
+- `/src/store`: Manajemen state global untuk skor dan progres permainan.
+- `/public/images`: Aset gambar infografis dan kepingan puzzle yang dikalibrasi secara presisi.
+
+## 📝 Konten Edukasi
+
+Konten dalam game ini merujuk pada standar mitigasi bencana di Indonesia, termasuk klasifikasi level kesiagaan gunung api oleh **PVMBG (Pusat Vulkanologi dan Mitigasi Bencana Geologi)**:
+- **Level 1 (Normal)**: Beraktivitas seperti biasa.
+- **Level 2 (Waspada)**: Peningkatan kewaspadaan & menjaga radius aman.
+- **Level 3 (Siaga)**: Persiapan evakuasi.
+- **Level 4 (Awas)**: Evakuasi segera ke tempat aman.
+
+## 🤝 Kontribusi
+
+Kontribusi sangat terbuka untuk pengembangan fitur baru atau penambahan konten mitigasi bencana lainnya. Silakan lakukan *Pull Request* atau hubungi tim pengembang.
+
+---
+Dikembangkan dengan ❤️ untuk Indonesia yang lebih tangguh bencana.
