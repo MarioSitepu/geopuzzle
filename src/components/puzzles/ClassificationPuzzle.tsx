@@ -24,6 +24,7 @@ type Category = { id: string; title: string; position?: { top: string; left: str
 
 function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageIndex, isPlaced }: { item: Item, isTsunami: boolean, isVolcano: boolean, isLandscapes: boolean, level?: string, stageIndex?: number, isPlaced?: boolean }) {
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
+  const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: item,
@@ -43,13 +44,13 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
       whileTap={{ scale: 0.95, rotate: -1 }}
       className={cn(
         "bg-white rounded-2xl shadow-lg border-2 cursor-grab active:cursor-grabbing text-sm font-bold text-earth-800 touch-none overflow-hidden transition-all duration-200 flex items-center justify-center group",
-        isPlaced ? "w-full h-full absolute inset-0" : ((isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1) ? "w-28 h-28 sm:w-36 sm:h-36 p-0" : "p-4 min-w-[120px]"),
+        isPlaced ? "w-full h-full absolute inset-0" : ((isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) ? "w-28 h-28 sm:w-36 sm:h-36 p-0" : "p-4 min-w-[120px]"),
         isDragging ? "opacity-0" : "opacity-100",
         isDragging ? "shadow-2xl ring-4 z-50" : "hover:shadow-xl",
         isTsunami ? 'border-blue-100 hover:border-blue-400' : isVolcano ? 'border-orange-100 hover:border-orange-400' : 'border-earth-100 hover:border-earth-400'
       )}
     >
-      {(isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1) && item.image ? (
+      {(isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) && item.image ? (
         <div className="flex flex-col items-center w-full h-full relative">
           {item.crop ? (
             <div 
@@ -86,8 +87,9 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
   });
 
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
+  const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
 
-  if (isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1) {
+  if (isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) {
     return (
       <div
         ref={setNodeRef}
@@ -152,8 +154,15 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   const isLandscapes = disasterId === 'longsor';
 
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
+  const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
 
-  const categories: Category[] = isVolcanoLanjut1 ? [
+  const categories: Category[] = isTsunamiLanjut1 ? [
+    { id: 'slot-peak', title: 'Puncak Gunung', position: { top: '22.5%', left: '57.3%', width: '10.5%', height: '9.5%' } },
+    { id: 'slot-sea', title: 'Laut', position: { top: '44.5%', left: '8.5%', width: '10.5%', height: '9.5%' } },
+    { id: 'slot-building', title: 'Gedung Tinggi', position: { top: '39.5%', left: '75.5%', width: '10.5%', height: '9.5%' } },
+    { id: 'slot-beach', title: 'Pemukiman Pantai', position: { top: '72.0%', left: '47.0%', width: '10.5%', height: '9.5%' } },
+    { id: 'slot-golf', title: 'Lapangan Golf', position: { top: '76.5%', left: '89.3%', width: '10.5%', height: '9.5%' } },
+  ] : isVolcanoLanjut1 ? [
     { id: 'slot-1', title: 'Kerucut Berlapis (Strato)', position: { top: '26%', left: '20%', width: '16%', height: '20%' } },
     { id: 'slot-2', title: 'Kaldera', position: { top: '26%', left: '52%', width: '16%', height: '20%' } },
     { id: 'slot-3', title: 'Maar', position: { top: '26%', left: '82%', width: '16%', height: '20%' } },
@@ -199,7 +208,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'creep', title: 'Creep (Rayapan)' },
   ] : [];
 
-  const initialItems: Item[] = isVolcanoLanjut1 ? [
+  const initialItems: Item[] = isTsunamiLanjut1 ? [
+    { id: 'family-1', content: 'Keluarga', image: '/images/quiz/tsunami/lanjutan/1/family.png', category: 'slot-peak' }
+  ] : isVolcanoLanjut1 ? [
     { id: 'vol-1', content: 'Strato', image: '/images/quiz/eruption/lanjut/1/aq.png', category: 'slot-1' },
     { id: 'vol-2', content: 'Kaldera', image: '/images/quiz/eruption/lanjut/1/bq.png', category: 'slot-2' },
     { id: 'vol-3', content: 'Maar', image: '/images/quiz/eruption/lanjut/1/cq.png', category: 'slot-3' },
@@ -368,12 +379,16 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     });
 
     // Total score should be based on number of categories (slots) to fill
-    const score = Math.round((correct / categories.length) * 100);
+    const score = isTsunamiLanjut1 
+      ? (correct > 0 ? 100 : 0)
+      : Math.round((correct / categories.length) * 100);
     onComplete(score);
   };
 
-  const isComplete = Object.values(assignedItems).every(items => items.length > 0);
-  const isBoardStyle = isVolcanoLanjut1 || (((isLandscapes && level === 'awal') || (isVolcano && level === 'awal')) && stageIndex !== 2);
+  const isComplete = isTsunamiLanjut1
+    ? Object.values(assignedItems).some(items => items.length > 0)
+    : Object.values(assignedItems).every(items => items.length > 0);
+  const isBoardStyle = isVolcanoLanjut1 || isTsunamiLanjut1 || (((isLandscapes && level === 'awal') || (isVolcano && level === 'awal')) && stageIndex !== 2);
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
@@ -386,6 +401,8 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             ? (stageIndex === 2 
                 ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
                 : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
+            : isTsunamiLanjut1
+            ? "BERDASARKAN KONDISI DI BAWAH INI AKAN ADA TSUNAMI YANG MENGENAI PEMUKIMAN KAMU, TEMPAT MANA YANG AKAN KAMU PILIH UNTUK MENYELAMATKAN KELUARGA INI, LAKUKAN UNTUK BISA MITIGASI BENCANA DI KASUS INI!"
             : isBoardStyle 
             ? "Tarik kepingan puzzle ke posisi yang tepat pada papan." 
             : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
@@ -459,7 +476,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             {isBoardStyle && (
               <div className="absolute inset-0 z-0">
                 <img 
-                  src={isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
+                  src={isTsunamiLanjut1 ? "/images/quiz/tsunami/lanjutan/1/1.png" : isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
                   alt="Board" 
                   className="w-full h-full object-fill"
                 />
