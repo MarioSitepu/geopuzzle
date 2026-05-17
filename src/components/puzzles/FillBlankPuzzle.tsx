@@ -48,6 +48,9 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
   const isVolcano = disasterId === 'gunung-api';
   const isVolcanoLanjut2 = isVolcano && level === 'atas' && stageIndex === 1;
   const isTsunami = disasterId === 'tsunami';
+  const isTsunamiAwal2 = isTsunami && level === 'awal' && stageIndex === 1;
+
+  const isCaseStudyMode = isVolcanoLanjut2 || isTsunamiAwal2;
   
   const volcanoStatements = [
     { id: 's1', text: 'Gunung api didefinisikan sebagai lubang atau rekahan di kerak bumi tempat keluarnya batuan cair (magma), gas, dan material piroklastik ke permukaan.', answer: 'Benar' },
@@ -64,7 +67,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
     { id: 's6', text: 'Berenang melawan arus tsunami adalah cara terbaik untuk menyelamatkan diri jika terjebak di air.', answer: 'Salah' },
   ];
 
-  const isTrueFalseMode = isVolcano || (isTsunami && level === 'awal');
+  const isTrueFalseMode = isVolcano || (isTsunami && level === 'awal' && stageIndex === 0);
   const statements = isTsunami ? tsunamiStatements : volcanoStatements;
 
   const choices = isVolcanoLanjut2
@@ -74,6 +77,14 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
         { id: 'opt3', word: 'Wedhus Gembel' },
         { id: 'opt4', word: 'Eksplosif' },
         { id: 'opt5', word: 'Kubah' }
+      ]
+    : isTsunamiAwal2
+    ? [
+        { id: 'opt1', word: 'Mengajak warga lain untuk mengungsi' },
+        { id: 'opt2', word: 'Berenang' },
+        { id: 'opt3', word: 'Tetap melanjutkan aktifitas' },
+        { id: 'opt4', word: 'Posting di Sosmed' },
+        { id: 'opt5', word: 'Mencari tempat Ketinggian' }
       ]
     : isTrueFalseMode 
     ? [
@@ -86,6 +97,10 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
         { id: 'opt3', word: 'Dedikasi' },
         { id: 'opt4', word: 'Edukasi' },
       ];
+
+  const caseStudyCorrectAnswers = isVolcanoLanjut2
+    ? ['Efusif', 'Eksplosif']
+    : ['Mengajak warga lain untuk mengungsi', 'Mencari tempat Ketinggian'];
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveWord(event.active.data.current?.word);
@@ -104,12 +119,12 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
   };
 
   const checkAnswer = () => {
-    if (isVolcanoLanjut2) {
+    if (isCaseStudyMode) {
       if (!droppedWords['drop-1'] || !droppedWords['drop-2']) return;
       setIsSubmitted(true);
       
       const answers = [droppedWords['drop-1'], droppedWords['drop-2']];
-      const correctCount = (answers.includes('Efusif') ? 1 : 0) + (answers.includes('Eksplosif') ? 1 : 0);
+      const correctCount = (answers.includes(caseStudyCorrectAnswers[0]) ? 1 : 0) + (answers.includes(caseStudyCorrectAnswers[1]) ? 1 : 0);
       
       const score = Math.round((correctCount / 2) * 100);
       setTimeout(() => onComplete(score), 1500);
@@ -133,13 +148,13 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
     }
   };
 
-  const isAllCorrect = isVolcanoLanjut2
-    ? ['Efusif', 'Eksplosif'].includes(droppedWords['drop-1'] || '') && ['Efusif', 'Eksplosif'].includes(droppedWords['drop-2'] || '') && droppedWords['drop-1'] !== droppedWords['drop-2']
+  const isAllCorrect = isCaseStudyMode
+    ? caseStudyCorrectAnswers.includes(droppedWords['drop-1'] || '') && caseStudyCorrectAnswers.includes(droppedWords['drop-2'] || '') && droppedWords['drop-1'] !== droppedWords['drop-2']
     : isTrueFalseMode 
     ? statements.every(s => droppedWords[s.id] === s.answer)
     : droppedWords['default'] === 'Mitigasi';
 
-  const isComplete = isVolcanoLanjut2
+  const isComplete = isCaseStudyMode
     ? !!droppedWords['drop-1'] && !!droppedWords['drop-2']
     : isTrueFalseMode 
     ? statements.every(s => droppedWords[s.id])
@@ -224,7 +239,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                 <RotateCcw className="w-7 h-7" />
               </div>
               <p className="text-earth-800 font-extrabold text-xl leading-snug">
-                {isVolcanoLanjut2 ? "Tarik dan taruh pilihan yang ada di bawah ini dengan mengisi jawaban yang cocok!" : (
+                {isCaseStudyMode ? "Tarik dan taruh pilihan yang ada di bawah ini dengan mengisi jawaban yang cocok!" : (
                   <>Tarik dan taruh pilihan <span className="text-green-600">benar</span> atau <span className="text-red-600">salah</span> mengenai pernyataan geologi berikut ini.</>
                 )}
               </p>
@@ -235,51 +250,89 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
               {/* Connecting Line */}
               <div className="absolute left-[50%] top-0 bottom-0 w-1 bg-earth-100 -z-10 hidden lg:block" />
 
-              {isVolcanoLanjut2 ? (
-                <div className="flex flex-col gap-6 w-full max-w-3xl mx-auto">
+              {isCaseStudyMode ? (
+                <div className="w-full max-w-3xl mx-auto">
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-white/90 backdrop-blur-md p-8 sm:p-10 rounded-[2.5rem] border border-white shadow-xl text-center relative overflow-hidden group"
+                    className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-[2rem] border border-white shadow-2xl relative group flex flex-col gap-6"
                   >
+                    {/* Premium Header Indicator */}
                     <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-400 to-red-500" />
-                    <div className="absolute top-0 left-0 w-64 h-64 bg-orange-100/30 rounded-full -ml-32 -mt-32 blur-3xl transition-transform group-hover:scale-110" />
-                    <p className="text-xl sm:text-2xl font-medium text-earth-800 leading-relaxed relative z-10">
-                      Secara umum, tipe erupsi gunung api dibedakan menjadi dua kategori utama berdasarkan mekanisme keluarnya magma. Ada letusan yang <span className="font-bold text-orange-600">meledak dahsyat</span> dan ada yang hanya <span className="font-bold text-red-500">mengalir tenang</span>.
-                    </p>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="bg-white/60 backdrop-blur-md p-8 rounded-[2.5rem] border border-white shadow-lg flex flex-col items-center justify-center gap-6 relative z-10"
-                  >
-                    <span className="text-sm font-black text-earth-500 uppercase tracking-widest bg-earth-100 px-6 py-2 rounded-full shadow-sm">
-                      Tarik 2 Jawaban ke Bawah
-                    </span>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full">
-                      <DroppableZone 
-                        id="drop-1"
-                        droppedWord={droppedWords['drop-1'] || null}
-                        isCorrect={isSubmitted ? ['Efusif', 'Eksplosif'].includes(droppedWords['drop-1'] || '') : undefined}
-                        isSubmitted={isSubmitted}
-                        onReset={() => setDroppedWords(prev => ({ ...prev, 'drop-1': null }))}
-                        isVolcano={false}
-                        className="min-w-[180px] h-16 sm:min-w-[200px] sm:h-20"
-                      />
-                      <div className="w-10 h-10 rounded-full bg-earth-200/80 text-earth-500 flex items-center justify-center font-black text-lg shadow-inner">
-                        &
+                    
+                    {/* sea level monitor badge */}
+                    <div className="flex items-center justify-between relative z-10 border-b border-earth-100 pb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                        <span className="text-xs font-black text-red-600 uppercase tracking-widest">Studi Kasus Tsunami</span>
                       </div>
-                      <DroppableZone 
-                        id="drop-2"
-                        droppedWord={droppedWords['drop-2'] || null}
-                        isCorrect={isSubmitted ? ['Efusif', 'Eksplosif'].includes(droppedWords['drop-2'] || '') : undefined}
-                        isSubmitted={isSubmitted}
-                        onReset={() => setDroppedWords(prev => ({ ...prev, 'drop-2': null }))}
-                        isVolcano={false}
-                        className="min-w-[180px] h-16 sm:min-w-[200px] sm:h-20"
-                      />
+                      <div className="flex items-center gap-1.5 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100/50 shadow-inner">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Sensor Pesisir Aktif</span>
+                      </div>
+                    </div>
+
+                    {/* Scenario Text Area */}
+                    <div className="relative z-10 bg-gradient-to-br from-earth-50 to-orange-50/20 p-5 rounded-2xl border border-earth-100">
+                      <span className="absolute -top-3 left-4 bg-earth-900 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md shadow-sm">
+                        Laporan Kejadian
+                      </span>
+                      <p className="text-earth-800 text-sm sm:text-base font-semibold leading-relaxed text-left italic">
+                        "Warga di pesisir Rajabasa sedang bersantai di sore hari tanpa merasakan guncangan gempa sedikit pun. Tiba-tiba, permukaan air laut naik dengan sangat cepat dan menggenang ke pemukiman. Berdasarkan data geologi, terdapat tebing curam di bawah laut yang baru saja runtuh."
+                      </p>
+                    </div>
+
+                    {/* Question Header */}
+                    <div className="text-center relative z-10 py-1">
+                      <h4 className="text-earth-900 text-base sm:text-lg font-black tracking-tight uppercase">
+                        Apa rencana aksi darurat yang paling tepat?
+                      </h4>
+                      <p className="text-xs text-earth-400 mt-1 font-semibold">Tarik 2 tindakan mitigasi terbaik dari kotak pilihan di sebelah kiri.</p>
+                    </div>
+
+                    {/* Unified Slotted Action Board */}
+                    <div className="relative z-10 bg-slate-950 text-white rounded-3xl p-5 border border-slate-800 shadow-inner flex flex-col gap-4">
+                      <div className="text-center border-b border-white/5 pb-3">
+                        <span className="text-xs font-black text-amber-400 uppercase tracking-widest bg-white/5 px-4 py-1.5 rounded-full border border-amber-500/30 shadow-inner">
+                          Rencana Evakuasi Mandiri
+                        </span>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full pt-1">
+                        {/* Slot 1 */}
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center justify-between px-1">
+                            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">Tindakan 1</span>
+                            <span className="text-[9px] font-black text-slate-950 uppercase bg-amber-400 px-2.5 py-0.5 rounded shadow-sm">Prioritas Utama</span>
+                          </div>
+                          <DroppableZone 
+                            id="drop-1"
+                            droppedWord={droppedWords['drop-1'] || null}
+                            isCorrect={isSubmitted ? caseStudyCorrectAnswers.includes(droppedWords['drop-1'] || '') : undefined}
+                            isSubmitted={isSubmitted}
+                            onReset={() => setDroppedWords(prev => ({ ...prev, 'drop-1': null }))}
+                            isVolcano={false}
+                            className="min-w-0 w-full h-16 rounded-2xl border-2 border-dashed border-slate-300 bg-white hover:border-amber-500/50 hover:bg-white shadow-sm"
+                          />
+                        </div>
+
+                        {/* Slot 2 */}
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center justify-between px-1">
+                            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">Tindakan 2</span>
+                            <span className="text-[9px] font-black text-slate-950 uppercase bg-amber-400 px-2.5 py-0.5 rounded shadow-sm">Prioritas Utama</span>
+                          </div>
+                          <DroppableZone 
+                            id="drop-2"
+                            droppedWord={droppedWords['drop-2'] || null}
+                            isCorrect={isSubmitted ? caseStudyCorrectAnswers.includes(droppedWords['drop-2'] || '') : undefined}
+                            isSubmitted={isSubmitted}
+                            onReset={() => setDroppedWords(prev => ({ ...prev, 'drop-2': null }))}
+                            isVolcano={false}
+                            className="min-w-0 w-full h-16 rounded-2xl border-2 border-dashed border-slate-300 bg-white hover:border-amber-500/50 hover:bg-white shadow-sm"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 </div>
@@ -437,12 +490,12 @@ function DroppableZone({ id, droppedWord, isCorrect, isSubmitted, onReset, isVol
     <div
       ref={setNodeRef}
       className={cn(
-        "inline-flex items-center justify-center min-w-[240px] h-20 border-4 border-dashed rounded-[2rem] transition-all duration-300 relative group overflow-hidden",
+        "flex items-center justify-center min-w-[140px] h-20 border-4 border-dashed rounded-[2rem] transition-all duration-300 relative group",
         isOver ? "bg-orange-50 border-orange-400 scale-105 shadow-lg" : "bg-earth-50/50 border-earth-200",
         droppedWord && "border-solid bg-white shadow-xl",
         isSubmitted && isCorrect === true && "border-green-500 bg-green-50 shadow-none",
         isSubmitted && isCorrect === false && "border-red-500 bg-red-50 shadow-none",
-        isVolcano ? "mx-auto" : "mx-4 align-middle",
+        isVolcano ? "mx-auto" : "mx-4",
         className
       )}
     >
@@ -452,10 +505,12 @@ function DroppableZone({ id, droppedWord, isCorrect, isSubmitted, onReset, isVol
             key="word"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center w-full gap-4 px-6"
+            className="flex items-center justify-center w-full gap-2 px-3 sm:px-4"
           >
             <span className={cn(
-              "font-black text-2xl tracking-tight",
+              droppedWord.length > 10 
+                ? "text-xs sm:text-sm font-bold leading-tight text-center" 
+                : "font-black text-xl sm:text-2xl tracking-tight",
               droppedWord === 'Benar' ? "text-green-600" : droppedWord === 'Salah' ? "text-red-600" : "text-earth-900"
             )}>
               {droppedWord}
@@ -463,9 +518,9 @@ function DroppableZone({ id, droppedWord, isCorrect, isSubmitted, onReset, isVol
             {!isSubmitted && (
               <button 
                 onClick={(e) => { e.stopPropagation(); onReset(); }} 
-                className="p-2 hover:bg-earth-100 rounded-2xl text-earth-300 hover:text-earth-600 transition-all active:scale-90"
+                className="p-1 sm:p-2 hover:bg-earth-100 rounded-2xl text-earth-300 hover:text-earth-600 transition-all active:scale-90 shrink-0"
               >
-                <RotateCcw className="w-6 h-6" />
+                <RotateCcw className="w-4 h-4" />
               </button>
             )}
             {isSubmitted && isCorrect === true && (
@@ -481,7 +536,7 @@ function DroppableZone({ id, droppedWord, isCorrect, isSubmitted, onReset, isVol
           </motion.div>
         ) : (
           <div className="flex flex-col items-center">
-             <span className="text-earth-300 text-xl font-black italic tracking-widest opacity-60">ISI</span>
+             <span className="text-earth-400 dark:text-white/40 text-sm font-bold tracking-wider uppercase">Taruh di Sini</span>
              {isOver && <div className="w-12 h-1 bg-orange-400 rounded-full animate-pulse" />}
           </div>
         )}

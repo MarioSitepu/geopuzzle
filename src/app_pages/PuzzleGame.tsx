@@ -49,6 +49,12 @@ export default function PuzzleGame() {
         { id: 'classification-1', component: ClassificationPuzzle },
         { id: 'classification-2', component: ClassificationPuzzle },
       ]
+    : (disasterId === 'tsunami' && level === 'awal')
+    ? [
+        { id: 'fill-blank-1', component: FillBlankPuzzle },
+        { id: 'fill-blank-2', component: FillBlankPuzzle },
+        { id: 'ordering', component: OrderingPuzzle },
+      ]
     : level === 'awal'
     ? [
         { id: 'fill-blank', component: FillBlankPuzzle },
