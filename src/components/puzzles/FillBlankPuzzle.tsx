@@ -80,7 +80,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
       ]
     : isTsunamiAwal2
     ? [
-        { id: 'opt1', word: 'Mengajak warga lain untuk mengungsi' },
+        { id: 'opt1', word: 'Mengajak Warga Lain untuk Mengungsi' },
         { id: 'opt2', word: 'Berenang' },
         { id: 'opt3', word: 'Tetap melanjutkan aktifitas' },
         { id: 'opt4', word: 'Posting di Sosmed' },
@@ -100,7 +100,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
 
   const caseStudyCorrectAnswers = isVolcanoLanjut2
     ? ['Efusif', 'Eksplosif']
-    : ['Mengajak warga lain untuk mengungsi', 'Mencari tempat Ketinggian'];
+    : ['Mengajak Warga Lain untuk Mengungsi', 'Tetap melanjutkan aktifitas'];
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveWord(event.active.data.current?.word);
@@ -278,7 +278,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                         Laporan Kejadian
                       </span>
                       <p className="text-earth-800 text-sm sm:text-base font-semibold leading-relaxed text-left italic">
-                        "Warga di pesisir Rajabasa sedang bersantai di sore hari tanpa merasakan guncangan gempa sedikit pun. Tiba-tiba, permukaan air laut naik dengan sangat cepat dan menggenang ke pemukiman. Berdasarkan data geologi, terdapat tebing curam di bawah laut yang baru saja runtuh."
+                        "Warga di pesisir Teluk X sedang bersantai di sore hari tanpa merasakan guncangan gempa sedikit pun. Tiba-tiba, permukaan air laut naik dengan sangat cepat and menggenang ke pemukiman. Berdasarkan data geologi, terdapat tebing curam di bawah laut yang baru saja runtuh."
                       </p>
                     </div>
 
