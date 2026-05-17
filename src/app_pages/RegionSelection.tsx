@@ -53,7 +53,7 @@ export default function RegionSelection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {REGIONS.map((region, index) => {
-          const isUnlocked = unlockedRegions.includes(region.id);
+          const isUnlocked = true; // Force unlock all regions
           
           return (
             <motion.div

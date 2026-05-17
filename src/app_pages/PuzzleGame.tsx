@@ -55,7 +55,7 @@ export default function PuzzleGame() {
         { id: 'classification', component: ClassificationPuzzle },
         { id: 'ordering', component: OrderingPuzzle },
       ]
-    : (disasterId === 'gunung-api' && level === 'lanjut')
+    : (disasterId === 'gunung-api' && level === 'atas')
     ? [
         { id: 'classification', component: ClassificationPuzzle },
         { id: 'fill-blank-2', component: FillBlankPuzzle },
@@ -161,7 +161,16 @@ export default function PuzzleGame() {
     }, 1500);
   };
 
-  const CurrentPuzzle = stages[currentStage].component;
+  const currentStageData = stages[currentStage];
+  const CurrentPuzzle = currentStageData?.component;
+
+  if (!CurrentPuzzle) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-4 rounded-full animate-spin border-earth-200 border-t-earth-600" />
+      </div>
+    );
+  }
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);

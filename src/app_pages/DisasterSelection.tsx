@@ -50,7 +50,7 @@ export default function DisasterSelection() {
   const regionId = params?.regionId as string;
   const { unlockedDisasters } = useGameStore();
   
-  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+  const [selectedLevel, setSelectedLevel] = useState<string>('awal');
 
   const levels = [
     { 
@@ -258,7 +258,7 @@ export default function DisasterSelection() {
             </AnimatePresence>
             
             {DISASTERS.map((disaster, index) => {
-              const isUnlocked = regionDisasters.includes(disaster.id);
+              const isUnlocked = true; // Force unlock all disasters per user request
               const Icon = disaster.icon;
               const canClick = selectedLevel && isUnlocked;
 
