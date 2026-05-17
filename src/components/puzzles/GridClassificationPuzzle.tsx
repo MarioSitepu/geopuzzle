@@ -1,0 +1,444 @@
+'use client';
+
+import React, { useState } from 'react';
+import { 
+  DndContext, 
+  DragEndEvent, 
+  DragStartEvent,
+  useDraggable, 
+  useDroppable,
+  DragOverlay,
+  defaultDropAnimationSideEffects
+} from '@dnd-kit/core';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '../../lib/utils';
+import { RotateCcw, CheckCircle2, AlertCircle } from 'lucide-react';
+
+// --- Types ---
+type Statement = {
+  id: string;
+  text: string;
+  isCorrect: boolean; // true = BENAR, false = SALAH
+};
+
+// --- Initial Data ---
+const INITIAL_STATEMENTS: Statement[] = [
+  { id: 'st-1', text: 'Longsor adalah perpindahan material lereng yang bergerak ke bawah atau keluar lereng.', isCorrect: true },
+  { id: 'st-2', text: 'Longsor adalah getaran permukaan bumi yang merusak bangunan di atas lereng.', isCorrect: false },
+  { id: 'st-3', text: 'Faktor kontrol longsor meliputi jenis batuan, kondisi tanah, dan struktur geologi.', isCorrect: true },
+  { id: 'st-4', text: 'Faktor pemicu yang mengontrol longsor adalah limbah rumah tangga', isCorrect: false },
+  { id: 'st-5', text: 'Faktor pemicu longsor adalah kemiringan lereng, curah hujan tinggi, getaran, dan minimnya pohon.', isCorrect: true },
+  { id: 'st-6', text: 'Faktor pemicu longsor adalah kurangnya sosialisasi dari pemerintahan.', isCorrect: false },
+  { id: 'st-7', text: 'Tanda awal longsor adalah munculnya retakan di lereng, suara tanah jatuh dan air sumur mendadak keruh.', isCorrect: true },
+  { id: 'st-8', text: 'Tanda awal longsor adalah suhu udara mendadak naik drastis dan langit berubah jadi gelap gulita.', isCorrect: false },
+  { id: 'st-9', text: 'Mitigasi yang tepat untuk menahan lereng adalah penahan beton drainase dan menanam pohon berakar lebat', isCorrect: true },
+  { id: 'st-10', text: 'Cara ampuh mencegah longsor adalah dengan membuang sampah ke kaki lereng.', isCorrect: false }
+];
+
+// Grid mappings matching the reference image layout exactly (3 rows x 5 columns = 15 cells)
+const BENAR_GRID_MAP = [
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'benar-slot-1' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'benar-slot-2' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'benar-slot-3' },
+  { type: 'slot', slotId: 'benar-slot-4' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'benar-slot-5' },
+  { type: 'yellow' }
+];
+
+const SALAH_GRID_MAP = [
+  { type: 'slot', slotId: 'salah-slot-1' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'salah-slot-2' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'salah-slot-3' },
+  { type: 'yellow' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'salah-slot-4' },
+  { type: 'yellow' },
+  { type: 'slot', slotId: 'salah-slot-5' }
+];
+
+// --- Subcomponents ---
+
+// Draggable card containing statement text
+function DraggableStatement({ statement, isUsed }: { statement: Statement; isUsed: boolean }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: statement.id,
+    data: statement,
+    disabled: isUsed
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className={cn(
+        "p-4 rounded-2xl shadow-md border-2 bg-gradient-to-br from-white to-slate-50 border-slate-200 text-earth-800 cursor-grab active:cursor-grabbing text-xs sm:text-sm font-bold leading-relaxed select-none text-center relative overflow-hidden transition-all duration-200",
+        isUsed ? "opacity-20 grayscale cursor-not-allowed shadow-none border-slate-100" : "hover:border-orange-400 hover:shadow-lg hover:-translate-y-1",
+        isDragging && "opacity-0"
+      )}
+    >
+      <div className="absolute top-0 left-0 w-1.5 h-full bg-orange-400" />
+      {statement.text}
+    </div>
+  );
+}
+
+// Droppable slot (grey dashed block in 3x5 grid)
+function DroppableSlot({ 
+  slotId, 
+  placedStatement, 
+  isSubmitted, 
+  onReset,
+  isCorrectSection
+}: { 
+  slotId: string; 
+  placedStatement: Statement | null; 
+  isSubmitted: boolean; 
+  onReset: () => void;
+  isCorrectSection: boolean; // true = BENAR grid, false = SALAH grid
+}) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: slotId,
+    disabled: isSubmitted
+  });
+
+  // A placement is correct if:
+  // - Dropped statement's 'isCorrect' matches the grid section it was dropped in
+  const isCorrectPlacement = placedStatement ? placedStatement.isCorrect === isCorrectSection : false;
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "w-full aspect-[4/3] min-h-[70px] sm:min-h-[90px] border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-1.5 transition-all duration-300 relative group",
+        isOver ? "bg-orange-50 border-orange-400 scale-[1.03] shadow-md z-10" : "bg-slate-100 border-slate-400",
+        placedStatement && "border-solid bg-white shadow-md border-slate-300",
+        isSubmitted && placedStatement && isCorrectPlacement && "border-green-500 bg-green-50/70 shadow-none scale-100",
+        isSubmitted && placedStatement && !isCorrectPlacement && "border-red-500 bg-red-50/70 shadow-none scale-100"
+      )}
+    >
+      <AnimatePresence mode="wait">
+        {placedStatement ? (
+          <motion.div 
+            key="placed"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full h-full flex flex-col items-center justify-between relative"
+          >
+            {/* Small text content inside slot */}
+            <div className="grow flex items-center justify-center text-center p-1 overflow-y-auto w-full">
+              <span className="text-[9px] sm:text-[10px] font-black text-slate-800 leading-snug">
+                {placedStatement.text}
+              </span>
+            </div>
+            
+            {/* Quick reset button */}
+            {!isSubmitted && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onReset(); }} 
+                className="absolute -top-1 -right-1 p-0.5 bg-slate-900 text-white rounded-full hover:bg-red-500 transition-colors shadow-md shrink-0 z-20 active:scale-90"
+              >
+                <RotateCcw className="w-2.5 h-2.5" />
+              </button>
+            )}
+
+            {/* Validation badge overlay */}
+            {isSubmitted && (
+              <div className="absolute -bottom-1 -right-1 z-20">
+                {isCorrectPlacement ? (
+                  <CheckCircle2 className="w-5 h-5 text-green-500 bg-white rounded-full shadow-sm" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 text-red-500 bg-white rounded-full shadow-sm" />
+                )}
+              </div>
+            )}
+          </motion.div>
+        ) : (
+          <div className="flex flex-col items-center text-center justify-center w-full h-full">
+            <span className="text-[9px] sm:text-[11px] font-black text-slate-500 uppercase tracking-wider">Kotak Kosong</span>
+            {isOver && <div className="w-6 h-0.5 bg-orange-400 rounded-full mt-1 animate-pulse" />}
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// --- Main GridClassificationPuzzle Component ---
+
+export default function GridClassificationPuzzle({ 
+  onComplete, 
+  disasterId, 
+  level, 
+  stageIndex 
+}: { 
+  onComplete: (score: number) => void;
+  disasterId?: string;
+  level?: string;
+  stageIndex?: number;
+}) {
+  const [activeStatement, setActiveStatement] = useState<Statement | null>(null);
+  
+  // Placements store mapping slotId -> Statement
+  const [placements, setPlacements] = useState<Record<string, Statement | null>>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveStatement(event.active.data.current as Statement);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { over, active } = event;
+    
+    if (over) {
+      const slotId = over.id.toString();
+      const statement = active.data.current as Statement;
+
+      // Remove the statement from any slot it was previously placed in
+      const newPlacements = { ...placements };
+      Object.keys(newPlacements).forEach(key => {
+        if (newPlacements[key]?.id === statement.id) {
+          newPlacements[key] = null;
+        }
+      });
+
+      // Place the statement into the new slot
+      newPlacements[slotId] = statement;
+      setPlacements(newPlacements);
+    }
+    setActiveStatement(null);
+  };
+
+  // Helper to check if a statement is placed in any slot
+  const isStatementPlaced = (id: string) => {
+    return Object.values(placements).some(p => p?.id === id);
+  };
+
+  // Returns placed statement for a given slot
+  const getPlacedStatement = (slotId: string) => {
+    return placements[slotId] || null;
+  };
+
+  // Resets a specific slot
+  const handleResetSlot = (slotId: string) => {
+    setPlacements(prev => ({ ...prev, [slotId]: null }));
+  };
+
+  // All 10 statements must be placed to complete the puzzle
+  const allPlaced = INITIAL_STATEMENTS.every(st => isStatementPlaced(st.id));
+
+  const checkAnswer = () => {
+    if (!allPlaced) return;
+    setIsSubmitted(true);
+
+    let correctPlacementsCount = 0;
+
+    // Validate BENAR slots (must contain statements with 'isCorrect === true')
+    BENAR_GRID_MAP.forEach(cell => {
+      if (cell.type === 'slot') {
+        const statement = placements[cell.slotId];
+        if (statement && statement.isCorrect === true) {
+          correctPlacementsCount++;
+        }
+      }
+    });
+
+    // Validate SALAH slots (must contain statements with 'isCorrect === false')
+    SALAH_GRID_MAP.forEach(cell => {
+      if (cell.type === 'slot') {
+        const statement = placements[cell.slotId];
+        if (statement && statement.isCorrect === false) {
+          correctPlacementsCount++;
+        }
+      }
+    });
+
+    // Calculate score out of 100
+    const score = Math.round((correctPlacementsCount / 10) * 100);
+    setTimeout(() => onComplete(score), 2000);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto relative px-4 py-8 sm:px-6 lg:px-8">
+      {/* Dynamic Background Accents */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-green-400/10 rounded-full blur-3xl -z-10 animate-pulse" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
+
+      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div className="flex flex-col gap-8">
+          
+          {/* Top Row: Info Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-white/60 backdrop-blur-md p-6 rounded-[2rem] border border-white shadow-xl gap-4">
+            <div className="flex items-center gap-4">
+              <span className="w-3.5 h-3.5 rounded-full bg-green-500 animate-ping" />
+              <h2 className="text-xl sm:text-2xl font-black text-earth-900 leading-tight">
+                PILIH & KLASIFIKASIKAN PERNYATAAN LONGSOR
+              </h2>
+            </div>
+            <div className="bg-earth-900 text-white px-6 py-2 rounded-full font-black text-base border border-earth-700 shadow-md">
+              NOMOR {stageIndex !== undefined ? stageIndex + 1 : 1}
+            </div>
+          </div>
+
+          {/* Middle Row: Side-by-Side Grid Boards (BENAR & SALAH) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+            
+            {/* --- BENAR Grid Board (Green) --- */}
+            <div className="flex flex-col bg-white/80 backdrop-blur-xl border-4 border-green-500 rounded-[2.5rem] shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-br from-green-500 to-green-600 text-white py-4 text-center font-black text-xl tracking-widest uppercase">
+                BENAR
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-5 gap-3 sm:gap-4 w-full">
+                  {BENAR_GRID_MAP.map((cell, idx) => {
+                    if (cell.type === 'yellow') {
+                      return (
+                        <div 
+                          key={`benar-yellow-${idx}`}
+                          className="w-full aspect-[4/3] min-h-[70px] sm:min-h-[90px] rounded-xl bg-yellow-400 shadow-sm border border-yellow-300"
+                        />
+                      );
+                    } else {
+                      return (
+                        <DroppableSlot 
+                          key={cell.slotId}
+                          slotId={cell.slotId}
+                          placedStatement={getPlacedStatement(cell.slotId)}
+                          isSubmitted={isSubmitted}
+                          onReset={() => handleResetSlot(cell.slotId)}
+                          isCorrectSection={true}
+                        />
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* --- SALAH Grid Board (Red) --- */}
+            <div className="flex flex-col bg-white/80 backdrop-blur-xl border-4 border-red-500 rounded-[2.5rem] shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-br from-red-500 to-red-600 text-white py-4 text-center font-black text-xl tracking-widest uppercase">
+                SALAH
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-5 gap-3 sm:gap-4 w-full">
+                  {SALAH_GRID_MAP.map((cell, idx) => {
+                    if (cell.type === 'yellow') {
+                      return (
+                        <div 
+                          key={`salah-yellow-${idx}`}
+                          className="w-full aspect-[4/3] min-h-[70px] sm:min-h-[90px] rounded-xl bg-yellow-400 shadow-sm border border-yellow-300"
+                        />
+                      );
+                    } else {
+                      return (
+                        <DroppableSlot 
+                          key={cell.slotId}
+                          slotId={cell.slotId}
+                          placedStatement={getPlacedStatement(cell.slotId)}
+                          isSubmitted={isSubmitted}
+                          onReset={() => handleResetSlot(cell.slotId)}
+                          isCorrectSection={false}
+                        />
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom Row: Unassigned Statements Sidebar/Footer */}
+          <div className="bg-white/90 backdrop-blur-xl border border-white p-8 rounded-[2.5rem] shadow-xl flex flex-col gap-6 w-full">
+            <div className="flex items-center gap-3 justify-center">
+              <div className="h-px flex-1 bg-earth-200" />
+              <span className="text-xs font-black text-earth-400 uppercase tracking-widest">SERET KEPINGAN PERNYATAAN DI BAWAH KE KOTAK KOSONG YANG TEPAT</span>
+              <div className="h-px flex-1 bg-earth-200" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {INITIAL_STATEMENTS.map((statement) => (
+                <DraggableStatement 
+                  key={statement.id}
+                  statement={statement}
+                  isUsed={isStatementPlaced(statement.id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Action Submission Board */}
+          <AnimatePresence>
+            {allPlaced && !isSubmitted && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex justify-center pt-4"
+              >
+                <button
+                  onClick={checkAnswer}
+                  className="group relative px-20 py-6 bg-earth-900 text-white rounded-3xl font-black text-2xl shadow-2xl overflow-hidden transform transition-all hover:scale-105 active:scale-95"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative flex items-center gap-4">
+                    Periksa Jawaban
+                    <motion.div animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                      →
+                    </motion.div>
+                  </span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Submission Feedback Banner */}
+          {isSubmitted && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-8 rounded-[2rem] shadow-2xl flex flex-col items-center justify-center bg-gradient-to-br from-leaf-500 to-leaf-600 border-4 border-leaf-400 text-white"
+            >
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-white/20 rounded-[1.5rem] flex items-center justify-center backdrop-blur-md shadow-lg rotate-12">
+                  <CheckCircle2 className="w-10 h-10" />
+                </div>
+                <div className="text-left">
+                  <h4 className="text-3xl font-black tracking-tight">KUIS SELESAI!</h4>
+                  <p className="text-lg font-bold opacity-90">Memeriksa semua penempatan kepingan jawaban Anda...</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+        </div>
+
+        {/* Drag Overlay Portal */}
+        <DragOverlay dropAnimation={{ sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.4' } } }) }}>
+          {activeStatement ? (
+            <div className="p-4 rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] bg-gradient-to-br from-white to-slate-50 border-2 border-orange-400 text-earth-800 text-xs sm:text-sm font-black leading-relaxed scale-105 rotate-2 cursor-grabbing text-center">
+              {activeStatement.text}
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
+  );
+}

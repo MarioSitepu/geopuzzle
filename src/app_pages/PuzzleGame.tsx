@@ -11,6 +11,7 @@ import ClassificationPuzzle from '../components/puzzles/ClassificationPuzzle';
 import MatchingPuzzle from '../components/puzzles/MatchingPuzzle';
 import FillBlankPuzzle from '../components/puzzles/FillBlankPuzzle';
 import OrderingPuzzle from '../components/puzzles/OrderingPuzzle';
+import GridClassificationPuzzle from '../components/puzzles/GridClassificationPuzzle';
 import { useGameStore } from '../store/useGameStore';
 import { useRef } from 'react';
 
@@ -40,8 +41,9 @@ export default function PuzzleGame() {
 
   const stages = disasterId === 'longsor' && level === 'awal' 
     ? [
-        { id: 'classification-1', component: ClassificationPuzzle },
-        { id: 'classification-2', component: ClassificationPuzzle },
+        { id: 'grid-classification', component: GridClassificationPuzzle, stageIndex: 0 },
+        { id: 'classification-1', component: ClassificationPuzzle, stageIndex: 0 },
+        { id: 'classification-2', component: ClassificationPuzzle, stageIndex: 1 },
       ]
     : (disasterId === 'gunung-api' && level === 'awal')
     ? [
@@ -270,7 +272,12 @@ export default function PuzzleGame() {
                 transition={{ duration: 0.3 }}
                 className="relative w-full pb-20"
               >
-                <CurrentPuzzle onComplete={handleStageComplete} disasterId={disasterId} level={level} stageIndex={currentStage} />
+                <CurrentPuzzle 
+                  onComplete={handleStageComplete} 
+                  disasterId={disasterId} 
+                  level={level} 
+                  stageIndex={currentStageData.stageIndex !== undefined ? currentStageData.stageIndex : currentStage} 
+                />
               </motion.div>
             ) : (
               <motion.div

@@ -181,17 +181,17 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'vulkanik', title: 'Pemicu Vulkanik' },
     { id: 'meteor', title: 'Pemicu Ekstraterestrial' },
   ] : (isLandscapes && level === 'awal') ? (stageIndex === 1 ? [
-    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '21.0%', left: '68.2%', width: '16.4%', height: '14.0%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '38.5%', left: '30.9%', width: '16.4%', height: '14.0%' } },
-    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '54.5%', left: '80.9%', width: '16.4%', height: '14.0%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '63.0%', left: '37.3%', width: '16.4%', height: '14.0%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '66.5%', left: '62.7%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '36.6%', left: '68.6%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '40.8%', left: '44.8%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '47.0%', left: '81.6%', width: '16.4%', height: '14.0%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
   ] : [
-    { id: 'top-1', title: 'Slot Atas 1', position: { top: '24%', left: '76%', width: '16%', height: '11%' } },
-    { id: 'top-2', title: 'Slot Atas 2', position: { top: '30%', left: '52%', width: '16%', height: '11%' } },
-    { id: 'top-3', title: 'Slot Atas 3', position: { top: '35%', left: '88%', width: '16%', height: '11%' } },
-    { id: 'bottom-1', title: 'Slot Bawah 1', position: { top: '68%', left: '39%', width: '16%', height: '11%' } },
-    { id: 'bottom-2', title: 'Slot Bawah 2', position: { top: '66%', left: '68%', width: '16%', height: '11%' } },
+    { id: 'top-1', title: 'Slot Atas 1', position: { top: '36.6%', left: '68.6%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-2', title: 'Slot Atas 2', position: { top: '40.8%', left: '44.8%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-3', title: 'Slot Atas 3', position: { top: '47.0%', left: '81.6%', width: '16.4%', height: '14.0%' } },
+    { id: 'bottom-1', title: 'Slot Bawah 1', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
+    { id: 'bottom-2', title: 'Slot Bawah 2', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
   ]) : (isLandscapes && level === 'menengah') ? [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
@@ -459,15 +459,15 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             {isBoardStyle && (
               <div className="absolute inset-0 z-0">
                 <img 
-                  src={isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscapes/landslide-bg.png")}
+                  src={isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
                   alt="Board" 
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-fill"
                 />
               </div>
             )}
 
             <div className={cn(
-              "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
+              isBoardStyle ? "absolute inset-0 z-10" : "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
               (isVolcano && level === 'awal' && stageIndex === 2) ? "flex flex-col gap-6 max-w-4xl mx-auto py-10 px-8 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl mt-4" : (!isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8")
             )}>
               {categories.map((category, idx) => (

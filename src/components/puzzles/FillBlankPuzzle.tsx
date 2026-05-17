@@ -49,6 +49,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
   const isVolcanoLanjut2 = isVolcano && level === 'atas' && stageIndex === 1;
   const isTsunami = disasterId === 'tsunami';
   const isTsunamiAwal2 = isTsunami && level === 'awal' && stageIndex === 1;
+  const isLandslide = disasterId === 'longsor';
 
   const isCaseStudyMode = isVolcanoLanjut2 || isTsunamiAwal2;
   
@@ -67,8 +68,16 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
     { id: 's6', text: 'Berenang melawan arus tsunami adalah cara terbaik untuk menyelamatkan diri jika terjebak di air.', answer: 'Salah' },
   ];
 
-  const isTrueFalseMode = isVolcano || (isTsunami && level === 'awal' && stageIndex === 0);
-  const statements = isTsunami ? tsunamiStatements : volcanoStatements;
+  const landslideStatements = [
+    { id: 's1', text: 'Tanah longsor didefinisikan sebagai perpindahan material pembentuk lereng berupa batuan, bahan rombakan, tanah, atau material campuran, bergerak ke bawah atau keluar lereng.', answer: 'Benar' },
+    { id: 's2', text: 'Salah satu tanda awal terjadinya tanah longsor adalah munculnya retakan baru pada lereng atau tanah di sekitar lereng.', answer: 'Benar' },
+    { id: 's3', text: 'Tanah longsor hanya terjadi saat musim kemarau panjang akibat tanah yang retak dan kering.', answer: 'Salah' },
+    { id: 's4', text: 'Penebangan pohon di lereng bukit dapat membantu meningkatkan kestabilan lereng karena mengurangi beban berat pohon.', answer: 'Salah' },
+    { id: 's5', text: 'Ketika terjadi longsor di sekitar Anda, tindakan terbaik yang harus dilakukan segera adalah mengungsi ke tempat yang lebih tinggi dan lapang.', answer: 'Benar' },
+  ];
+
+  const isTrueFalseMode = isVolcano || (isTsunami && level === 'awal' && stageIndex === 0) || (isLandslide && level === 'awal' && stageIndex === 0);
+  const statements = isTsunami ? tsunamiStatements : isVolcano ? volcanoStatements : landslideStatements;
 
   const choices = isVolcanoLanjut2
     ? [
