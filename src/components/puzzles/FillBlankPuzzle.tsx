@@ -29,7 +29,7 @@ function DraggableWord({ word, id, isUsed }: { word: string; id: string; isUsed:
       {...attributes}
       className={cn(
         "px-5 py-3 rounded-2xl shadow-sm border-2 cursor-grab active:cursor-grabbing text-base font-black transition-all select-none text-center",
-        word === 'Benar' ? "bg-green-500 border-green-600 text-white" : word === 'Salah' ? "bg-red-500 border-red-600 text-white" : "bg-white border-earth-100 text-earth-800",
+        word === 'Benar' ? "bg-green-500 border-green-600 text-white" : word === 'Salah' ? "bg-red-500 border-red-600 text-white" : "bg-yellow-400 border-yellow-500 text-earth-900",
         isUsed ? "opacity-30 grayscale cursor-not-allowed border-earth-100 shadow-none" : "hover:shadow-md hover:-translate-y-0.5",
         isDragging && "opacity-0"
       )}
@@ -40,12 +40,13 @@ function DraggableWord({ word, id, isUsed }: { word: string; id: string; isUsed:
 }
 
 
-export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onComplete: (score: number) => void, disasterId?: string, level?: string }) {
+export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIndex }: { onComplete: (score: number) => void, disasterId?: string, level?: string, stageIndex?: number }) {
   const [activeWord, setActiveWord] = useState<string | null>(null);
   const [droppedWords, setDroppedWords] = useState<Record<string, string | null>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   
   const isVolcano = disasterId === 'gunung-api';
+  const isVolcanoLanjut2 = isVolcano && level === 'lanjut' && stageIndex === 1;
   const isTsunami = disasterId === 'tsunami';
   
   const volcanoStatements = [
@@ -54,7 +55,15 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
     { id: 's3', text: 'Magma yang telah mencapai permukaan bumi dan mengalir keluar disebut sebagai lava.', answer: 'Benar' },
   ];
 
-  const choices = isVolcano 
+  const choices = isVolcanoLanjut2
+    ? [
+        { id: 'opt1', word: 'Efusif' },
+        { id: 'opt2', word: 'Strato' },
+        { id: 'opt3', word: 'Wedhus Gembel' },
+        { id: 'opt4', word: 'Eksplosif' },
+        { id: 'opt5', word: 'Kubah' }
+      ]
+    : isVolcano 
     ? [
         { id: 'opt1', word: 'Benar' },
         { id: 'opt2', word: 'Salah' },
@@ -80,7 +89,16 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
   };
 
   const checkAnswer = () => {
-    if (isVolcano) {
+    if (isVolcanoLanjut2) {
+      if (!droppedWords['drop-1'] || !droppedWords['drop-2']) return;
+      setIsSubmitted(true);
+      
+      const answers = [droppedWords['drop-1'], droppedWords['drop-2']];
+      const correctCount = (answers.includes('Efusif') ? 1 : 0) + (answers.includes('Eksplosif') ? 1 : 0);
+      
+      const score = Math.round((correctCount / 2) * 100);
+      setTimeout(() => onComplete(score), 1500);
+    } else if (isVolcano) {
       if (Object.keys(droppedWords).length < volcanoStatements.length) return;
       setIsSubmitted(true);
       
@@ -100,11 +118,15 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
     }
   };
 
-  const isAllCorrect = isVolcano 
+  const isAllCorrect = isVolcanoLanjut2
+    ? ['Efusif', 'Eksplosif'].includes(droppedWords['drop-1'] || '') && ['Efusif', 'Eksplosif'].includes(droppedWords['drop-2'] || '') && droppedWords['drop-1'] !== droppedWords['drop-2']
+    : isVolcano 
     ? volcanoStatements.every(s => droppedWords[s.id] === s.answer)
     : droppedWords['default'] === 'Mitigasi';
 
-  const isComplete = isVolcano 
+  const isComplete = isVolcanoLanjut2
+    ? !!droppedWords['drop-1'] && !!droppedWords['drop-2']
+    : isVolcano 
     ? volcanoStatements.every(s => droppedWords[s.id])
     : !!droppedWords['default'];
 
@@ -127,9 +149,9 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
               <div className="relative z-10 flex flex-col items-center">
                 <span className="text-xs font-black uppercase tracking-[0.3em] opacity-80 mb-1">Level Edukasi</span>
-                <h3 className="text-3xl font-black italic tracking-tighter drop-shadow-sm">TINGKAT AWAL</h3>
+                <h3 className="text-3xl font-black italic tracking-tighter drop-shadow-sm">TINGKAT {level === 'lanjut' ? 'LANJUT' : 'AWAL'}</h3>
                 <div className="mt-4 px-6 py-2 bg-white/20 backdrop-blur-md rounded-full text-xl font-bold border border-white/30">
-                  NOMOR 1
+                  NOMOR {stageIndex !== undefined ? stageIndex + 1 : 1}
                 </div>
               </div>
             </div>
@@ -187,7 +209,9 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
                 <RotateCcw className="w-7 h-7" />
               </div>
               <p className="text-earth-800 font-extrabold text-xl leading-snug">
-                Tarik dan taruh pilihan <span className="text-green-600">benar</span> atau <span className="text-red-600">salah</span> mengenai pernyataan geologi berikut ini.
+                {isVolcanoLanjut2 ? "Tarik dan taruh pilihan yang ada di bawah ini dengan mengisi jawaban yang cocok!" : (
+                  <>Tarik dan taruh pilihan <span className="text-green-600">benar</span> atau <span className="text-red-600">salah</span> mengenai pernyataan geologi berikut ini.</>
+                )}
               </p>
             </motion.div>
 
@@ -196,7 +220,46 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
               {/* Connecting Line */}
               <div className="absolute left-[50%] top-0 bottom-0 w-1 bg-earth-100 -z-10 hidden lg:block" />
 
-              {isVolcano ? (
+              {isVolcanoLanjut2 ? (
+                <div className="flex flex-col gap-8 w-full max-w-4xl mx-auto">
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-white p-10 sm:p-12 rounded-[3rem] border border-earth-100 shadow-xl text-center relative overflow-hidden group"
+                  >
+                    <div className="absolute top-0 left-0 w-64 h-64 bg-orange-100/40 rounded-full -ml-32 -mt-32 blur-3xl transition-transform group-hover:scale-110" />
+                    <p className="text-2xl font-bold text-earth-800 leading-relaxed relative z-10">
+                      Secara umum, tipe erupsi gunung api dibedakan menjadi dua kategori utama berdasarkan mekanisme keluarnya magma, ada yang keluarnya seperti meledak dan ada yang diam diam dan mengalir. Pilihlah jawabannya dibawah ini
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="bg-white p-10 sm:p-12 rounded-[3rem] border border-earth-100 shadow-xl flex flex-col md:flex-row items-center justify-center gap-8 relative z-10"
+                  >
+                    <span className="text-2xl font-black text-earth-800">Jawabanya adalah</span>
+                    <DroppableZone 
+                      id="drop-1"
+                      droppedWord={droppedWords['drop-1'] || null}
+                      isCorrect={isSubmitted ? ['Efusif', 'Eksplosif'].includes(droppedWords['drop-1'] || '') : undefined}
+                      isSubmitted={isSubmitted}
+                      onReset={() => setDroppedWords(prev => ({ ...prev, 'drop-1': null }))}
+                      isVolcano={false}
+                    />
+                    <span className="text-4xl font-black text-earth-400">&</span>
+                    <DroppableZone 
+                      id="drop-2"
+                      droppedWord={droppedWords['drop-2'] || null}
+                      isCorrect={isSubmitted ? ['Efusif', 'Eksplosif'].includes(droppedWords['drop-2'] || '') : undefined}
+                      isSubmitted={isSubmitted}
+                      onReset={() => setDroppedWords(prev => ({ ...prev, 'drop-2': null }))}
+                      isVolcano={false}
+                    />
+                  </motion.div>
+                </div>
+              ) : isVolcano ? (
                 volcanoStatements.map((s, index) => (
                   <motion.div 
                     key={s.id}
@@ -321,8 +384,8 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level }: { onC
         <DragOverlay dropAnimation={{ sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.4' } } }) }}>
           {activeWord ? (
             <div className={cn(
-              "px-10 py-5 rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] text-2xl font-black text-white cursor-grabbing scale-110 rotate-2 transition-transform border-2",
-              activeWord === 'Benar' ? 'bg-green-500 border-green-400' : activeWord === 'Salah' ? 'bg-red-500 border-red-400' : 'bg-earth-800 border-earth-700'
+              "px-10 py-5 rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] text-2xl font-black transition-transform border-2 scale-110 rotate-2 cursor-grabbing",
+              activeWord === 'Benar' ? 'bg-green-500 border-green-400 text-white' : activeWord === 'Salah' ? 'bg-red-500 border-red-400 text-white' : 'bg-yellow-400 border-yellow-500 text-earth-900'
             )}>
               {activeWord}
             </div>

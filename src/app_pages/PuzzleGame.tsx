@@ -55,6 +55,12 @@ export default function PuzzleGame() {
         { id: 'classification', component: ClassificationPuzzle },
         { id: 'ordering', component: OrderingPuzzle },
       ]
+    : (disasterId === 'gunung-api' && level === 'lanjut')
+    ? [
+        { id: 'classification', component: ClassificationPuzzle },
+        { id: 'fill-blank-2', component: FillBlankPuzzle },
+        { id: 'ordering', component: OrderingPuzzle },
+      ]
     : [
         { id: 'classification', component: ClassificationPuzzle },
         { id: 'matching', component: disasterId === 'longsor' ? MatchingPuzzle : OrderingPuzzle },

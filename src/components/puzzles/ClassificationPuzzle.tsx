@@ -430,49 +430,57 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
               </div>
             )}
 
-              <div className="flex flex-col gap-6 relative z-10 w-full max-w-4xl mx-auto py-10 px-8 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl mt-4">
-                {categories.map((category, idx) => (
-                  <div key={category.id} className="flex items-center gap-8 group">
-                    {/* Level Label */}
-                    <div className={cn(
-                      "w-44 sm:w-56 py-4 sm:py-5 px-4 sm:px-6 rounded-2xl shadow-md border-t-2 border-white/50 text-center font-bold text-xs sm:text-sm tracking-widest transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg",
-                      idx === 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white" :
-                      idx === 1 ? "bg-gradient-to-br from-amber-500 to-yellow-600 text-white" :
-                      idx === 2 ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white" :
-                      "bg-gradient-to-br from-rose-600 to-red-700 text-white"
-                    )}>
-                      {category.title}
-                      <div className="mt-0.5 opacity-70 text-[8px] uppercase font-bold tracking-[0.1em]">Mitigasi</div>
-                    </div>
+            <div className={cn(
+              "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
+              (isVolcano && level === 'awal' && stageIndex === 2) ? "flex flex-col gap-6 max-w-4xl mx-auto py-10 px-8 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl mt-4" : (!isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8")
+            )}>
+              {categories.map((category, idx) => (
+                <div key={category.id} className={cn(
+                  (isVolcano && level === 'awal' && stageIndex === 2) ? "flex items-center gap-8 group" : "contents"
+                )}>
+                  {isVolcano && level === 'awal' && stageIndex === 2 && (
+                    <>
+                      {/* Level Label */}
+                      <div className={cn(
+                        "w-44 sm:w-56 py-4 sm:py-5 px-4 sm:px-6 rounded-2xl shadow-md border-t-2 border-white/50 text-center font-bold text-xs sm:text-sm tracking-widest transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg",
+                        idx === 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white" :
+                        idx === 1 ? "bg-gradient-to-br from-amber-500 to-yellow-600 text-white" :
+                        idx === 2 ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white" :
+                        "bg-gradient-to-br from-rose-600 to-red-700 text-white"
+                      )}>
+                        {category.title}
+                        <div className="mt-0.5 opacity-70 text-[8px] uppercase font-bold tracking-[0.1em]">Mitigasi</div>
+                      </div>
 
-                    {/* Elegant Single Arrow */}
-                    <div className="flex-shrink-0">
-                      <motion.div 
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ repeat: Infinity, duration: 2.5 }}
-                        className="text-earth-300 hidden sm:block opacity-60"
-                      >
-                        <svg className="w-12 h-6" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M30 7l5 5-5 5" />
-                          <line x1="0" y1="12" x2="35" y2="12" />
-                        </svg>
-                      </motion.div>
-                    </div>
+                      {/* Elegant Single Arrow */}
+                      <div className="flex-shrink-0">
+                        <motion.div 
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{ repeat: Infinity, duration: 2.5 }}
+                          className="text-earth-300 hidden sm:block opacity-60"
+                        >
+                          <svg className="w-12 h-6" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M30 7l5 5-5 5" />
+                            <line x1="0" y1="12" x2="35" y2="12" />
+                          </svg>
+                        </motion.div>
+                      </div>
+                    </>
+                  )}
 
-                    {/* Drop Zone */}
-                    <div className="flex-grow">
-                      <DroppableZone 
-                        category={category} 
-                        items={assignedItems[category.id] || []} 
-                        isTsunami={isTsunami}
-                        isVolcano={isVolcano}
-                        isLandscapes={isLandscapes}
-                        level={level}
-                      />
-                    </div>
+                  <div className={cn("flex-grow", !(isVolcano && level === 'awal' && stageIndex === 2) && "contents")}>
+                    <DroppableZone 
+                      category={category} 
+                      items={assignedItems[category.id] || []} 
+                      isTsunami={isTsunami}
+                      isVolcano={isVolcano}
+                      isLandscapes={isLandscapes}
+                      level={level}
+                    />
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
