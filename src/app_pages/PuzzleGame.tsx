@@ -12,6 +12,7 @@ import MatchingPuzzle from '../components/puzzles/MatchingPuzzle';
 import FillBlankPuzzle from '../components/puzzles/FillBlankPuzzle';
 import OrderingPuzzle from '../components/puzzles/OrderingPuzzle';
 import GridClassificationPuzzle from '../components/puzzles/GridClassificationPuzzle';
+import DecisionPuzzle from '../components/puzzles/DecisionPuzzle';
 import { useGameStore } from '../store/useGameStore';
 import { useRef } from 'react';
 
@@ -72,9 +73,7 @@ export default function PuzzleGame() {
     : (disasterId === 'tsunami' && level === 'atas')
     ? [
         { id: 'classification-1', component: ClassificationPuzzle, stageIndex: 0 },
-        { id: 'classification-2', component: ClassificationPuzzle, stageIndex: 1 },
-        { id: 'ordering', component: OrderingPuzzle, stageIndex: 2 },
-        { id: 'fill-blank', component: FillBlankPuzzle, stageIndex: 3 },
+        { id: 'decision', component: DecisionPuzzle, stageIndex: 1 },
       ]
     : [
         { id: 'classification', component: ClassificationPuzzle },
