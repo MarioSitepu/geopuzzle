@@ -8,7 +8,7 @@ import PageTransition from '../components/PageTransition';
 import { cn } from '../lib/utils';
 
 const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size: string; url: string }[]>> = {
-  'bandar-lampung': {
+  'kalianda': {
     'gunung-api': [
       { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
       { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
@@ -36,7 +36,7 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
       { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
     ]
   },
-  'panjang': {
+  'rajabasa': {
     'gunung-api': [
       { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
       { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }

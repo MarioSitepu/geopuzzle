@@ -1,86 +1,76 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Flame, Mountain, Waves, Lock, ChevronRight, Sparkles, BookOpen } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ArrowLeft, Sparkles, BookOpen, ChevronRight } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
-import { useGameStore } from '../store/useGameStore';
 import { cn } from '../lib/utils';
 
-const DISASTERS = [
-  {
-    id: 'longsor',
-    name: 'Tanah Longsor',
-    icon: Mountain,
-    description: 'Memahami Definisi Longsor, Pergerakan Tanah dan Jenis Jenis nya dari sisi keilmuan Geologi',
-    color: 'from-amber-500 to-amber-700',
-    glow: 'shadow-amber-500/20',
-    bgLight: 'bg-amber-50',
-    textColor: 'text-amber-700',
-    accent: 'border-amber-200'
-  },
-  {
-    id: 'gunung-api',
-    name: 'Gunung Api',
-    icon: Flame,
-    description: 'Memahami aktivitas vulkanik, jenis erupsi, dan dampak geologi dari gunung berapi.',
-    color: 'from-orange-500 to-red-600',
-    glow: 'shadow-red-500/20',
-    bgLight: 'bg-orange-50',
-    textColor: 'text-orange-700',
-    accent: 'border-orange-200'
-  },
-  {
-    id: 'tsunami',
+const REGION_DISASTER_MAP: Record<string, string> = {
+  'kalianda': 'tsunami',
+  'pidada': 'longsor',
+  'rajabasa': 'gunung-api'
+};
+
+const DISASTER_INFO: Record<string, { name: string; color: string; glow: string; text: string }> = {
+  'tsunami': {
     name: 'Tsunami',
-    icon: Waves,
-    description: 'Memahami mekanisme pemicu tsunami, perambatan gelombang, dan dampaknya di pesisir.',
     color: 'from-blue-500 to-cyan-600',
     glow: 'shadow-blue-500/20',
-    bgLight: 'bg-blue-50',
-    textColor: 'text-blue-700',
-    accent: 'border-blue-200'
+    text: 'text-blue-700'
   },
-];
+  'longsor': {
+    name: 'Tanah Longsor',
+    color: 'from-amber-500 to-amber-700',
+    glow: 'shadow-amber-500/20',
+    text: 'text-amber-700'
+  },
+  'gunung-api': {
+    name: 'Gunung Api',
+    color: 'from-orange-500 to-red-600',
+    glow: 'shadow-red-500/20',
+    text: 'text-orange-700'
+  }
+};
 
 export default function DisasterSelection() {
   const params = useParams();
   const regionId = params?.regionId as string;
-  const { unlockedDisasters } = useGameStore();
   
-  const [selectedLevel, setSelectedLevel] = useState<string | null>('awal');
-
   const levels = [
     { 
       id: 'awal', 
-      name: 'Awal', 
-      description: 'Konsep dasar & terminologi geologi', 
+      name: 'Tingkat Awal', 
+      description: 'Konsep dasar, terminologi geologi, dan mitigasi awal.', 
       icon: Sparkles,
-      color: 'leaf' 
+      color: 'from-leaf-500 to-emerald-600',
+      glow: 'shadow-leaf-500/20',
+      textColor: 'text-leaf-700'
     },
     { 
       id: 'atas', 
-      name: 'Lanjutan', 
-      description: 'Analisis risiko & mitigasi kompleks', 
+      name: 'Tingkat Lanjutan', 
+      description: 'Analisis risiko kompleks dan strategi mitigasi lanjutan.', 
       icon: BookOpen,
-      color: 'red' 
+      color: 'from-rose-500 to-red-600',
+      glow: 'shadow-red-500/20',
+      textColor: 'text-rose-700'
     },
   ];
-  
-  const regionDisasters = unlockedDisasters[regionId || ''] || [];
 
   const regionNames: Record<string, string> = {
-    'bandar-lampung': 'Bandar Lampung',
+    'kalianda': 'Kalianda',
     'pidada': 'Pidada',
-    'panjang': 'Panjang'
+    'rajabasa': 'Rajabasa'
   };
 
   const displayName = regionNames[regionId] || regionId?.replace(/-/g, ' ');
+  const targetDisasterId = REGION_DISASTER_MAP[regionId] || 'longsor';
+  const disasterInfo = DISASTER_INFO[targetDisasterId];
 
   return (
-    <PageTransition className="p-4 sm:p-8 max-w-7xl mx-auto w-full relative">
+    <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full relative min-h-[80vh] flex flex-col justify-center">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-leaf-100/30 blur-[120px] animate-pulse" />
@@ -90,10 +80,11 @@ export default function DisasterSelection() {
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
+        className="absolute top-0 left-0 w-full"
       >
         <Link 
           href="/regions" 
-          className="group inline-flex items-center gap-2 text-earth-500 hover:text-earth-900 mb-8 transition-all font-medium"
+          className="group inline-flex items-center gap-2 text-earth-500 hover:text-earth-900 transition-all font-medium"
         >
           <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:-translate-x-1 transition-transform border border-earth-100">
             <ArrowLeft className="w-4 h-4" />
@@ -102,19 +93,19 @@ export default function DisasterSelection() {
         </Link>
       </motion.div>
 
-      <div className="mb-12">
+      <div className="text-center mb-16 mt-16">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-block px-4 py-1.5 rounded-full bg-leaf-100 text-leaf-700 text-sm font-bold mb-4 border border-leaf-200"
+          className={cn("inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-4 border bg-white shadow-sm uppercase tracking-widest", disasterInfo.text)}
         >
-          GeoPuzzle Explorer
+          Modul {disasterInfo.name}
         </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-5xl sm:text-6xl font-black text-earth-900 mb-6 tracking-tight"
+          className="text-4xl sm:text-6xl font-black text-earth-900 mb-6 tracking-tight"
         >
           Kecamatan <span className="text-transparent bg-clip-text bg-linear-to-r from-earth-700 via-leaf-700 to-earth-500">{displayName}</span>
         </motion.h1>
@@ -122,211 +113,56 @@ export default function DisasterSelection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-earth-600 text-lg max-w-2xl leading-relaxed"
+          className="text-earth-600 text-lg max-w-2xl mx-auto leading-relaxed"
         >
-          Pilih tingkatan keahlian Anda untuk memulai modul pembelajaran interaktif mengenai bencana geologi di wilayah ini.
+          Silakan pilih tingkatan materi yang ingin Anda pelajari untuk modul bencana <strong>{disasterInfo.name}</strong> di wilayah ini.
         </motion.p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 items-start">
-        {/* Sidebar: Tingkatan */}
-        <div className="lg:w-1/3 w-full space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-earth-900 flex items-center gap-3">
-              <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-earth-900 text-white shadow-lg text-lg">1</span>
-              Tingkatan
-            </h2>
-            {selectedLevel && (
-              <motion.button 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                onClick={() => setSelectedLevel(null)}
-                className="text-sm text-leaf-600 font-bold hover:underline"
+      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto w-full">
+        {levels.map((level, idx) => {
+          const Icon = level.icon;
+          return (
+            <motion.div
+              key={level.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + (idx * 0.1) }}
+            >
+              <Link
+                href={`/regions/${regionId}/${targetDisasterId}/learn?level=${level.id}`}
+                className={cn(
+                  "group relative block h-full p-8 rounded-[2.5rem] bg-white border-2 border-transparent hover:border-earth-200 shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+                )}
               >
-                Ganti
-              </motion.button>
-            )}
-          </div>
-          
-          <div className="grid grid-cols-1 gap-4">
-            {levels.map((level, idx) => {
-              const isActive = selectedLevel === level.id;
-              const Icon = level.icon;
-              return (
-                <motion.button
-                  key={level.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + (idx * 0.1) }}
-                  onClick={() => setSelectedLevel(level.id)}
-                  className={cn(
-                    "group relative p-6 rounded-4xl border-2 transition-all duration-500 text-left overflow-hidden",
-                    isActive 
-                      ? "border-earth-900 bg-earth-900 text-white shadow-2xl shadow-earth-900/20 translate-x-2" 
-                      : "border-white bg-white/60 backdrop-blur-md hover:border-earth-200 hover:shadow-xl hover:translate-x-1"
-                  )}
-                >
-                  <div className="relative z-10 flex items-center gap-4">
-                    <div className={cn(
-                      "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500",
-                      isActive ? "bg-white/20 text-white scale-110" : "bg-earth-100 text-earth-600 group-hover:bg-earth-200"
-                    )}>
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <div className="font-black text-xl mb-0.5">Tingkat {level.name}</div>
-                      <div className={cn(
-                        "text-sm font-medium opacity-70",
-                        isActive ? "text-white/80" : "text-earth-500"
-                      )}>
-                        {level.description}
-                      </div>
-                    </div>
-                    {isActive && (
-                      <motion.div 
-                        layoutId="active-indicator"
-                        className="ml-auto w-8 h-8 rounded-full bg-white flex items-center justify-center"
-                      >
-                        <ChevronRight className="w-5 h-5 text-earth-900" />
-                      </motion.div>
-                    )}
+                <div className="relative z-10">
+                  <div className={cn(
+                    "w-16 h-16 rounded-3xl flex items-center justify-center mb-8 shadow-xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3",
+                    `bg-gradient-to-br ${level.color} ${level.glow} text-white`
+                  )}>
+                    <Icon className="w-8 h-8" />
                   </div>
                   
-                  {/* Subtle background glow for active state */}
-                  {isActive && (
-                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-32 h-32 bg-white/10 blur-3xl rounded-full" />
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
-
-          <AnimatePresence>
-            {!selectedLevel && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="p-6 rounded-4xl bg-amber-50 border-2 border-amber-100/50 text-amber-800"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
-                    <Sparkles className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-amber-900 mb-1">Tips Belajar</h4>
-                    <p className="text-sm leading-relaxed opacity-80">
-                      Disarankan untuk mulai dari tingkat <strong>Awal</strong> jika Anda baru pertama kali mempelajari materi ini.
-                    </p>
+                  <h3 className="text-3xl font-black text-earth-900 mb-4">{level.name}</h3>
+                  <p className="text-earth-600 font-medium leading-relaxed mb-8">
+                    {level.description}
+                  </p>
+                  
+                  <div className={cn("flex items-center gap-2 font-bold", level.textColor)}>
+                    Mulai Belajar
+                    <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
 
-        {/* Main: Bencana */}
-        <div className="lg:w-2/3 w-full">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className={cn(
-              "text-2xl font-bold flex items-center gap-3 transition-all duration-500",
-              !selectedLevel ? "opacity-30" : "opacity-100"
-            )}>
-              <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-earth-900 text-white shadow-lg text-lg">2</span>
-              Pilih Bencana
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 relative">
-            <AnimatePresence>
-              {!selectedLevel && (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/40 backdrop-blur-md rounded-[2.5rem] border-4 border-dashed border-earth-200/50 p-12 text-center"
-                >
-                  <div className="w-20 h-20 rounded-full bg-white shadow-xl flex items-center justify-center mb-6 animate-bounce">
-                    <Lock className="w-8 h-8 text-earth-300" />
-                  </div>
-                  <h3 className="text-2xl font-black text-earth-900 mb-2">Bencana Terkunci</h3>
-                  <p className="text-earth-500 font-medium max-w-xs">
-                    Pilih tingkatan materi terlebih dahulu di panel sebelah kiri untuk membuka modul.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            
-            {DISASTERS.map((disaster, index) => {
-              const isUnlocked = true; // Force unlock all disasters per user request
-              const Icon = disaster.icon;
-              const canClick = selectedLevel && isUnlocked;
-
-              return (
-                <motion.div
-                  key={disaster.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + (index * 0.1) }}
-                  className="group"
-                >
-                  <Link
-                    href={canClick ? `/regions/${regionId}/${disaster.id}/learn?level=${selectedLevel}` : '#'}
-                    className={cn(
-                      "block relative h-full overflow-hidden rounded-[2.5rem] p-1 transition-all duration-500",
-                      canClick 
-                        ? `bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] hover:shadow-2xl hover:shadow-earth-900/10 hover:-translate-y-2` 
-                        : "bg-earth-100 cursor-not-allowed grayscale"
-                    )}
-                  >
-                    <div className="relative z-10 p-8 flex flex-col h-full">
-                      <div className="flex items-start justify-between mb-8">
-                        <div className={cn(
-                          "w-16 h-16 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-xl",
-                          canClick ? `bg-linear-to-br ${disaster.color} text-white ${disaster.glow}` : "bg-earth-300 text-earth-500"
-                        )}>
-                          {isUnlocked ? <Icon className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
-                        </div>
-                        {canClick && (
-                          <div className={cn(
-                            "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                            disaster.bgLight, disaster.textColor
-                          )}>
-                            Tersedia
-                          </div>
-                        )}
-                      </div>
-                      
-                      <h3 className="text-3xl font-black text-earth-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r transition-all duration-500"
-                        style={{ backgroundImage: canClick ? `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))` : 'none' }}>
-                        {disaster.name}
-                      </h3>
-                      <p className="text-earth-600 font-medium leading-relaxed mb-10 line-clamp-2">
-                        {disaster.description}
-                      </p>
-                      
-                      <div className="mt-auto flex items-center justify-between">
-                        <div className={cn(
-                          "flex items-center gap-2 font-bold transition-all duration-300",
-                          canClick ? disaster.textColor : "text-earth-400"
-                        )}>
-                          <span>{canClick ? 'Mulai Eksplorasi' : 'Terkunci'}</span>
-                          {canClick && <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
-                        </div>
-                        
-                        {/* Decorative background circle */}
-                        <div className={cn(
-                          "absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 w-32 h-32 rounded-full transition-all duration-700 opacity-10 group-hover:scale-150 group-hover:opacity-20",
-                          canClick ? `bg-linear-to-br ${disaster.color}` : "bg-earth-300"
-                        )} />
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+                {/* Decorative Background Blur */}
+                <div className={cn(
+                  "absolute -bottom-10 -right-10 w-48 h-48 rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-700 blur-3xl",
+                  `bg-gradient-to-br ${level.color}`
+                )} />
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
     </PageTransition>
   );

@@ -9,9 +9,9 @@ import { cn } from '../lib/utils';
 
 const REGIONS = [
   {
-    id: 'bandar-lampung',
-    name: 'Bandar Lampung',
-    description: 'Pusat kota dengan kepadatan tinggi',
+    id: 'kalianda',
+    name: 'Kalianda',
+    description: 'Kawasan pesisir pantai',
     image: '/images/quizregion/lampung-selatan(menara-siger-kalianda).jpg',
   },
   {
@@ -21,9 +21,9 @@ const REGIONS = [
     image: '/images/quizregion/lampung-barat-(danau-suoh).png',
   },
   {
-    id: 'panjang',
-    name: 'Panjang',
-    description: 'Kawasan pelabuhan dan pesisir',
+    id: 'rajabasa',
+    name: 'Rajabasa',
+    description: 'Kawasan pegunungan vulkanik',
     image: '/images/quizregion/lampung-tengah(bukit-batubara).jpg',
   },
 ];
