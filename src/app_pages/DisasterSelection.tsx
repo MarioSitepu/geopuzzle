@@ -50,7 +50,7 @@ export default function DisasterSelection() {
   const regionId = params?.regionId as string;
   const { unlockedDisasters } = useGameStore();
   
-  const [selectedLevel, setSelectedLevel] = useState<string>('awal');
+  const [selectedLevel, setSelectedLevel] = useState<string | null>('awal');
 
   const levels = [
     { 
