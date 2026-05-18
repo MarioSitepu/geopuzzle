@@ -573,7 +573,7 @@ export default function GridClassificationPuzzle({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedStatementForClassification(null)}
-            className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md cursor-pointer"
+            className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-md cursor-pointer"
           >
             <motion.div
               initial={{ y: "100%", opacity: 0 }}
@@ -581,27 +581,35 @@ export default function GridClassificationPuzzle({
               exit={{ y: "100%", opacity: 0 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-md w-full bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col gap-6 mx-auto cursor-default"
+              className="relative max-w-md w-full bg-white rounded-[2rem] p-5 sm:p-8 shadow-2xl border border-slate-100 flex flex-col gap-4 sm:gap-6 mx-auto cursor-default max-h-[85vh] sm:max-h-[90vh] overflow-y-auto"
             >
+              {/* Top Close X Button */}
+              <button
+                onClick={() => setSelectedStatementForClassification(null)}
+                className="absolute top-4 right-4 p-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4 sm:w-5 h-5" />
+              </button>
+
               {/* Header Title */}
-              <div className="text-center">
-                <span className="inline-block px-3 py-1 bg-earth-50 text-earth-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-1.5">
+              <div className="text-center mt-2 sm:mt-0">
+                <span className="inline-block px-3 py-1 bg-earth-50 text-earth-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-1">
                   Pilih Kategori
                 </span>
-                <h3 className="text-lg font-black text-slate-800 leading-tight">
+                <h3 className="text-base sm:text-lg font-black text-slate-800 leading-tight">
                   Klasifikasikan Pernyataan
                 </h3>
               </div>
 
               {/* Statement Content */}
-              <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-100 text-center">
+              <div className="bg-slate-50 p-3 sm:p-5 rounded-2xl border border-slate-100 text-center max-h-[25vh] overflow-y-auto">
                 <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed italic">
                   "{selectedStatementForClassification.text}"
                 </p>
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full">
                 <button
                   onClick={() => {
                     placeStatementAutomatically(selectedStatementForClassification, true);
@@ -609,13 +617,13 @@ export default function GridClassificationPuzzle({
                   }}
                   disabled={isCategoryFull(true)}
                   className={cn(
-                    "py-4 rounded-2xl font-black text-white transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center gap-1 cursor-pointer",
+                    "py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-white transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center gap-0.5 sm:gap-1 cursor-pointer",
                     isCategoryFull(true) 
                       ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed" 
                       : "bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-500/20"
                   )}
                 >
-                  <span className="text-base sm:text-lg">BENAR</span>
+                  <span className="text-sm sm:text-lg">BENAR</span>
                   <span className="text-[8px] sm:text-[9px] opacity-80 uppercase tracking-wider font-bold">
                     {isCategoryFull(true) ? 'Penuh' : 'Kotak Benar'}
                   </span>
@@ -628,13 +636,13 @@ export default function GridClassificationPuzzle({
                   }}
                   disabled={isCategoryFull(false)}
                   className={cn(
-                    "py-4 rounded-2xl font-black text-white transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center gap-1 cursor-pointer",
+                    "py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-white transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center gap-0.5 sm:gap-1 cursor-pointer",
                     isCategoryFull(false) 
                       ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed" 
                       : "bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/20"
                   )}
                 >
-                  <span className="text-base sm:text-lg">SALAH</span>
+                  <span className="text-sm sm:text-lg">SALAH</span>
                   <span className="text-[8px] sm:text-[9px] opacity-80 uppercase tracking-wider font-bold">
                     {isCategoryFull(false) ? 'Penuh' : 'Kotak Salah'}
                   </span>
@@ -644,7 +652,7 @@ export default function GridClassificationPuzzle({
               {/* Batal Button */}
               <button
                 onClick={() => setSelectedStatementForClassification(null)}
-                className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs tracking-wider uppercase text-center w-full cursor-pointer active:scale-[0.98]"
+                className="py-2.5 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg sm:rounded-xl font-bold transition-all text-[11px] sm:text-xs tracking-wider uppercase text-center w-full cursor-pointer active:scale-[0.98]"
               >
                 Batal
               </button>
