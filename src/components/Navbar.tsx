@@ -33,7 +33,7 @@ export default function Navbar() {
               height={72} 
               className="w-16 h-16 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" 
             />
-            <span className="font-bold text-xl tracking-tight text-earth-900 uppercase">GEOLOGICALPUZZLE</span>
+            <span className="font-bold text-sm sm:text-lg lg:text-xl tracking-tight text-earth-900 uppercase">GEOLOGICALPUZZLE</span>
           </Link>
           
           <div className="hidden md:flex items-center gap-4 pl-4 border-l border-earth-200">
@@ -42,7 +42,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <nav className="flex items-center gap-2 sm:gap-4">
+        <nav className="flex items-center gap-1.5 sm:gap-4">
           <div className="hidden lg:flex items-center gap-1 sm:gap-4 mr-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -88,9 +88,9 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-2 px-5 py-2.5 bg-earth-900 text-white rounded-full text-sm font-bold shadow-lg shadow-earth-900/20 hover:bg-black transition-all active:scale-95"
+              className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 bg-earth-900 text-white rounded-full text-xs sm:text-sm font-bold shadow-lg shadow-earth-900/20 hover:bg-black transition-all active:scale-95 shrink-0"
             >
-              <LogIn className="w-4 h-4" />
+              <LogIn className="w-3.5 h-3.5 sm:w-4 h-4" />
               <span>Masuk</span>
             </Link>
           )}

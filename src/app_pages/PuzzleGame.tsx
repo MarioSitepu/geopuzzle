@@ -230,30 +230,31 @@ export default function PuzzleGame() {
 
   return (
     <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full flex flex-col">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 w-full">
         <Link 
           href={`/regions/${regionId}/${disasterId}/learn`} 
-          className="inline-flex items-center gap-2 text-earth-600 hover:text-earth-900 transition-colors"
+          className="inline-flex items-center gap-1.5 text-earth-600 hover:text-earth-900 transition-colors text-xs sm:text-sm font-bold self-start sm:self-auto"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Kembali ke Materi
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Kembali ke Materi</span>
+          <span className="inline sm:hidden">Kembali</span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm text-earth-700 font-medium">
-            <Trophy className="w-4 h-4 text-yellow-500" />
-            Tahap {currentStage + 1}/{stages.length}
+        <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end sm:justify-start">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-white rounded-full shadow-sm text-earth-700 font-extrabold text-[11px] sm:text-sm border border-earth-100/50">
+            <Trophy className="w-3.5 h-3.5 sm:w-4 h-4 text-yellow-500 shrink-0" />
+            <span>Tahap {currentStage + 1}/{stages.length}</span>
           </div>
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-sm font-medium ${timeLeft < 30 ? 'bg-red-100 text-red-600' : 'bg-white text-earth-700'}`}>
-            <Timer className="w-4 h-4" />
-            {formatTime(timeLeft)}
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm font-extrabold text-[11px] sm:text-sm border border-earth-100/50 ${timeLeft < 30 ? 'bg-red-50 border-red-100 text-red-600 animate-pulse' : 'bg-white text-earth-700'}`}>
+            <Timer className="w-3.5 h-3.5 sm:w-4 h-4 shrink-0" />
+            <span>{formatTime(timeLeft)}</span>
           </div>
           <button
             onClick={toggleMute}
-            className="p-2 bg-white rounded-full shadow-sm text-earth-600 hover:text-earth-900 transition-all hover:scale-110 active:scale-95 border border-earth-100"
+            className="p-1.5 sm:p-2 bg-white rounded-full shadow-sm text-earth-600 hover:text-earth-900 transition-all hover:scale-110 active:scale-95 border border-earth-100 shrink-0 cursor-pointer"
             title={isMuted ? "Unmute Music" : "Mute Music"}
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isMuted ? <VolumeX className="w-3.5 h-3.5 sm:w-4 h-4" /> : <Volume2 className="w-3.5 h-3.5 sm:w-4 h-4" />}
           </button>
         </div>
       </div>
