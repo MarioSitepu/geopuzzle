@@ -8,11 +8,15 @@ import {
   useDraggable, 
   useDroppable,
   DragOverlay,
-  defaultDropAnimationSideEffects
+  defaultDropAnimationSideEffects,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor
 } from '@dnd-kit/core';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import { RotateCcw, CheckCircle2, AlertCircle } from 'lucide-react';
+import { RotateCcw, CheckCircle2, AlertCircle, X } from 'lucide-react';
 
 // --- Types ---
 type Statement = {
@@ -75,7 +79,15 @@ const SALAH_GRID_MAP = [
 // --- Subcomponents ---
 
 // Draggable card containing statement text
-function DraggableStatement({ statement, isUsed }: { statement: Statement; isUsed: boolean }) {
+function DraggableStatement({ 
+  statement, 
+  isUsed,
+  onClick
+}: { 
+  statement: Statement; 
+  isUsed: boolean;
+  onClick?: (statement: Statement) => void;
+}) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: statement.id,
     data: statement,
@@ -87,8 +99,12 @@ function DraggableStatement({ statement, isUsed }: { statement: Statement; isUse
       ref={setNodeRef}
       {...listeners}
       {...attributes}
+      onClick={(e) => {
+        if (isUsed) return;
+        if (onClick) onClick(statement);
+      }}
       className={cn(
-        "p-4 rounded-2xl shadow-md border-2 bg-gradient-to-br from-white to-slate-50 border-slate-200 text-earth-800 cursor-grab active:cursor-grabbing text-xs sm:text-sm font-bold leading-relaxed select-none text-center relative overflow-hidden transition-all duration-200",
+        "p-4 rounded-2xl shadow-md border-2 bg-gradient-to-br from-white to-slate-50 border-slate-200 text-earth-800 cursor-grab active:cursor-grabbing text-xs sm:text-sm font-bold leading-relaxed select-none text-center relative overflow-hidden transition-all duration-200 touch-none",
         isUsed ? "opacity-20 grayscale cursor-not-allowed shadow-none border-slate-100" : "hover:border-orange-400 hover:shadow-lg hover:-translate-y-1",
         isDragging && "opacity-0"
       )}
@@ -105,13 +121,15 @@ function DroppableSlot({
   placedStatement, 
   isSubmitted, 
   onReset,
-  isCorrectSection
+  isCorrectSection,
+  onZoom
 }: { 
   slotId: string; 
   placedStatement: Statement | null; 
   isSubmitted: boolean; 
   onReset: () => void;
   isCorrectSection: boolean; // true = BENAR grid, false = SALAH grid
+  onZoom?: (statement: Statement) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({
     id: slotId,
@@ -126,7 +144,7 @@ function DroppableSlot({
     <div
       ref={setNodeRef}
       className={cn(
-        "w-full aspect-[4/3] min-h-[70px] sm:min-h-[90px] border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-1.5 transition-all duration-300 relative group",
+        "w-full aspect-[4/3] min-h-[50px] sm:min-h-[90px] border-2 border-dashed rounded-lg sm:rounded-xl flex flex-col items-center justify-center p-1 sm:p-1.5 transition-all duration-300 relative group",
         isOver ? "bg-orange-50 border-orange-400 scale-[1.03] shadow-md z-10" : "bg-slate-100 border-slate-400",
         placedStatement && "border-solid bg-white shadow-md border-slate-300",
         isSubmitted && placedStatement && isCorrectPlacement && "border-green-500 bg-green-50/70 shadow-none scale-100",
@@ -142,8 +160,16 @@ function DroppableSlot({
             className="w-full h-full flex flex-col items-center justify-between relative"
           >
             {/* Small text content inside slot */}
-            <div className="grow flex items-center justify-center text-center p-1 overflow-y-auto w-full">
-              <span className="text-[9px] sm:text-[10px] font-black text-slate-800 leading-snug">
+            <div 
+              onClick={(e) => {
+                e.stopPropagation();
+                if (placedStatement && onZoom) {
+                  onZoom(placedStatement);
+                }
+              }}
+              className="grow flex items-center justify-center text-center p-1 overflow-hidden w-full cursor-zoom-in hover:bg-slate-50/80 rounded-lg transition-colors"
+            >
+              <span className="text-[7px] sm:text-[10px] font-black text-slate-800 leading-[1.1] break-words line-clamp-3 text-center px-0.5 select-none">
                 {placedStatement.text}
               </span>
             </div>
@@ -194,6 +220,59 @@ export default function GridClassificationPuzzle({
   stageIndex?: number;
 }) {
   const [activeStatement, setActiveStatement] = useState<Statement | null>(null);
+  const [zoomedStatement, setZoomedStatement] = useState<Statement | null>(null);
+  const [selectedStatementForClassification, setSelectedStatementForClassification] = useState<Statement | null>(null);
+  
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      },
+    })
+  );
+
+  // Helper to check if a category grid is full
+  const isCategoryFull = (isCorrectSection: boolean) => {
+    const gridMap = isCorrectSection ? BENAR_GRID_MAP : SALAH_GRID_MAP;
+    return gridMap.filter(cell => cell.type === 'slot').every(cell => placements[cell.slotId]);
+  };
+
+  // Helper to programmatically place a statement in a category
+  const placeStatementAutomatically = (statement: Statement, isCorrectSection: boolean) => {
+    const gridMap = isCorrectSection ? BENAR_GRID_MAP : SALAH_GRID_MAP;
+    
+    // Find the first slot in the gridMap that doesn't have a placement yet
+    const emptySlotCell = gridMap.find(cell => {
+      if (cell.type === 'slot') {
+        return !placements[cell.slotId];
+      }
+      return false;
+    });
+
+    if (emptySlotCell && emptySlotCell.slotId) {
+      const slotId = emptySlotCell.slotId;
+      
+      // Remove from any existing placements first
+      const newPlacements = { ...placements };
+      Object.keys(newPlacements).forEach(key => {
+        if (newPlacements[key]?.id === statement.id) {
+          newPlacements[key] = null;
+        }
+      });
+
+      // Place it in the empty slot
+      newPlacements[slotId] = statement;
+      setPlacements(newPlacements);
+      return true;
+    }
+    return false;
+  };
   
   // Placements store mapping slotId -> Statement
   const [placements, setPlacements] = useState<Record<string, Statement | null>>({});
@@ -280,18 +359,23 @@ export default function GridClassificationPuzzle({
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-green-400/10 rounded-full blur-3xl -z-10 animate-pulse" />
       <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
-      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex flex-col gap-8">
           
           {/* Top Row: Info Bar */}
           <div className="flex flex-col sm:flex-row items-center justify-between bg-white/60 backdrop-blur-md p-6 rounded-[2rem] border border-white shadow-xl gap-4">
-            <div className="flex items-center gap-4">
-              <span className="w-3.5 h-3.5 rounded-full bg-green-500 animate-ping" />
-              <h2 className="text-xl sm:text-2xl font-black text-earth-900 leading-tight">
-                PILIH & KLASIFIKASIKAN PERNYATAAN LONGSOR
-              </h2>
+            <div className="flex flex-col gap-1 w-full sm:w-auto text-left">
+              <div className="flex items-center gap-4">
+                <span className="w-3.5 h-3.5 rounded-full bg-green-500 animate-ping shrink-0" />
+                <h2 className="text-xl sm:text-2xl font-black text-earth-900 leading-tight">
+                  PILIH & KLASIFIKASIKAN PERNYATAAN LONGSOR
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm font-semibold text-earth-600 pl-7 mt-1">
+                <strong>Instruksi Soal :</strong> Tarik dan taruh kepingan puzzle yang menurutmu benar atau salah kedalam kotak yang sudah di sediakan!
+              </p>
             </div>
-            <div className="bg-earth-900 text-white px-6 py-2 rounded-full font-black text-base border border-earth-700 shadow-md">
+            <div className="bg-earth-900 text-white px-6 py-2 rounded-full font-black text-base border border-earth-700 shadow-md shrink-0">
               NOMOR {stageIndex !== undefined ? stageIndex + 1 : 1}
             </div>
           </div>
@@ -304,14 +388,14 @@ export default function GridClassificationPuzzle({
               <div className="bg-gradient-to-br from-green-500 to-green-600 text-white py-4 text-center font-black text-xl tracking-widest uppercase">
                 BENAR
               </div>
-              <div className="p-6">
-                <div className="grid grid-cols-5 gap-3 sm:gap-4 w-full">
+              <div className="p-2.5 sm:p-6 w-full">
+                <div className="grid grid-cols-5 gap-1.5 sm:gap-4 w-full">
                   {BENAR_GRID_MAP.map((cell, idx) => {
                     if (cell.type === 'yellow') {
                       return (
                         <div 
                           key={`benar-yellow-${idx}`}
-                          className="w-full aspect-[4/3] min-h-[70px] sm:min-h-[90px] rounded-xl bg-yellow-400 shadow-sm border border-yellow-300"
+                          className="w-full aspect-[4/3] min-h-[50px] sm:min-h-[90px] rounded-lg sm:rounded-xl bg-yellow-400 shadow-sm border border-yellow-300"
                         />
                       );
                     } else {
@@ -323,6 +407,7 @@ export default function GridClassificationPuzzle({
                           isSubmitted={isSubmitted}
                           onReset={() => handleResetSlot(cell.slotId)}
                           isCorrectSection={true}
+                          onZoom={setZoomedStatement}
                         />
                       );
                     }
@@ -336,14 +421,14 @@ export default function GridClassificationPuzzle({
               <div className="bg-gradient-to-br from-red-500 to-red-600 text-white py-4 text-center font-black text-xl tracking-widest uppercase">
                 SALAH
               </div>
-              <div className="p-6">
-                <div className="grid grid-cols-5 gap-3 sm:gap-4 w-full">
+              <div className="p-2.5 sm:p-6 w-full">
+                <div className="grid grid-cols-5 gap-1.5 sm:gap-4 w-full">
                   {SALAH_GRID_MAP.map((cell, idx) => {
                     if (cell.type === 'yellow') {
                       return (
                         <div 
                           key={`salah-yellow-${idx}`}
-                          className="w-full aspect-[4/3] min-h-[70px] sm:min-h-[90px] rounded-xl bg-yellow-400 shadow-sm border border-yellow-300"
+                          className="w-full aspect-[4/3] min-h-[50px] sm:min-h-[90px] rounded-lg sm:rounded-xl bg-yellow-400 shadow-sm border border-yellow-300"
                         />
                       );
                     } else {
@@ -355,6 +440,7 @@ export default function GridClassificationPuzzle({
                           isSubmitted={isSubmitted}
                           onReset={() => handleResetSlot(cell.slotId)}
                           isCorrectSection={false}
+                          onZoom={setZoomedStatement}
                         />
                       );
                     }
@@ -366,11 +452,13 @@ export default function GridClassificationPuzzle({
           </div>
 
           {/* Bottom Row: Unassigned Statements Sidebar/Footer */}
-          <div className="bg-white/90 backdrop-blur-xl border border-white p-8 rounded-[2.5rem] shadow-xl flex flex-col gap-6 w-full">
-            <div className="flex items-center gap-3 justify-center">
-              <div className="h-px flex-1 bg-earth-200" />
-              <span className="text-xs font-black text-earth-400 uppercase tracking-widest">SERET KEPINGAN PERNYATAAN DI BAWAH KE KOTAK KOSONG YANG TEPAT</span>
-              <div className="h-px flex-1 bg-earth-200" />
+          <div className="bg-white/90 backdrop-blur-xl border border-white p-4 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-xl flex flex-col gap-6 w-full">
+            <div className="flex flex-col sm:flex-row items-center gap-3 justify-center">
+              <div className="h-px w-full sm:flex-1 bg-earth-200 hidden sm:block" />
+              <span className="text-[10px] sm:text-xs font-black text-earth-400 uppercase tracking-widest text-center px-2">
+                SERET KEPINGAN PERNYATAAN DI BAWAH KE KOTAK KOSONG YANG TEPAT
+              </span>
+              <div className="h-px w-full sm:flex-1 bg-earth-200 hidden sm:block" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -379,6 +467,7 @@ export default function GridClassificationPuzzle({
                   key={statement.id}
                   statement={statement}
                   isUsed={isStatementPlaced(statement.id)}
+                  onClick={setSelectedStatementForClassification}
                 />
               ))}
             </div>
@@ -439,6 +528,130 @@ export default function GridClassificationPuzzle({
           ) : null}
         </DragOverlay>
       </DndContext>
+
+      {/* Zoom Modal */}
+      <AnimatePresence>
+        {zoomedStatement && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setZoomedStatement(null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md cursor-zoom-out"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 15, opacity: 0 }}
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-md w-full bg-white rounded-[2rem] p-6 sm:p-10 shadow-2xl border border-slate-100/80 flex flex-col items-center text-center gap-5 sm:gap-8 mx-auto"
+            >
+              {/* Main Text */}
+              <p className="text-lg sm:text-2xl font-black text-slate-800 leading-relaxed">
+                "{zoomedStatement.text}"
+              </p>
+
+              {/* Tutup Button */}
+              <button
+                onClick={() => setZoomedStatement(null)}
+                className="mt-2 inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-extrabold transition-all text-sm shadow-lg shadow-slate-900/20 active:scale-95 cursor-pointer w-full sm:w-auto"
+              >
+                <X className="w-4 h-4" />
+                Tutup
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Auto Classification Modal / Bottom Sheet */}
+      <AnimatePresence>
+        {selectedStatementForClassification && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedStatementForClassification(null)}
+            className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md cursor-pointer"
+          >
+            <motion.div
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "100%", opacity: 0 }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-md w-full bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col gap-6 mx-auto cursor-default"
+            >
+              {/* Header Title */}
+              <div className="text-center">
+                <span className="inline-block px-3 py-1 bg-earth-50 text-earth-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-1.5">
+                  Pilih Kategori
+                </span>
+                <h3 className="text-lg font-black text-slate-800 leading-tight">
+                  Klasifikasikan Pernyataan
+                </h3>
+              </div>
+
+              {/* Statement Content */}
+              <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-100 text-center">
+                <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed italic">
+                  "{selectedStatementForClassification.text}"
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <button
+                  onClick={() => {
+                    placeStatementAutomatically(selectedStatementForClassification, true);
+                    setSelectedStatementForClassification(null);
+                  }}
+                  disabled={isCategoryFull(true)}
+                  className={cn(
+                    "py-4 rounded-2xl font-black text-white transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center gap-1 cursor-pointer",
+                    isCategoryFull(true) 
+                      ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed" 
+                      : "bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-500/20"
+                  )}
+                >
+                  <span className="text-base sm:text-lg">BENAR</span>
+                  <span className="text-[8px] sm:text-[9px] opacity-80 uppercase tracking-wider font-bold">
+                    {isCategoryFull(true) ? 'Penuh' : 'Kotak Benar'}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    placeStatementAutomatically(selectedStatementForClassification, false);
+                    setSelectedStatementForClassification(null);
+                  }}
+                  disabled={isCategoryFull(false)}
+                  className={cn(
+                    "py-4 rounded-2xl font-black text-white transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center gap-1 cursor-pointer",
+                    isCategoryFull(false) 
+                      ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed" 
+                      : "bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/20"
+                  )}
+                >
+                  <span className="text-base sm:text-lg">SALAH</span>
+                  <span className="text-[8px] sm:text-[9px] opacity-80 uppercase tracking-wider font-bold">
+                    {isCategoryFull(false) ? 'Penuh' : 'Kotak Salah'}
+                  </span>
+                </button>
+              </div>
+
+              {/* Batal Button */}
+              <button
+                onClick={() => setSelectedStatementForClassification(null)}
+                className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs tracking-wider uppercase text-center w-full cursor-pointer active:scale-[0.98]"
+              >
+                Batal
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
