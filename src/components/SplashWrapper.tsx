@@ -27,7 +27,7 @@ export default function SplashWrapper({ children }: { children: React.ReactNode 
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoading ? 0 : 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full h-full"
+        className="w-full h-full overflow-x-hidden max-w-full"
       >
         {children}
       </motion.div>
