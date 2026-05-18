@@ -246,6 +246,38 @@ export default function PuzzleGame() {
       </PageTransition>
     );
   }
+  // Dynamic styles for the floating Scroll-to-Top button based on disaster type
+  const getDisasterStyles = () => {
+    switch (disasterId) {
+      case 'gunung-api':
+        return {
+          bg: 'bg-[#FFF8F3] hover:bg-[#FFF3EB]',
+          strokeTrack: 'stroke-orange-100',
+          strokeProgress: 'stroke-orange-500',
+          chevron: 'text-orange-700',
+          border: 'border-orange-200/30'
+        };
+      case 'tsunami':
+        return {
+          bg: 'bg-[#F0F7FF] hover:bg-[#E0EFFF]',
+          strokeTrack: 'stroke-blue-100',
+          strokeProgress: 'stroke-blue-500',
+          chevron: 'text-blue-700',
+          border: 'border-blue-200/30'
+        };
+      case 'longsor':
+      default:
+        return {
+          bg: 'bg-[#FAF6EE] hover:bg-[#F3EDE2]',
+          strokeTrack: 'stroke-earth-200',
+          strokeProgress: 'stroke-rose-500',
+          chevron: 'text-leaf-700',
+          border: 'border-earth-100/30'
+        };
+    }
+  };
+
+  const styles = getDisasterStyles();
 
   return (
     <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full flex flex-col">
@@ -327,7 +359,7 @@ export default function PuzzleGame() {
                 exit={{ opacity: 0, scale: 0.8, y: 20 }}
                 transition={{ type: "spring", damping: 25, stiffness: 350 }}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="fixed bottom-6 right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FAF6EE] shadow-xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform border border-earth-100/30 group"
+                className={`fixed bottom-6 right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full ${styles.bg} shadow-xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-all border ${styles.border} group`}
               >
                 <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 50 50">
                   {/* Soft background progress outline track */}
@@ -335,16 +367,16 @@ export default function PuzzleGame() {
                     cx="25"
                     cy="25"
                     r="22"
-                    className="stroke-earth-200"
+                    className={styles.strokeTrack}
                     strokeWidth="2.5"
                     fill="transparent"
                   />
-                  {/* Dynamic progress outline ring (pink/coral red) */}
+                  {/* Dynamic progress outline ring (pink/coral red/blue/orange) */}
                   <motion.circle
                     cx="25"
                     cy="25"
                     r="22"
-                    className="stroke-rose-500"
+                    className={styles.strokeProgress}
                     strokeWidth="2.5"
                     fill="transparent"
                     strokeDasharray={2 * Math.PI * 22}
@@ -353,7 +385,7 @@ export default function PuzzleGame() {
                     transition={{ type: "tween", ease: "easeOut" }}
                   />
                 </svg>
-                <ChevronUp className="w-5 h-5 sm:w-6 h-6 text-leaf-700 relative z-10 transition-transform group-hover:-translate-y-0.5 font-bold" strokeWidth={3} />
+                <ChevronUp className={`w-5 h-5 sm:w-6 h-6 ${styles.chevron} relative z-10 transition-transform group-hover:-translate-y-0.5 font-bold`} strokeWidth={3} />
               </motion.button>
             )}
           </AnimatePresence>
