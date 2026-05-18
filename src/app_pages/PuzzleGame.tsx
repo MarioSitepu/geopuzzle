@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Timer, Trophy, ChevronDown, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Timer, Trophy, ChevronDown, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import PageTransition from '../components/PageTransition';
 import ClassificationPuzzle from '../components/puzzles/ClassificationPuzzle';
@@ -33,6 +33,25 @@ export default function PuzzleGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+      setScrollProgress(progress);
+      setShowScrollToTop(scrollTop > 200);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Run once initially to capture potential reload state
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (session?.user?.name && !playerName) {
@@ -299,19 +318,45 @@ export default function PuzzleGame() {
             )}
           </AnimatePresence>
 
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-earth-400 pointer-events-none md:hidden"
-          >
-            <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Scroll Down</span>
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-            >
-              <ChevronDown className="w-6 h-6" />
-            </motion.div>
-          </motion.div>
+          {/* Scroll to Top floating progress button */}
+          <AnimatePresence>
+            {showScrollToTop && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 350 }}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="fixed bottom-6 right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FAF6EE] shadow-xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-transform border border-earth-100/30 group"
+              >
+                <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 50 50">
+                  {/* Soft background progress outline track */}
+                  <circle
+                    cx="25"
+                    cy="25"
+                    r="22"
+                    className="stroke-earth-200"
+                    strokeWidth="2.5"
+                    fill="transparent"
+                  />
+                  {/* Dynamic progress outline ring (pink/coral red) */}
+                  <motion.circle
+                    cx="25"
+                    cy="25"
+                    r="22"
+                    className="stroke-rose-500"
+                    strokeWidth="2.5"
+                    fill="transparent"
+                    strokeDasharray={2 * Math.PI * 22}
+                    strokeDashoffset={(2 * Math.PI * 22) * (1 - scrollProgress)}
+                    strokeLinecap="round"
+                    transition={{ type: "tween", ease: "easeOut" }}
+                  />
+                </svg>
+                <ChevronUp className="w-5 h-5 sm:w-6 h-6 text-leaf-700 relative z-10 transition-transform group-hover:-translate-y-0.5 font-bold" strokeWidth={3} />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </PageTransition>
