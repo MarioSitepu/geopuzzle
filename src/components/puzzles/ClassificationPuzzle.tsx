@@ -26,6 +26,7 @@ type Category = { id: string; title: string; position?: { top: string; left: str
 function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageIndex, isPlaced, onClick }: { item: Item, isTsunami: boolean, isVolcano: boolean, isLandscapes: boolean, level?: string, stageIndex?: number, isPlaced?: boolean, onClick?: (item: Item) => void }) {
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
   const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
+  const isCloningMode = isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: item,
@@ -47,18 +48,19 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
       whileHover={{ scale: 1.05, rotate: 1 }}
       whileTap={{ scale: 0.95, rotate: -1 }}
       className={cn(
-        "bg-white rounded-2xl shadow-lg border-2 cursor-grab active:cursor-grabbing text-sm font-bold text-earth-800 touch-none overflow-hidden transition-all duration-200 flex items-center justify-center group",
+        "cursor-grab active:cursor-grabbing text-sm font-bold text-earth-800 touch-none overflow-hidden transition-all duration-200 flex items-center justify-center group",
+        (isPlaced && isCloningMode) ? "bg-transparent border-0" : "bg-white rounded-2xl shadow-lg border-2",
         isPlaced ? "w-full h-full absolute inset-0" : ((isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) ? "w-28 h-28 sm:w-36 sm:h-36 p-0" : "p-4 min-w-[120px]"),
         isDragging ? "opacity-0" : "opacity-100",
-        isDragging ? "shadow-2xl ring-4 z-50" : "hover:shadow-xl",
-        isTsunami ? 'border-blue-100 hover:border-blue-400' : isVolcano ? 'border-orange-100 hover:border-orange-400' : 'border-earth-100 hover:border-earth-400'
+        isDragging ? "shadow-2xl ring-4 z-50" : (!(isPlaced && isCloningMode) ? "hover:shadow-xl" : ""),
+        !(isPlaced && isCloningMode) ? (isTsunami ? 'border-blue-100 hover:border-blue-400' : isVolcano ? 'border-orange-100 hover:border-orange-400' : 'border-earth-100 hover:border-earth-400') : ""
       )}
     >
       {(isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) && item.image ? (
         <div className="flex flex-col items-center w-full h-full relative">
           {item.crop ? (
             <div 
-              className="w-full h-full bg-no-repeat transition-transform duration-500 group-hover:scale-110"
+              className={cn("w-full h-full bg-no-repeat transition-transform duration-500", !(isPlaced && isCloningMode) && "group-hover:scale-110")}
               style={{
                 backgroundImage: `url(${item.image})`,
                 backgroundSize: '500% 100%',
@@ -66,15 +68,19 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
               }}
             />
           ) : (
-            <img src={item.image} alt={item.content} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <img src={item.image} alt={item.content} className={cn("w-full h-full object-contain transition-transform duration-500", !(isPlaced && isCloningMode) && "group-hover:scale-110")} />
           )}
           
-          {/* Glass overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          <div className="absolute bottom-0 w-full bg-earth-900/90 backdrop-blur-md text-white text-[10px] py-2 px-1 text-center font-black uppercase tracking-wider translate-y-0 transition-transform">
-            {item.content}
-          </div>
+          {/* Glass overlay and text on hover */}
+          {!(isPlaced && isCloningMode) && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="absolute bottom-0 w-full bg-earth-900/90 backdrop-blur-md text-white text-[10px] py-2 px-1 text-center font-black uppercase tracking-wider translate-y-0 transition-transform">
+                {item.content}
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <div className="w-full h-full flex items-center justify-center px-4 py-2 text-center text-xs sm:text-sm font-black text-earth-900 leading-snug">
@@ -171,6 +177,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
   const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
+  const isCloningMode = isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1);
 
   const categories: Category[] = isTsunamiLanjut1 ? [
     { id: 'slot-peak', title: 'Puncak Gunung', position: { top: '22.5%', left: '57.3%', width: '10.5%', height: '9.5%' } },
@@ -351,6 +358,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           [source]: (prev[source] || []).filter(i => i.id !== itemId)
         }));
         setUnassignedItems(prev => {
+          if (isCloningMode) return prev; // Do not return clones to unassigned
           if (prev.some(i => i.id === item.id)) return prev;
           return [...prev, item];
         });
@@ -363,7 +371,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     const existingItems = assignedItems[targetCategoryId] || [];
 
     setAssignedItems(prev => {
-      const next = { ...prev, [targetCategoryId]: [item] };
+      const newItem = (isCloningMode && source === 'unassigned') 
+        ? { ...item, id: `${item.id}-clone-${Date.now()}` } 
+        : item;
+        
+      const next = { ...prev, [targetCategoryId]: [newItem] };
       if (source !== 'unassigned') {
         next[source] = (next[source] || []).filter(i => i.id !== itemId);
       }
@@ -372,10 +384,10 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
     setUnassignedItems(prev => {
       let next = prev;
-      if (source === 'unassigned') {
+      if (source === 'unassigned' && !isCloningMode) {
         next = next.filter(i => i.id !== itemId);
       }
-      if (existingItems.length > 0) {
+      if (existingItems.length > 0 && !isCloningMode) {
         const newItems = existingItems.filter(e => !next.some(i => i.id === e.id));
         next = [...next, ...newItems];
       }
@@ -694,22 +706,32 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                     key={category.id}
                     onClick={() => {
                       const itemId = selectedItemForClassification.id;
+                      const sourceIsUnassigned = unassignedItems.some(i => i.id === itemId);
+                      const targetCatId = category.id;
                       
-                      // Move item to the selected category
                       setAssignedItems(prev => {
-                        // Clean from any other category first
                         const cleaned = { ...prev };
-                        Object.keys(cleaned).forEach(key => {
-                          cleaned[key] = (cleaned[key] || []).filter(i => i.id !== itemId);
-                        });
+                        if (!isCloningMode || !sourceIsUnassigned) {
+                          Object.keys(cleaned).forEach(key => {
+                            cleaned[key] = (cleaned[key] || []).filter(i => i.id !== itemId);
+                          });
+                        }
                         
-                        // Add to the new category
-                        cleaned[category.id] = [...(cleaned[category.id] || []), selectedItemForClassification];
+                        const newItem = (isCloningMode && sourceIsUnassigned) 
+                          ? { ...selectedItemForClassification, id: `${itemId}-clone-${Date.now()}` }
+                          : selectedItemForClassification;
+                          
+                        cleaned[targetCatId] = [newItem];
                         return cleaned;
                       });
                       
-                      // Remove from unassigned
-                      setUnassignedItems(prev => prev.filter(i => i.id !== itemId));
+                      setUnassignedItems(prev => {
+                        let next = prev;
+                        if (!isCloningMode && sourceIsUnassigned) {
+                          next = next.filter(i => i.id !== itemId);
+                        }
+                        return next;
+                      });
                       
                       setSelectedItemForClassification(null);
                     }}
