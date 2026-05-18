@@ -334,7 +334,7 @@ export default function PuzzleGame() {
                   onComplete={handleStageComplete} 
                   disasterId={disasterId} 
                   level={level} 
-                  stageIndex={currentStageData.stageIndex !== undefined ? currentStageData.stageIndex : currentStage} 
+                  stageIndex={(currentStageData && 'stageIndex' in currentStageData) ? (currentStageData as any).stageIndex : currentStage} 
                 />
               </motion.div>
             ) : (

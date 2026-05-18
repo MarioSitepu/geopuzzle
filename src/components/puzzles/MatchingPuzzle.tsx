@@ -31,9 +31,11 @@ interface DraggableOptionProps {
   option: Option;
   isFlood: boolean;
   isDragging?: boolean;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-function DraggableOption({ option, isFlood, isDragging }: DraggableOptionProps) {
+function DraggableOption({ option, isFlood, isDragging, isSelected, onClick }: DraggableOptionProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: option.id,
     data: option,
@@ -49,10 +51,14 @@ function DraggableOption({ option, isFlood, isDragging }: DraggableOptionProps) 
       style={style}
       {...listeners}
       {...attributes}
+      onClick={(e) => {
+        if (onClick) onClick();
+      }}
       className={cn(
-        "bg-white rounded-xl shadow-md border-2 border-earth-100 overflow-hidden cursor-grab active:cursor-grabbing transition-all hover:shadow-lg w-28 h-28 sm:w-36 sm:h-36 shrink-0",
+        "bg-white rounded-xl shadow-md border-2 border-earth-100 overflow-hidden cursor-grab active:cursor-grabbing transition-all hover:shadow-lg w-28 h-28 sm:w-36 sm:h-36 shrink-0 relative",
         isDragging && "opacity-0",
-        !isDragging && "hover:scale-105"
+        !isDragging && "hover:scale-105",
+        isSelected && "border-amber-500 ring-4 ring-amber-400/25 scale-[1.03] shadow-lg z-20"
       )}
     >
       <img src={option.image} alt={option.value} className="w-full h-full object-cover" />
@@ -63,7 +69,7 @@ function DraggableOption({ option, isFlood, isDragging }: DraggableOptionProps) 
   );
 }
 
-function DroppableBoard({ board, assignedOption }: { board: Board; assignedOption: Option | null }) {
+function DroppableBoard({ board, assignedOption, onSlotClick, isMobile }: { board: Board; assignedOption: Option | null; onSlotClick?: () => void; isMobile?: boolean }) {
   const { setNodeRef, isOver } = useDroppable({
     id: board.id,
   });
@@ -80,6 +86,11 @@ function DroppableBoard({ board, assignedOption }: { board: Board; assignedOptio
         {/* Drop Zone Overlay */}
         <div 
           ref={setNodeRef}
+          onClick={(e) => {
+            if (isMobile && onSlotClick) {
+              onSlotClick();
+            }
+          }}
           style={{
             top: board.slotConfig.top,
             left: board.slotConfig.left,
@@ -89,7 +100,8 @@ function DroppableBoard({ board, assignedOption }: { board: Board; assignedOptio
           className={cn(
             "absolute border-4 border-dashed rounded-xl transition-all duration-300 flex items-center justify-center overflow-hidden",
             isOver ? "border-amber-400 bg-amber-400/20 scale-105 z-30" : "border-white/40 hover:border-white/60 bg-black/5",
-            assignedOption ? "border-solid border-green-500 bg-white" : ""
+            assignedOption ? "border-solid border-green-500 bg-white" : "",
+            isMobile && "cursor-pointer active:scale-95 duration-100"
           )}
         >
           {assignedOption ? (
@@ -103,7 +115,7 @@ function DroppableBoard({ board, assignedOption }: { board: Board; assignedOptio
             </motion.div>
           ) : (
             <div className="text-white/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-center px-2">
-              Drop FK Disini
+              {isMobile ? "Ketuk Untuk Pasang" : "Drop FK Disini"}
             </div>
           )}
         </div>
@@ -149,11 +161,25 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
   const [assignments, setAssignments] = useState<Record<string, string>>({});
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [selectedOptionForAssignment, setSelectedOptionForAssignment] = useState<string | null>(null);
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
-  );
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+  }, []);
+
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 5 } });
+  const touchSensor = useSensor(TouchSensor, { 
+    activationConstraint: isMobile ? {
+      delay: 3600000,
+      tolerance: 0,
+    } : {
+      delay: 100, 
+      tolerance: 5 
+    } 
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
@@ -179,6 +205,34 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
         newAssignments[boardId] = optionId;
         return newAssignments;
       });
+    }
+  };
+
+  const handleSlotClick = (boardId: string) => {
+    // If there is an assigned option already, we reset/clear it when clicked!
+    if (assignments[boardId]) {
+      setAssignments(prev => {
+        const next = { ...prev };
+        delete next[boardId];
+        return next;
+      });
+      return;
+    }
+
+    // If there is a selected option, assign it!
+    if (selectedOptionForAssignment) {
+      setAssignments(prev => {
+        const next = { ...prev };
+        
+        // Remove from any other board first
+        Object.keys(next).forEach(key => {
+          if (next[key] === selectedOptionForAssignment) delete next[key];
+        });
+        
+        next[boardId] = selectedOptionForAssignment;
+        return next;
+      });
+      setSelectedOptionForAssignment(null);
     }
   };
 
@@ -224,6 +278,8 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
               key={board.id} 
               board={board} 
               assignedOption={options.find(o => o.id === assignments[board.id]) || null}
+              isMobile={isMobile}
+              onSlotClick={() => handleSlotClick(board.id)}
             />
           ))}
         </div>
@@ -239,6 +295,25 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
                   option={option} 
                   isFlood={false} 
                   isDragging={activeId === option.id}
+                  isSelected={selectedOptionForAssignment === option.id}
+                  onClick={() => {
+                    if (isMobile) {
+                      // Check if already assigned
+                      const isAssigned = Object.values(assignments).includes(option.id);
+                      if (isAssigned) {
+                        // Reset/remove from whichever board has it
+                        setAssignments(prev => {
+                          const next = { ...prev };
+                          Object.keys(next).forEach(key => {
+                            if (next[key] === option.id) delete next[key];
+                          });
+                          return next;
+                        });
+                      } else {
+                        setSelectedOptionForAssignment(prev => prev === option.id ? null : option.id);
+                      }
+                    }
+                  }}
                 />
               ))}
             </div>

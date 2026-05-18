@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   DndContext, 
   DragEndEvent, 
@@ -222,25 +222,34 @@ export default function GridClassificationPuzzle({
   const [activeStatement, setActiveStatement] = useState<Statement | null>(null);
   const [zoomedStatement, setZoomedStatement] = useState<Statement | null>(null);
   const [selectedStatementForClassification, setSelectedStatementForClassification] = useState<Statement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+  }, []);
   
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+  
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: isMobile ? {
+      delay: 3600000,
+      tolerance: 0,
+    } : {
+      delay: 100,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   // Helper to check if a category grid is full
   const isCategoryFull = (isCorrectSection: boolean) => {
     const gridMap = isCorrectSection ? BENAR_GRID_MAP : SALAH_GRID_MAP;
-    return gridMap.filter(cell => cell.type === 'slot').every(cell => placements[cell.slotId]);
+    return gridMap.filter(cell => cell.type === 'slot').every(cell => cell.slotId && placements[cell.slotId]);
   };
 
   // Helper to programmatically place a statement in a category
@@ -249,7 +258,7 @@ export default function GridClassificationPuzzle({
     
     // Find the first slot in the gridMap that doesn't have a placement yet
     const emptySlotCell = gridMap.find(cell => {
-      if (cell.type === 'slot') {
+      if (cell.type === 'slot' && cell.slotId) {
         return !placements[cell.slotId];
       }
       return false;
@@ -330,7 +339,7 @@ export default function GridClassificationPuzzle({
 
     // Validate BENAR slots (must contain statements with 'isCorrect === true')
     BENAR_GRID_MAP.forEach(cell => {
-      if (cell.type === 'slot') {
+      if (cell.type === 'slot' && cell.slotId) {
         const statement = placements[cell.slotId];
         if (statement && statement.isCorrect === true) {
           correctPlacementsCount++;
@@ -340,7 +349,7 @@ export default function GridClassificationPuzzle({
 
     // Validate SALAH slots (must contain statements with 'isCorrect === false')
     SALAH_GRID_MAP.forEach(cell => {
-      if (cell.type === 'slot') {
+      if (cell.type === 'slot' && cell.slotId) {
         const statement = placements[cell.slotId];
         if (statement && statement.isCorrect === false) {
           correctPlacementsCount++;
@@ -402,10 +411,10 @@ export default function GridClassificationPuzzle({
                       return (
                         <DroppableSlot 
                           key={cell.slotId}
-                          slotId={cell.slotId}
-                          placedStatement={getPlacedStatement(cell.slotId)}
+                          slotId={cell.slotId!}
+                          placedStatement={getPlacedStatement(cell.slotId!)}
                           isSubmitted={isSubmitted}
-                          onReset={() => handleResetSlot(cell.slotId)}
+                          onReset={() => handleResetSlot(cell.slotId!)}
                           isCorrectSection={true}
                           onZoom={setZoomedStatement}
                         />
@@ -435,10 +444,10 @@ export default function GridClassificationPuzzle({
                       return (
                         <DroppableSlot 
                           key={cell.slotId}
-                          slotId={cell.slotId}
-                          placedStatement={getPlacedStatement(cell.slotId)}
+                          slotId={cell.slotId!}
+                          placedStatement={getPlacedStatement(cell.slotId!)}
                           isSubmitted={isSubmitted}
-                          onReset={() => handleResetSlot(cell.slotId)}
+                          onReset={() => handleResetSlot(cell.slotId!)}
                           isCorrectSection={false}
                           onZoom={setZoomedStatement}
                         />

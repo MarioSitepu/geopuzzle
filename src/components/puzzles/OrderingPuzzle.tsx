@@ -29,7 +29,7 @@ interface SortableItemProps {
   key?: string | number;
 }
 
-function SortableItem({ id, content, isFlood }: SortableItemProps & { isFlood: boolean }) {
+function SortableItem({ id, content, isFlood, isSelected, isMobile, onClick }: SortableItemProps & { isFlood: boolean; isSelected?: boolean; isMobile?: boolean; onClick?: () => void }) {
   const {
     attributes,
     listeners,
@@ -49,9 +49,14 @@ function SortableItem({ id, content, isFlood }: SortableItemProps & { isFlood: b
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
+      {...(isMobile ? {} : listeners)}
+      onClick={(e) => {
+        if (onClick) onClick();
+      }}
       className={cn(
-        "flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-earth-200 mb-3 cursor-grab active:cursor-grabbing touch-none",
+        "flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border mb-3 select-none transition-all duration-200",
+        isMobile ? "cursor-pointer hover:bg-slate-50 active:scale-[0.99]" : "cursor-grab active:cursor-grabbing touch-none",
+        isSelected ? "border-amber-500 ring-4 ring-amber-400/25 scale-[1.01] shadow-md z-10" : "border-earth-200",
         isDragging && `opacity-50 shadow-lg ring-2 z-50 relative ${isFlood ? 'ring-blue-500' : (id === 'volcano' ? 'ring-orange-500' : 'ring-earth-600')}`
       )}
     >
@@ -63,7 +68,7 @@ function SortableItem({ id, content, isFlood }: SortableItemProps & { isFlood: b
   );
 }
 
-export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete: (score: number) => void, disasterId?: string }) {
+export default function OrderingPuzzle({ onComplete, disasterId, level, stageIndex }: { onComplete: (score: number) => void, disasterId?: string, level?: string, stageIndex?: number }) {
   const isVolcano = disasterId === 'gunung-api';
   const isTsunami = disasterId === 'tsunami';
 
@@ -85,28 +90,38 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
   ];
 
   const [items, setItems] = useState(initialItems);
+  const [isMobile, setIsMobile] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   useEffect(() => {
     // Shuffle only on client side to avoid hydration mismatch
     setItems([...initialItems].sort(() => Math.random() - 0.5));
-  }, []);
+    const isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
+    const isLongsorAwal = disasterId === 'longsor' && level === 'awal';
+    setIsMobile(isMobileDevice && !isLongsorAwal);
+  }, [disasterId, level]);
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+  
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: isMobile ? {
+      delay: 3600000,
+      tolerance: 0,
+    } : {
+      delay: 100,
+      tolerance: 5,
+    },
+  });
+
+  const keyboardSensor = useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -117,6 +132,29 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
         const newIndex = items.findIndex((item) => item.id === over.id);
         return arrayMove(items, oldIndex, newIndex);
       });
+    }
+  };
+
+  const handleItemClick = (id: string) => {
+    if (!isMobile) return;
+    if (selectedId === null) {
+      setSelectedId(id);
+    } else if (selectedId === id) {
+      setSelectedId(null);
+    } else {
+      // Swap items!
+      setItems(prev => {
+        const next = [...prev];
+        const idxA = next.findIndex(item => item.id === selectedId);
+        const idxB = next.findIndex(item => item.id === id);
+        if (idxA !== -1 && idxB !== -1) {
+          const temp = next[idxA];
+          next[idxA] = next[idxB];
+          next[idxB] = temp;
+        }
+        return next;
+      });
+      setSelectedId(null);
     }
   };
 
@@ -148,7 +186,15 @@ export default function OrderingPuzzle({ onComplete, disasterId }: { onComplete:
             strategy={verticalListSortingStrategy}
           >
             {items.map((item) => (
-              <SortableItem key={item.id} id={item.id} content={item.content} isFlood={isTsunami} />
+              <SortableItem 
+                key={item.id} 
+                id={item.id} 
+                content={item.content} 
+                isFlood={isTsunami} 
+                isMobile={isMobile}
+                isSelected={selectedId === item.id}
+                onClick={() => handleItemClick(item.id)}
+              />
             ))}
           </SortableContext>
         </DndContext>

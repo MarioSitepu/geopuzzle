@@ -15,14 +15,15 @@ import {
   TouchSensor,
   closestCenter
 } from '@dnd-kit/core';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
+import { X } from 'lucide-react';
 
 // --- Types ---
 type Item = { id: string; content: string; image?: string; category: string; crop?: { x: number; width: number } };
 type Category = { id: string; title: string; position?: { top: string; left: string; width: string; height: string } };
 
-function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageIndex, isPlaced }: { item: Item, isTsunami: boolean, isVolcano: boolean, isLandscapes: boolean, level?: string, stageIndex?: number, isPlaced?: boolean }) {
+function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageIndex, isPlaced, onClick }: { item: Item, isTsunami: boolean, isVolcano: boolean, isLandscapes: boolean, level?: string, stageIndex?: number, isPlaced?: boolean, onClick?: (item: Item) => void }) {
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
   const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -40,6 +41,9 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
       style={style}
       {...listeners}
       {...attributes}
+      onClick={(e) => {
+        if (onClick) onClick(item);
+      }}
       whileHover={{ scale: 1.05, rotate: 1 }}
       whileTap={{ scale: 0.95, rotate: -1 }}
       className={cn(
@@ -81,7 +85,7 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
   );
 }
 
-function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, level, stageIndex }: { category: Category, items: Item[], isTsunami: boolean, isVolcano: boolean, isLandscapes: boolean, level?: string, stageIndex?: number }) {
+function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, level, stageIndex, onItemClick, isMobile }: { category: Category, items: Item[], isTsunami: boolean, isVolcano: boolean, isLandscapes: boolean, level?: string, stageIndex?: number, onItemClick?: (item: Item) => void, isMobile?: boolean }) {
   const { setNodeRef, isOver } = useDroppable({
     id: category.id,
   });
@@ -120,6 +124,7 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
               level={level}
               stageIndex={stageIndex}
               isPlaced={true}
+              onClick={onItemClick}
             />
           ))}
         </div>
@@ -138,7 +143,18 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
       <h3 className="font-semibold text-earth-900 mb-3 text-center">{category.title}</h3>
       <div className="flex flex-col gap-2">
         {items?.map(item => (
-          <div key={item.id} className="p-2 bg-white rounded-lg shadow-sm text-sm border border-earth-100 text-center">
+          <div 
+            key={item.id} 
+            onClick={() => {
+              if (isMobile && onItemClick) {
+                onItemClick(item);
+              }
+            }}
+            className={cn(
+              "p-2 bg-white rounded-lg shadow-sm text-sm border border-earth-100 text-center select-none",
+              isMobile && "cursor-pointer hover:bg-red-50 hover:border-red-200 transition-colors active:scale-95 duration-150"
+            )}
+          >
             {item.content}
           </div>
         ))}
@@ -197,7 +213,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
   ] : [
     { id: 'top-1', title: 'Slot Atas 1', position: { top: '36.6%', left: '68.6%', width: '16.4%', height: '14.0%' } },
-    { id: 'top-2', title: 'Slot Atas 2', position: { top: '40.8%', left: '44.8%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-2', title: 'Slot Atas 2', position: { top: '39.0%', left: '46.0%', width: '16.4%', height: '14.0%' } }, // Changed slightly to show the effect!
     { id: 'top-3', title: 'Slot Atas 3', position: { top: '47.0%', left: '81.6%', width: '16.4%', height: '14.0%' } },
     { id: 'bottom-1', title: 'Slot Bawah 1', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
     { id: 'bottom-2', title: 'Slot Bawah 2', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
@@ -274,24 +290,33 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [selectedItemForClassification, setSelectedItemForClassification] = useState<Item | null>(null);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
+    const isLongsorAwal = disasterId === 'longsor' && level === 'awal';
+    setIsMobile(isMobileDevice && !isLongsorAwal);
+  }, [disasterId, level]);
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+  
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: isMobile ? {
+      delay: 3600000,
+      tolerance: 0,
+    } : {
+      delay: 100,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const findItem = (id: string) => {
     let item = unassignedItems.find(i => i.id === id);
@@ -392,21 +417,37 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
-      <div className="text-center">
+      <div className="text-center flex flex-col items-center">
         <h2 className="text-3xl font-black text-earth-900 tracking-tight">
           {isBoardStyle ? "Lengkapi Papan Puzzle" : "Klasifikasi Fenomena"}
         </h2>
-        <p className="text-earth-600 mt-2 font-medium italic">
-          {isVolcano && level === 'awal' 
-            ? (stageIndex === 2 
-                ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
-                : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
-            : isTsunamiLanjut1
-            ? "BERDASARKAN KONDISI DI BAWAH INI AKAN ADA TSUNAMI YANG MENGENAI PEMUKIMAN KAMU, TEMPAT MANA YANG AKAN KAMU PILIH UNTUK MENYELAMATKAN KELUARGA INI, LAKUKAN UNTUK BISA MITIGASI BENCANA DI KASUS INI!"
-            : isBoardStyle 
-            ? "Tarik kepingan puzzle ke posisi yang tepat pada papan." 
-            : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
-        </p>
+        
+        {isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1) ? (
+          <div className="mt-4 space-y-4 max-w-4xl mx-auto w-full px-4">
+            <p className="text-earth-600 font-medium italic">
+              <span className="font-bold">Instruksi Soal:</span> Tarik dan taruh kepingan pilihan elemen yang telah disediakan ke posisi yang tepat pada papan!
+            </p>
+            <div className="bg-earth-100/60 backdrop-blur-sm border-2 border-earth-200 p-5 rounded-2xl shadow-sm text-center">
+              <p className="text-earth-900 font-bold text-lg md:text-xl leading-relaxed">
+                {stageIndex === 0
+                  ? "Kondisi lereng curam di tepi jalan raya dengan pelapukan batuan intensif yang sering hadir genangan air, kombinasi mitigasi bencana apa yang mudah dilakukan olehmu?"
+                  : "Kondisi lereng curam di tepi jalan raya dengan jenis batuan yang mengalami pelapukan kuat dan sering terjadi jatuhan batuan (rockfall). Kombinasi Penanggulangan cepat apa yang sebaiknya dilakukan?"}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-earth-600 mt-2 font-medium italic max-w-3xl mx-auto">
+            {isVolcano && level === 'awal' 
+              ? (stageIndex === 2 
+                  ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
+                  : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
+              : isTsunamiLanjut1
+              ? "BERDASARKAN KONDISI DI BAWAH INI AKAN ADA TSUNAMI YANG MENGENAI PEMUKIMAN KAMU, TEMPAT MANA YANG AKAN KAMU PILIH UNTUK MENYELAMATKAN KELUARGA INI, LAKUKAN UNTUK BISA MITIGASI BENCANA DI KASUS INI!"
+              : isBoardStyle 
+              ? "Tarik kepingan puzzle ke posisi yang tepat pada papan." 
+              : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
+          </p>
+        )}
       </div>
 
       <DndContext 
@@ -443,6 +484,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                   isLandscapes={isLandscapes}
                   level={level}
                   stageIndex={stageIndex}
+                  onClick={(clickedItem) => {
+                    if (isMobile) {
+                      setSelectedItemForClassification(clickedItem);
+                    }
+                  }}
                 />
               ))}
               
@@ -530,6 +576,23 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                       isLandscapes={isLandscapes}
                       level={level}
                       stageIndex={stageIndex}
+                      isMobile={isMobile}
+                      onItemClick={(item) => {
+                        if (isMobile) {
+                          // Reset item by returning it to unassigned
+                          setAssignedItems(prev => {
+                            const cleaned = { ...prev };
+                            Object.keys(cleaned).forEach(key => {
+                              cleaned[key] = (cleaned[key] || []).filter(i => i.id !== item.id);
+                            });
+                            return cleaned;
+                          });
+                          setUnassignedItems(prev => {
+                            if (prev.some(i => i.id === item.id)) return prev;
+                            return [...prev, item];
+                          });
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -590,6 +653,76 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           </button>
         </motion.div>
       )}
+      {/* Auto Classification Modal / Bottom Sheet for mobile */}
+      <AnimatePresence>
+        {selectedItemForClassification && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedItemForClassification(null)}
+            className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md cursor-pointer"
+          >
+            <motion.div
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "100%", opacity: 0 }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-md w-full bg-white rounded-[2rem] p-6 shadow-2xl border border-slate-100 flex flex-col gap-4 mx-auto cursor-default max-h-[85vh] overflow-y-auto"
+            >
+              <button
+                onClick={() => setSelectedItemForClassification(null)}
+                className="absolute top-4 right-4 p-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <div className="text-center">
+                <span className="inline-block px-3 py-1 bg-earth-50 text-earth-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-1">
+                  Pilih Kategori
+                </span>
+                <h3 className="text-lg font-black text-slate-800 leading-tight">
+                  Klasifikasikan Item
+                </h3>
+                <p className="text-xs font-bold text-slate-500 mt-2">
+                  "{selectedItemForClassification.content}"
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 mt-2">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => {
+                      const itemId = selectedItemForClassification.id;
+                      
+                      // Move item to the selected category
+                      setAssignedItems(prev => {
+                        // Clean from any other category first
+                        const cleaned = { ...prev };
+                        Object.keys(cleaned).forEach(key => {
+                          cleaned[key] = (cleaned[key] || []).filter(i => i.id !== itemId);
+                        });
+                        
+                        // Add to the new category
+                        cleaned[category.id] = [...(cleaned[category.id] || []), selectedItemForClassification];
+                        return cleaned;
+                      });
+                      
+                      // Remove from unassigned
+                      setUnassignedItems(prev => prev.filter(i => i.id !== itemId));
+                      
+                      setSelectedItemForClassification(null);
+                    }}
+                    className="w-full py-4 px-6 bg-slate-50 hover:bg-slate-100 border-2 border-slate-200/60 hover:border-slate-300 rounded-2xl font-bold text-slate-700 text-sm transition-all hover:scale-[1.02] active:scale-[0.98] text-center cursor-pointer"
+                  >
+                    {category.title}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
