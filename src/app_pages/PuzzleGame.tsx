@@ -87,7 +87,6 @@ export default function PuzzleGame() {
     ? [
         { id: 'classification', component: ClassificationPuzzle },
         { id: 'fill-blank-2', component: FillBlankPuzzle },
-        { id: 'ordering', component: OrderingPuzzle },
       ]
     : (disasterId === 'tsunami' && level === 'atas')
     ? [
