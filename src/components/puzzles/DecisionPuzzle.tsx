@@ -240,7 +240,7 @@ export default function DecisionPuzzle({
               <img 
                 src="/images/quiz/tsunami/lanjutan/2/1.png" 
                 alt="Background" 
-                className="absolute inset-0 w-full h-full object-fill sm:object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               
               {/* Family Image */}

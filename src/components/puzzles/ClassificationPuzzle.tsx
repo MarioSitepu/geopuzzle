@@ -540,7 +540,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                 <img
                   src={isTsunamiLanjut1 ? "/images/quiz/tsunami/lanjutan/1/1.png" : isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (isLandscapes && level === 'atas') ? "/images/quiz/landscapes/1.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
                   alt="Board"
-                  className="w-full h-full object-fill"
+                  className="w-full h-full object-cover"
                 />
               </div>
             )}
