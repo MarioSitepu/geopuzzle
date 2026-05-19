@@ -75,7 +75,6 @@ export default function PuzzleGame() {
     ? [
         { id: 'fill-blank-1', component: FillBlankPuzzle },
         { id: 'fill-blank-2', component: FillBlankPuzzle },
-        { id: 'ordering', component: OrderingPuzzle },
       ]
     : level === 'awal'
     ? [
