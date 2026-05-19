@@ -167,7 +167,7 @@ export default function PuzzleGame() {
       }).catch(console.error);
 
       setTimeout(() => {
-        router.push(`/regions/${regionId}/${disasterId}/result?score=${finalScore}`);
+        router.push(`/regions/${regionId}/${disasterId}/result?score=${finalScore}&level=${level}`);
       }, 1500);
     }
   };
@@ -190,7 +190,7 @@ export default function PuzzleGame() {
     }).catch(console.error);
 
     setTimeout(() => {
-      router.push(`/regions/${regionId}/${disasterId}/result?score=${finalScore}&timeout=true`);
+      router.push(`/regions/${regionId}/${disasterId}/result?score=${finalScore}&timeout=true&level=${level}`);
     }, 1500);
   };
 
@@ -283,7 +283,7 @@ export default function PuzzleGame() {
     <PageTransition className="p-4 sm:p-8 max-w-5xl mx-auto w-full flex flex-col">
       <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 w-full">
         <Link 
-          href={`/regions/${regionId}/${disasterId}/learn`} 
+          href={`/regions/${regionId}/${disasterId}/learn?level=${level}`} 
           className="inline-flex items-center gap-1.5 text-earth-600 hover:text-earth-900 transition-colors text-xs sm:text-sm font-bold self-start sm:self-auto"
         >
           <ArrowLeft className="w-3.5 h-3.5 sm:w-4 h-4 shrink-0" />

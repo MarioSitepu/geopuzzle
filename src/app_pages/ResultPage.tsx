@@ -15,6 +15,7 @@ export default function ResultPage() {
   const searchParams = useSearchParams();
   const score = parseInt(searchParams?.get('score') || '0', 10);
   const isTimeout = searchParams?.get('timeout') === 'true';
+  const level = searchParams?.get('level') || 'awal';
   
   const { unlockDisaster, isMuted } = useGameStore();
   const isSuccess = score >= 75;
@@ -83,14 +84,14 @@ export default function ResultPage() {
           {!isSuccess ? (
             <>
               <Link
-                href={`/regions/${regionId}/${disasterId}/learn`}
+                href={`/regions/${regionId}/${disasterId}/learn?level=${level}`}
                 className="w-full sm:w-auto px-8 py-4 bg-white text-earth-800 rounded-full font-semibold shadow-md hover:bg-earth-50 transition-colors flex items-center justify-center gap-2"
               >
                 <RotateCcw className="w-5 h-5" />
                 Pelajari Lagi
               </Link>
               <Link
-                href={`/regions/${regionId}/${disasterId}/puzzle`}
+                href={`/regions/${regionId}/${disasterId}/puzzle?level=${level}`}
                 className={`w-full sm:w-auto px-8 py-4 text-white rounded-full font-semibold shadow-lg transition-colors flex items-center justify-center gap-2 ${
                   isVolcano ? 'bg-orange-600 hover:bg-orange-700' : isTsunami ? 'bg-blue-600 hover:bg-blue-700' : 'bg-earth-700 hover:bg-earth-800'
                 }`}
