@@ -8,7 +8,11 @@ import {
   useDraggable, 
   useDroppable,
   DragOverlay,
-  defaultDropAnimationSideEffects
+  defaultDropAnimationSideEffects,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor
 } from '@dnd-kit/core';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
@@ -28,9 +32,9 @@ function DraggableWord({ word, id, isUsed }: { word: string; id: string; isUsed:
       {...listeners}
       {...attributes}
       className={cn(
-        "px-4 py-3 rounded-2xl shadow-sm border-2 cursor-grab active:cursor-grabbing text-base font-bold transition-all select-none text-center relative overflow-hidden group",
+        "px-3 py-2.5 rounded-xl shadow-sm border-2 cursor-grab active:cursor-grabbing text-sm font-bold transition-all select-none text-center relative overflow-hidden group",
         word === 'Benar' ? "bg-gradient-to-br from-green-500 to-green-600 border-green-400 text-white" : word === 'Salah' ? "bg-gradient-to-br from-red-500 to-red-600 border-red-400 text-white" : "bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 text-earth-800 hover:border-orange-400 hover:shadow-orange-500/20",
-        isUsed ? "opacity-30 grayscale cursor-not-allowed border-earth-100 shadow-none" : "hover:shadow-lg hover:-translate-y-1",
+        isUsed ? "opacity-30 grayscale cursor-not-allowed border-earth-100 shadow-none" : "hover:shadow-md hover:-translate-y-0.5",
         isDragging && "opacity-0"
       )}
     >
@@ -44,6 +48,14 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
   const [activeWord, setActiveWord] = useState<string | null>(null);
   const [droppedWords, setDroppedWords] = useState<Record<string, string | null>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: { distance: 5 },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { delay: 100, tolerance: 5 },
+  });
+  const sensors = useSensors(mouseSensor, touchSensor);
   
   const isVolcano = disasterId === 'gunung-api';
   const isVolcanoLanjut2 = isVolcano && level === 'atas' && stageIndex === 1;
@@ -170,52 +182,57 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
     : !!droppedWords['default'];
 
   return (
-    <div className="max-w-7xl mx-auto relative px-4 py-8 sm:px-6 lg:px-8">
-      {/* Decorative Background Elements */}
-      <div className="absolute -top-24 -left-24 w-96 h-96 bg-orange-400/10 rounded-full blur-3xl -z-10 animate-pulse" />
-      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-leaf-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
+    <div className="max-w-6xl mx-auto relative px-3 py-6 sm:px-5 lg:px-6">
+      {/* Subtle Background Accents */}
+      <div className="absolute -top-20 -left-20 w-72 h-72 bg-orange-300/8 rounded-full blur-3xl -z-10" />
+      <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-leaf-300/8 rounded-full blur-3xl -z-10" />
 
-      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div className="flex flex-col lg:flex-row gap-5 items-start">
           
-          {/* Left Sidebar - Premium Refined Style */}
+          {/* Left Sidebar — Compact & Refined */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="lg:w-[320px] w-full flex flex-col gap-6 sticky top-8"
+            className="lg:w-[260px] w-full flex flex-col gap-4 sticky top-6"
           >
-            <div className="relative group overflow-hidden bg-gradient-to-br from-orange-500 to-orange-600 p-6 rounded-[2.5rem] shadow-2xl shadow-orange-500/20 text-white transform transition-transform hover:scale-[1.02]">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
-              <div className="relative z-10 flex flex-col items-center">
-                <span className="text-xs font-black uppercase tracking-[0.3em] opacity-80 mb-1">Level Edukasi</span>
-                <h3 className="text-3xl font-black italic tracking-tighter drop-shadow-sm">TINGKAT {level === 'atas' ? 'LANJUTAN' : 'AWAL'}</h3>
-                <div className="mt-4 px-6 py-2 bg-white/20 backdrop-blur-md rounded-full text-xl font-bold border border-white/30">
-                  NOMOR {stageIndex !== undefined ? stageIndex + 1 : 1}
+            {/* Level Badge — Slim */}
+            <div className={cn(
+              "relative overflow-hidden px-5 py-4 rounded-2xl shadow-lg text-white",
+              isVolcano ? "bg-gradient-to-br from-orange-500 to-orange-600" : isTsunami ? "bg-gradient-to-br from-blue-500 to-blue-600" : "bg-gradient-to-br from-earth-600 to-earth-700"
+            )}>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12 blur-xl" />
+              <div className="relative z-10 flex items-center justify-between gap-3">
+                <div>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-70">Level</span>
+                  <h3 className="text-lg font-black tracking-tight leading-none">{level === 'atas' ? 'Lanjutan' : 'Awal'}</h3>
+                </div>
+                <div className="px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg text-sm font-bold border border-white/20">
+                  No. {stageIndex !== undefined ? stageIndex + 1 : 1}
                 </div>
               </div>
             </div>
-            
-            <div className="bg-white/90 backdrop-blur-xl border border-white p-3 rounded-[2.5rem] shadow-xl">
-              <div className="bg-gradient-to-br from-orange-400 to-orange-500 text-white py-6 rounded-[2rem] shadow-inner text-center font-black text-2xl uppercase tracking-widest flex items-center justify-center gap-3">
-                <div className="w-2 h-8 bg-white/30 rounded-full" />
-                {disasterId === 'gunung-api' ? 'GUNUNG API' : disasterId === 'tsunami' ? 'TSUNAMI' : 'LONGSOR'}
-                <div className="w-2 h-8 bg-white/30 rounded-full" />
-              </div>
 
-              <div className="p-6 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-earth-200" />
-                  <span className="text-[10px] font-black text-earth-400 uppercase tracking-widest">Kotak Pilihan</span>
-                  <div className="h-px flex-1 bg-earth-200" />
+            {/* Choices Panel — Tight */}
+            <div className="bg-white/90 backdrop-blur-xl border border-earth-100 rounded-2xl shadow-md overflow-hidden">
+              <div className={cn(
+                "py-3 text-center font-bold text-sm uppercase tracking-widest text-white",
+                isVolcano ? "bg-gradient-to-r from-orange-500 to-orange-600" : isTsunami ? "bg-gradient-to-r from-blue-500 to-blue-600" : "bg-gradient-to-r from-earth-600 to-earth-700"
+              )}>
+                {disasterId === 'gunung-api' ? 'Gunung Api' : disasterId === 'tsunami' ? 'Tsunami' : 'Longsor'}
+              </div>
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="h-px flex-1 bg-earth-100" />
+                  <span className="text-[9px] font-bold text-earth-400 uppercase tracking-widest">Pilihan</span>
+                  <div className="h-px flex-1 bg-earth-100" />
                 </div>
-                
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-2.5">
                   {choices.map((choice) => (
                     <motion.div 
                       key={choice.id} 
-                      className="relative"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                     >
                       <DraggableWord 
                         id={choice.id} 
@@ -228,36 +245,35 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
               </div>
             </div>
 
-            {/* Hint Box */}
-            <div className="bg-earth-900 text-white/90 p-6 rounded-3xl shadow-lg border border-earth-700/50 hidden lg:block">
-              <p className="text-xs font-medium leading-relaxed italic">
-                "Pahami setiap pernyataan dengan teliti. Tarik pilihan yang menurutmu paling tepat untuk melengkapi konsep geologi tersebut."
-              </p>
+            {/* Hint — Minimal */}
+            <div className="bg-earth-900/90 text-white/80 px-4 py-3 rounded-xl text-[11px] font-medium leading-relaxed italic hidden lg:block">
+              &quot;Pahami setiap pernyataan dengan teliti. Tarik pilihan yang tepat untuk melengkapi konsep geologi.&quot;
             </div>
           </motion.div>
 
           {/* Main Content Area */}
-          <div className="flex-1 w-full flex flex-col gap-8">
-            {/* Instruction Header */}
+          <div className="flex-1 w-full flex flex-col gap-5">
+            {/* Instruction — Compact */}
             <motion.div 
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/60 backdrop-blur-md p-8 rounded-[2rem] border border-white shadow-xl flex items-center gap-6"
+              className="bg-white/60 backdrop-blur-sm px-5 py-4 rounded-xl border border-white/80 shadow-sm flex items-center gap-4"
             >
-              <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
-                <RotateCcw className="w-7 h-7" />
+              <div className={cn(
+                "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+                isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-earth-100 text-earth-600"
+              )}>
+                <RotateCcw className="w-5 h-5" />
               </div>
-              <p className="text-earth-800 font-extrabold text-xl leading-snug">
+              <p className="text-earth-700 font-bold text-sm leading-snug">
                 {isCaseStudyMode ? "Tarik dan taruh pilihan yang ada di bawah ini dengan mengisi jawaban yang cocok!" : (
                   <>Tarik dan taruh pilihan <span className="text-green-600">benar</span> atau <span className="text-red-600">salah</span> mengenai pernyataan geologi berikut ini.</>
                 )}
               </p>
             </motion.div>
 
-            {/* Statements List */}
-            <div className="grid grid-cols-1 gap-12 relative">
-              {/* Connecting Line */}
-              <div className="absolute left-[50%] top-0 bottom-0 w-1 bg-earth-100 -z-10 hidden lg:block" />
+            {/* Statements List — Slim Cards */}
+            <div className="flex flex-col gap-4 relative">
 
               {isCaseStudyMode ? (
                 <div className="w-full max-w-3xl mx-auto">
@@ -349,21 +365,25 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                 statements.map((s, index) => (
                   <motion.div 
                     key={s.id}
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: index * 0.08 }}
                     className="flex flex-col lg:flex-row items-center gap-3 w-full"
                   >
-                    <div className="flex-1 w-full group relative">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-3xl blur opacity-10 group-hover:opacity-20 transition duration-1000" />
-                      <div className="relative h-full bg-white/90 backdrop-blur-sm px-5 py-4 rounded-3xl border border-earth-100 shadow-lg flex items-center gap-4">
-                        <p className="text-earth-800 text-sm sm:text-base font-semibold leading-snug flex-1 text-center lg:text-left">
+                    <div className="flex-1 w-full">
+                      <div className="bg-white/90 backdrop-blur-sm px-4 py-3 rounded-xl border border-earth-100 shadow-sm flex items-center gap-3 hover:shadow-md transition-shadow">
+                        <span className={cn(
+                          "w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-black shrink-0",
+                          isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-earth-100 text-earth-600"
+                        )}>
+                          {index + 1}
+                        </span>
+                        <p className="text-earth-700 text-sm font-medium leading-snug flex-1">
                           {s.text}
                         </p>
                       </div>
                     </div>
-                    
-                    <div className="shrink-0 flex items-center justify-center pt-1 lg:pt-0">
+                    <div className="shrink-0 flex items-center justify-center">
                       <DroppableZone 
                         id={`drop-zone-${s.id}`}
                         droppedWord={droppedWords[s.id] || null}
@@ -371,19 +391,19 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                         isSubmitted={isSubmitted}
                         onReset={() => setDroppedWords(prev => ({ ...prev, [s.id]: null }))}
                         isVolcano={true}
-                        className="min-w-[120px] h-12 sm:min-w-[140px] sm:h-14 rounded-2xl text-base"
+                        className="min-w-[110px] h-11 sm:min-w-[120px] sm:h-12 rounded-xl text-sm"
                       />
                     </div>
                   </motion.div>
                 ))
               ) : (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-white p-12 sm:p-16 rounded-[4rem] text-2xl sm:text-3xl leading-[2.2] text-earth-800 shadow-2xl border border-white relative overflow-hidden group"
+                  className="bg-white/95 p-8 sm:p-10 rounded-2xl text-lg sm:text-xl leading-[2] text-earth-700 shadow-lg border border-earth-100 relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-leaf-100/30 rounded-full -mr-32 -mt-32 blur-3xl transition-transform group-hover:scale-110" />
-                   <div className="relative z-10 text-center font-bold">
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-leaf-100/20 rounded-full -mr-24 -mt-24 blur-3xl" />
+                   <div className="relative z-10 text-center font-semibold">
                     {isTsunami
                       ? <>
                           Sistem peringatan dini yang mendeteksi gelombang besar akibat gempa tektonik di dasar laut bertujuan untuk mempercepat proses
@@ -418,21 +438,23 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
             <AnimatePresence>
               {isComplete && !isSubmitted && (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="flex justify-center pt-10"
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="flex justify-center pt-4"
                 >
                   <button
                     onClick={checkAnswer}
-                    className="group relative px-20 py-6 bg-earth-900 text-white rounded-3xl font-black text-2xl shadow-2xl overflow-hidden transform transition-all hover:scale-105 active:scale-95"
+                    className={cn(
+                      "group relative px-12 py-4 text-white rounded-2xl font-bold text-lg shadow-xl overflow-hidden transition-all hover:scale-105 active:scale-95",
+                      isVolcano ? "bg-orange-600 hover:bg-orange-700" : isTsunami ? "bg-blue-600 hover:bg-blue-700" : "bg-earth-700 hover:bg-earth-800"
+                    )}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <span className="relative flex items-center gap-4">
+                    <span className="relative flex items-center gap-3">
                       Periksa Jawaban
-                      <motion.div animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                      <motion.span animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
                         →
-                      </motion.div>
+                      </motion.span>
                     </span>
                   </button>
                 </motion.div>
@@ -441,35 +463,33 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
 
             {isSubmitted && (
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
-                  "p-10 rounded-[3rem] shadow-2xl flex flex-col items-center justify-center gap-4 border-4 transition-all duration-500",
+                  "px-6 py-5 rounded-2xl shadow-lg flex items-center gap-4 border-2",
                   isAllCorrect 
-                    ? "bg-gradient-to-br from-leaf-500 to-leaf-600 text-white border-leaf-400 shadow-leaf-500/30" 
-                    : "bg-gradient-to-br from-red-500 to-red-600 text-white border-red-400 shadow-red-500/30"
+                    ? "bg-gradient-to-r from-leaf-500 to-leaf-600 text-white border-leaf-400" 
+                    : "bg-gradient-to-r from-red-500 to-red-600 text-white border-red-400"
                 )}
               >
-                <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-white/20 rounded-[2rem] flex items-center justify-center backdrop-blur-md shadow-lg rotate-12 transition-transform hover:rotate-0">
-                    {isAllCorrect ? <CheckCircle2 className="w-12 h-12" /> : <AlertCircle className="w-12 h-12" />}
-                  </div>
-                  <div className="text-left">
-                    <h4 className="text-4xl font-black tracking-tight">{isAllCorrect ? "LUAR BIASA!" : "BELUM TEPAT!"}</h4>
-                    <p className="text-xl font-bold opacity-90">{isAllCorrect ? "Semua jawaban benar." : "Periksa kembali pilihanmu."}</p>
-                  </div>
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                  {isAllCorrect ? <CheckCircle2 className="w-7 h-7" /> : <AlertCircle className="w-7 h-7" />}
+                </div>
+                <div>
+                  <h4 className="text-xl font-black">{isAllCorrect ? "LUAR BIASA!" : "BELUM TEPAT!"}</h4>
+                  <p className="text-sm font-semibold opacity-90">{isAllCorrect ? "Semua jawaban benar." : "Periksa kembali pilihanmu."}</p>
                 </div>
               </motion.div>
             )}
           </div>
         </div>
 
-        {/* Drag Overlay */}
+        {/* Drag Overlay — Refined */}
         <DragOverlay dropAnimation={{ sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.4' } } }) }}>
           {activeWord ? (
             <div className={cn(
-              "px-10 py-5 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] text-2xl font-black transition-transform border-2 scale-110 rotate-2 cursor-grabbing text-center",
-              activeWord === 'Benar' ? "bg-gradient-to-br from-green-500 to-green-600 border-green-400 text-white" : activeWord === 'Salah' ? "bg-gradient-to-br from-red-500 to-red-600 border-red-400 text-white" : "bg-gradient-to-br from-orange-50 to-orange-100 border-orange-300 text-earth-800"
+              "px-6 py-3 rounded-xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.25)] text-base font-bold border-2 scale-105 rotate-1 cursor-grabbing text-center",
+              activeWord === 'Benar' ? "bg-green-500 border-green-400 text-white" : activeWord === 'Salah' ? "bg-red-500 border-red-400 text-white" : "bg-orange-50 border-orange-300 text-earth-800"
             )}>
               {activeWord}
             </div>

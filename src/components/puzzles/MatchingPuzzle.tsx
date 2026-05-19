@@ -170,10 +170,7 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
 
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 5 } });
   const touchSensor = useSensor(TouchSensor, { 
-    activationConstraint: isMobile ? {
-      delay: 3600000,
-      tolerance: 0,
-    } : {
+    activationConstraint: {
       delay: 100, 
       tolerance: 5 
     } 
@@ -289,7 +286,7 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
           <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-earth-100 flex flex-col items-center">
             <h3 className="text-[10px] uppercase tracking-widest font-bold text-earth-400 mb-3">Pilihan Faktor Keamanan (Target FK)</h3>
             <div className="flex gap-4 overflow-x-auto pb-2 w-full justify-center no-scrollbar">
-              {options.map((option) => (
+              {unassignedOptions.length > 0 ? unassignedOptions.map((option) => (
                 <DraggableOption 
                   key={option.id} 
                   option={option} 
@@ -298,24 +295,13 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
                   isSelected={selectedOptionForAssignment === option.id}
                   onClick={() => {
                     if (isMobile) {
-                      // Check if already assigned
-                      const isAssigned = Object.values(assignments).includes(option.id);
-                      if (isAssigned) {
-                        // Reset/remove from whichever board has it
-                        setAssignments(prev => {
-                          const next = { ...prev };
-                          Object.keys(next).forEach(key => {
-                            if (next[key] === option.id) delete next[key];
-                          });
-                          return next;
-                        });
-                      } else {
-                        setSelectedOptionForAssignment(prev => prev === option.id ? null : option.id);
-                      }
+                      setSelectedOptionForAssignment(prev => prev === option.id ? null : option.id);
                     }
                   }}
                 />
-              ))}
+              )) : (
+                <p className="text-earth-400 text-xs font-semibold py-4">Semua opsi telah dipasang.</p>
+              )}
             </div>
           </div>
         </div>

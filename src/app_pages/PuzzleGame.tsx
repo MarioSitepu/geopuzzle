@@ -94,6 +94,11 @@ export default function PuzzleGame() {
         { id: 'classification-1', component: ClassificationPuzzle, stageIndex: 0 },
         { id: 'decision', component: DecisionPuzzle, stageIndex: 1 },
       ]
+    : (disasterId === 'longsor' && level === 'atas')
+    ? [
+        { id: 'classification', component: ClassificationPuzzle },
+        { id: 'matching', component: MatchingPuzzle },
+      ]
     : [
         { id: 'classification', component: ClassificationPuzzle },
         { id: 'matching', component: disasterId === 'longsor' ? MatchingPuzzle : OrderingPuzzle },

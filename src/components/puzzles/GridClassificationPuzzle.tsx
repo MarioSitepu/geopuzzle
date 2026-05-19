@@ -235,10 +235,7 @@ export default function GridClassificationPuzzle({
   });
   
   const touchSensor = useSensor(TouchSensor, {
-    activationConstraint: isMobile ? {
-      delay: 3600000,
-      tolerance: 0,
-    } : {
+    activationConstraint: {
       delay: 100,
       tolerance: 5,
     },
