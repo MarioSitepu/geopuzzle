@@ -235,20 +235,22 @@ export default function DecisionPuzzle({
             </div>
 
             {/* Main Board */}
-            <div className="lg:w-[85%] relative rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-300 aspect-[16/10] sm:aspect-video bg-blue-100">
-              {/* Background Image */}
-              <img 
-                src="/images/quiz/tsunami/lanjutan/2/1.png" 
-                alt="Background" 
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              
-              {/* Family Image */}
-              <img 
-                src="/images/quiz/tsunami/lanjutan/2/family.png" 
-                alt="Family" 
-                className="absolute left-[15%] top-[50%] w-[25%] sm:w-[20%] object-contain -translate-y-1/2"
-              />
+            <div className="lg:w-[85%] relative rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-300 bg-blue-100">
+              {/* Background Image centered and not cropped */}
+              <div className="w-full h-[320px] sm:h-[420px] md:h-[520px] lg:h-full flex items-center justify-center relative">
+                <img 
+                  src="/images/quiz/tsunami/lanjutan/2/1.png" 
+                  alt="Background" 
+                  className="max-w-full max-h-full object-contain"
+                />
+
+                {/* Family Image positioned relative to the board container */}
+                <img 
+                  src="/images/quiz/tsunami/lanjutan/2/family.png" 
+                  alt="Family" 
+                  className="absolute left-[15%] top-[50%] w-[22%] sm:w-[18%] object-contain -translate-y-1/2"
+                />
+              </div>
 
               {/* Connecting Label between slots */}
               <div className="absolute top-[35%] right-[5%] w-[30%] sm:w-48 text-center bg-white/80 font-bold text-black text-xs sm:text-sm p-2 sm:p-3 rounded-xl border border-slate-300 shadow-sm backdrop-blur-sm">

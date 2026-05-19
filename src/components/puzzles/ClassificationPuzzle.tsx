@@ -467,7 +467,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
         onDragEnd={handleDragEnd}
         collisionDetection={closestCenter}
       >
-        <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
+  <div className={cn("flex flex-col gap-8 items-start w-full", !isBoardStyle && "lg:flex-row")}>
           {/* Choices Panel */}
           <div className="lg:w-1/3 w-full bg-white/60 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center overflow-y-auto max-h-[75vh] relative">
             {/* Glossy highlight effect */}
@@ -532,15 +532,15 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             <div className={cn(
               "rounded-3xl shadow-2xl border-4 overflow-hidden relative",
               isBoardStyle
-                ? "border-earth-200 bg-earth-50 aspect-[1645/525] min-w-[750px] lg:min-w-0 w-full"
+                ? "border-earth-200 bg-earth-50 w-full min-h-[420px]"
                 : "w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100"
             )}>
             {isBoardStyle && (
-              <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 z-0 flex items-center justify-center">
                 <img
                   src={isTsunamiLanjut1 ? "/images/quiz/tsunami/lanjutan/1/1.png" : isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (isLandscapes && level === 'atas') ? "/images/quiz/landscapes/1.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
                   alt="Board"
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                 />
               </div>
             )}
