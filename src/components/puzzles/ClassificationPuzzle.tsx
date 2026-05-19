@@ -27,6 +27,7 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
   const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
   const isCloningMode = isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1);
+  const isTransparentPlaced = isPlaced && (isCloningMode || (isLandscapes && level === 'atas'));
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: item,
@@ -49,18 +50,18 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
       whileTap={{ scale: 0.95, rotate: -1 }}
       className={cn(
         "cursor-grab active:cursor-grabbing text-sm font-bold text-earth-800 touch-none overflow-hidden transition-all duration-200 flex items-center justify-center group",
-        (isPlaced && isCloningMode) ? "bg-transparent border-0" : "bg-white rounded-2xl shadow-lg border-2",
+        isTransparentPlaced ? "bg-transparent border-0" : "bg-white rounded-2xl shadow-lg border-2",
         isPlaced ? "w-full h-full absolute inset-0" : ((isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) ? "w-28 h-28 sm:w-36 sm:h-36 p-0" : "p-4 min-w-[120px]"),
         isDragging ? "opacity-0" : "opacity-100",
-        isDragging ? "shadow-2xl ring-4 z-50" : (!(isPlaced && isCloningMode) ? "hover:shadow-xl" : ""),
-        !(isPlaced && isCloningMode) ? (isTsunami ? 'border-blue-100 hover:border-blue-400' : isVolcano ? 'border-orange-100 hover:border-orange-400' : 'border-earth-100 hover:border-earth-400') : ""
+        isDragging ? "shadow-2xl ring-4 z-50" : (!isTransparentPlaced ? "hover:shadow-xl" : ""),
+        !isTransparentPlaced ? (isTsunami ? 'border-blue-100 hover:border-blue-400' : isVolcano ? 'border-orange-100 hover:border-orange-400' : 'border-earth-100 hover:border-earth-400') : ""
       )}
     >
       {(isLandscapes || (isVolcano && level === 'awal') || isVolcanoLanjut1 || isTsunamiLanjut1) && item.image ? (
         <div className="flex flex-col items-center w-full h-full relative">
           {item.crop ? (
-            <div 
-              className={cn("w-full h-full bg-no-repeat transition-transform duration-500", !(isPlaced && isCloningMode) && "group-hover:scale-110")}
+            <div
+              className={cn("w-full h-full bg-no-repeat transition-transform duration-500", !isTransparentPlaced && "group-hover:scale-110")}
               style={{
                 backgroundImage: `url(${item.image})`,
                 backgroundSize: '500% 100%',
@@ -68,14 +69,14 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
               }}
             />
           ) : (
-            <img src={item.image} alt={item.content} className={cn("w-full h-full object-contain transition-transform duration-500", !(isPlaced && isCloningMode) && "group-hover:scale-110")} />
+            <img src={item.image} alt={item.content} className={cn("w-full h-full object-contain transition-transform duration-500", !isTransparentPlaced && "group-hover:scale-110")} />
           )}
-          
+
           {/* Glass overlay and text on hover */}
-          {!(isPlaced && isCloningMode) && (
+          {!isTransparentPlaced && (
             <>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
+
               <div className="absolute bottom-0 w-full bg-earth-900/90 backdrop-blur-md text-white text-[10px] py-2 px-1 text-center font-black uppercase tracking-wider translate-y-0 transition-transform">
                 {item.content}
               </div>
@@ -121,8 +122,8 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
       >
         <div className="w-full h-full relative flex items-center justify-center p-2">
           {items?.map(item => (
-            <DraggableItem 
-              key={item.id} 
+            <DraggableItem
+              key={item.id}
               item={item}
               isTsunami={isTsunami}
               isVolcano={isVolcano}
@@ -149,8 +150,8 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
       <h3 className="font-semibold text-earth-900 mb-3 text-center">{category.title}</h3>
       <div className="flex flex-col gap-2">
         {items?.map(item => (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             onClick={() => {
               if (isMobile && onItemClick) {
                 onItemClick(item);
@@ -224,7 +225,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'top-3', title: 'Slot Atas 3', position: { top: '47.0%', left: '81.6%', width: '16.4%', height: '14.0%' } },
     { id: 'bottom-1', title: 'Slot Bawah 1', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
     { id: 'bottom-2', title: 'Slot Bawah 2', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
-  ]) : (isLandscapes && level === 'menengah') ? [
+  ]) : (isLandscapes && level === 'atas') ? [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
     { id: 'flows', title: 'Flows (Aliran)' },
@@ -304,7 +305,8 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     setMounted(true);
     const isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
     const isLongsorAwal = disasterId === 'longsor' && level === 'awal';
-    setIsMobile(isMobileDevice && !isLongsorAwal);
+    const isLongsorAtas = disasterId === 'longsor' && level === 'atas';
+    setIsMobile(isMobileDevice && !isLongsorAwal && !isLongsorAtas);
   }, [disasterId, level]);
 
   const mouseSensor = useSensor(MouseSensor, {
@@ -312,7 +314,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
       distance: 5,
     },
   });
-  
+
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: isMobile ? {
       delay: 3600000,
@@ -343,7 +345,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveItem(null);
-    
+
     const itemId = active.id as string;
     const found = findItem(itemId);
     if (!found) return;
@@ -371,10 +373,10 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     const existingItems = assignedItems[targetCategoryId] || [];
 
     setAssignedItems(prev => {
-      const newItem = (isCloningMode && source === 'unassigned') 
-        ? { ...item, id: `${item.id}-clone-${Date.now()}` } 
+      const newItem = (isCloningMode && source === 'unassigned')
+        ? { ...item, id: `${item.id}-clone-${Date.now()}` }
         : item;
-        
+
       const next = { ...prev, [targetCategoryId]: [newItem] };
       if (source !== 'unassigned') {
         next[source] = (next[source] || []).filter(i => i.id !== itemId);
@@ -416,7 +418,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     });
 
     // Total score should be based on number of categories (slots) to fill
-    const score = isTsunamiLanjut1 
+    const score = isTsunamiLanjut1
       ? (correct > 0 ? 100 : 0)
       : Math.round((correct / categories.length) * 100);
     onComplete(score);
@@ -425,7 +427,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   const isComplete = isTsunamiLanjut1
     ? Object.values(assignedItems).some(items => items.length > 0)
     : Object.values(assignedItems).every(items => items.length > 0);
-  const isBoardStyle = isVolcanoLanjut1 || isTsunamiLanjut1 || (((isLandscapes && level === 'awal') || (isVolcano && level === 'awal')) && stageIndex !== 2);
+  const isBoardStyle = isVolcanoLanjut1 || isTsunamiLanjut1 || (((isLandscapes && level === 'awal') || (isVolcano && level === 'awal')) && stageIndex !== 2) || (isLandscapes && level === 'atas');
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
@@ -433,7 +435,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
         <h2 className="text-3xl font-black text-earth-900 tracking-tight">
           {isBoardStyle ? "Lengkapi Papan Puzzle" : "Klasifikasi Fenomena"}
         </h2>
-        
+
         {isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1) ? (
           <div className="mt-4 space-y-4 max-w-4xl mx-auto w-full px-4">
             <p className="text-earth-600 font-medium italic">
@@ -449,20 +451,20 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           </div>
         ) : (
           <p className="text-earth-600 mt-2 font-medium italic max-w-3xl mx-auto">
-            {isVolcano && level === 'awal' 
-              ? (stageIndex === 2 
-                  ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
-                  : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
+            {isVolcano && level === 'awal'
+              ? (stageIndex === 2
+                ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
+                : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
               : isTsunamiLanjut1
-              ? "BERDASARKAN KONDISI DI BAWAH INI AKAN ADA TSUNAMI YANG MENGENAI PEMUKIMAN KAMU, TEMPAT MANA YANG AKAN KAMU PILIH UNTUK MENYELAMATKAN KELUARGA INI, LAKUKAN UNTUK BISA MITIGASI BENCANA DI KASUS INI!"
-              : isBoardStyle 
-              ? "Tarik kepingan puzzle ke posisi yang tepat pada papan." 
-              : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
+                ? "BERDASARKAN KONDISI DI BAWAH INI AKAN ADA TSUNAMI YANG MENGENAI PEMUKIMAN KAMU, TEMPAT MANA YANG AKAN KAMU PILIH UNTUK MENYELAMATKAN KELUARGA INI, LAKUKAN UNTUK BISA MITIGASI BENCANA DI KASUS INI!"
+                : isBoardStyle
+                  ? "Tarik kepingan puzzle ke posisi yang tepat pada papan."
+                  : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
           </p>
         )}
       </div>
 
-      <DndContext 
+      <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
@@ -473,7 +475,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           <div className="lg:w-1/3 w-full bg-white/60 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center overflow-y-auto max-h-[75vh]">
             {/* Glossy highlight effect */}
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/30 rounded-full blur-3xl pointer-events-none" />
-            
+
             <div className="relative mb-8 text-center w-full">
               <span className={cn(
                 "inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-3 shadow-sm",
@@ -488,9 +490,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
             <div className="flex flex-wrap gap-5 justify-center w-full">
               {unassignedItems.map((item) => (
-                <DraggableItem 
-                  key={item.id} 
-                  item={item} 
+                <DraggableItem
+                  key={item.id}
+                  item={item}
                   isVolcano={isVolcano}
                   isTsunami={isTsunami}
                   isLandscapes={isLandscapes}
@@ -503,9 +505,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                   }}
                 />
               ))}
-              
+
               {unassignedItems.length === 0 && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex flex-col items-center gap-4 py-10"
@@ -533,9 +535,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           )}>
             {isBoardStyle && (
               <div className="absolute inset-0 z-0">
-                <img 
-                  src={isTsunamiLanjut1 ? "/images/quiz/tsunami/lanjutan/1/1.png" : isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
-                  alt="Board" 
+                <img
+                  src={isTsunamiLanjut1 ? "/images/quiz/tsunami/lanjutan/1/1.png" : isVolcanoLanjut1 ? "/images/quiz/eruption/lanjut/1/board.png" : isVolcano ? "/images/quiz/eruption/awal/2/board.png" : (isLandscapes && level === 'atas') ? "/images/quiz/landscapes/1.png" : (stageIndex === 1 ? "/images/quiz/landscape/lanjutan/3/2.png" : "/images/quiz/landscape/lanjutan/2/1.png")}
+                  alt="Board"
                   className="w-full h-full object-fill"
                 />
               </div>
@@ -543,6 +545,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
             <div className={cn(
               isBoardStyle ? "absolute inset-0 z-10" : "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
+              (isLandscapes && level === 'atas') && "grid grid-cols-4 px-[6%] pb-[6%] pt-[13%] gap-[3%]",
               (isVolcano && level === 'awal' && stageIndex === 2) ? "flex flex-col gap-6 max-w-4xl mx-auto py-10 px-8 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl mt-4" : (!isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8")
             )}>
               {categories.map((category, idx) => (
@@ -555,9 +558,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                       <div className={cn(
                         "w-44 sm:w-56 py-4 sm:py-5 px-4 sm:px-6 rounded-2xl shadow-md border-t-2 border-white/50 text-center font-bold text-xs sm:text-sm tracking-widest transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg",
                         idx === 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white" :
-                        idx === 1 ? "bg-gradient-to-br from-amber-500 to-yellow-600 text-white" :
-                        idx === 2 ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white" :
-                        "bg-gradient-to-br from-rose-600 to-red-700 text-white"
+                          idx === 1 ? "bg-gradient-to-br from-amber-500 to-yellow-600 text-white" :
+                            idx === 2 ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white" :
+                              "bg-gradient-to-br from-rose-600 to-red-700 text-white"
                       )}>
                         {category.title}
                         <div className="mt-0.5 opacity-70 text-[8px] uppercase font-bold tracking-[0.1em]">Mitigasi</div>
@@ -565,7 +568,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
                       {/* Elegant Single Arrow */}
                       <div className="flex-shrink-0">
-                        <motion.div 
+                        <motion.div
                           animate={{ x: [0, 5, 0] }}
                           transition={{ repeat: Infinity, duration: 2.5 }}
                           className="text-earth-300 hidden sm:block opacity-60"
@@ -580,9 +583,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                   )}
 
                   <div className={cn("flex-grow", !(isVolcano && level === 'awal' && stageIndex === 2) && "contents")}>
-                    <DroppableZone 
-                      category={category} 
-                      items={assignedItems[category.id] || []} 
+                    <DroppableZone
+                      category={category}
+                      items={assignedItems[category.id] || []}
                       isTsunami={isTsunami}
                       isVolcano={isVolcano}
                       isLandscapes={isLandscapes}
@@ -624,7 +627,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
               {activeItem.image ? (
                 <div className="flex flex-col items-center w-full h-full relative">
                   {activeItem.crop ? (
-                    <div 
+                    <div
                       className="w-full h-full bg-no-repeat"
                       style={{
                         backgroundImage: `url(${activeItem.image})`,
@@ -648,7 +651,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
       </DndContext>
 
       {isComplete && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-center pt-8"
@@ -708,7 +711,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                       const itemId = selectedItemForClassification.id;
                       const sourceIsUnassigned = unassignedItems.some(i => i.id === itemId);
                       const targetCatId = category.id;
-                      
+
                       setAssignedItems(prev => {
                         const cleaned = { ...prev };
                         if (!isCloningMode || !sourceIsUnassigned) {
@@ -716,15 +719,15 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                             cleaned[key] = (cleaned[key] || []).filter(i => i.id !== itemId);
                           });
                         }
-                        
-                        const newItem = (isCloningMode && sourceIsUnassigned) 
+
+                        const newItem = (isCloningMode && sourceIsUnassigned)
                           ? { ...selectedItemForClassification, id: `${itemId}-clone-${Date.now()}` }
                           : selectedItemForClassification;
-                          
+
                         cleaned[targetCatId] = [newItem];
                         return cleaned;
                       });
-                      
+
                       setUnassignedItems(prev => {
                         let next = prev;
                         if (!isCloningMode && sourceIsUnassigned) {
@@ -732,7 +735,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                         }
                         return next;
                       });
-                      
+
                       setSelectedItemForClassification(null);
                     }}
                     className="w-full py-4 px-6 bg-slate-50 hover:bg-slate-100 border-2 border-slate-200/60 hover:border-slate-300 rounded-2xl font-bold text-slate-700 text-sm transition-all hover:scale-[1.02] active:scale-[0.98] text-center cursor-pointer"
