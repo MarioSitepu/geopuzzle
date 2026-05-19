@@ -470,15 +470,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
         onDragEnd={handleDragEnd}
         collisionDetection={closestCenter}
       >
-        <div className={cn(
-          "w-full gap-8",
-          isBoardStyle ? "flex flex-col items-center" : "flex flex-col lg:flex-row items-start"
-        )}>
+        <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
           {/* Choices Panel */}
-          <div className={cn(
-            "bg-white/60 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col items-center relative",
-            isBoardStyle ? "w-full max-w-5xl" : "lg:w-1/3 w-full sticky top-8 overflow-y-auto max-h-[75vh]"
-          )}>
+          <div className="lg:w-1/3 w-full bg-white/60 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center overflow-y-auto max-h-[75vh] relative">
             {/* Glossy highlight effect */}
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/30 rounded-full blur-3xl pointer-events-none" />
 
@@ -534,11 +528,16 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             </div>
           </div>
 
-          {/* Board / Category Area */}
+          {/* Board Area Wrapper for horizontal scroll on mobile */}
           <div className={cn(
-            "rounded-3xl shadow-2xl border-4 overflow-hidden relative w-full",
-            isBoardStyle ? "max-w-5xl border-earth-200 bg-earth-50 aspect-[1645/525] lg:min-h-0" : "lg:w-2/3 min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100"
+            isBoardStyle ? "w-full lg:w-2/3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200" : "lg:w-2/3 w-full"
           )}>
+            <div className={cn(
+              "rounded-3xl shadow-2xl border-4 overflow-hidden relative",
+              isBoardStyle
+                ? "border-earth-200 bg-earth-50 aspect-[1645/525] min-w-[750px] lg:min-w-0 w-full"
+                : "w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100"
+            )}>
             {isBoardStyle && (
               <div className="absolute inset-0 z-0">
                 <img
@@ -619,6 +618,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                 </div>
               ))}
             </div>
+          </div>
           </div>
         </div>
 
