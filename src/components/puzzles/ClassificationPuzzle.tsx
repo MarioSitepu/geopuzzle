@@ -27,7 +27,7 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
   const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
   const isCloningMode = isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1);
-  const isTransparentPlaced = isPlaced && (isCloningMode || (isLandscapes && level === 'atas'));
+  const isTransparentPlaced = isPlaced && (isCloningMode || (isLandscapes && level === 'atas') || (isVolcano && level === 'awal'));
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: item,
