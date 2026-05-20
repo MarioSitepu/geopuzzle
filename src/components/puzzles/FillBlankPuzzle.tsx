@@ -259,15 +259,15 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
             <motion.div 
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/60 backdrop-blur-sm px-5 py-4 rounded-xl border border-white/80 shadow-sm flex items-center gap-4"
+              className="bg-white/80 backdrop-blur-sm px-6 py-5 rounded-2xl border border-white shadow-md flex items-center gap-5"
             >
               <div className={cn(
-                "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+                "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
                 isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-earth-100 text-earth-600"
               )}>
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw className="w-6 h-6" />
               </div>
-              <p className="text-earth-700 font-bold text-sm leading-snug">
+              <p className="text-earth-800 font-extrabold text-base sm:text-lg leading-relaxed flex-1">
                 {isCaseStudyMode ? "Tarik dan taruh pilihan yang ada di bawah ini dengan mengisi jawaban yang cocok!" : (
                   <>Tarik dan taruh pilihan <span className="text-green-600">benar</span> atau <span className="text-red-600">salah</span> mengenai pernyataan geologi berikut ini.</>
                 )}
