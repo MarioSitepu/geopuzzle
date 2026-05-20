@@ -362,40 +362,40 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                   </motion.div>
                 </div>
               ) : isTrueFalseMode ? (
-                statements.map((s, index) => (
-                  <motion.div 
-                    key={s.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.08 }}
-                    className="flex flex-col lg:flex-row items-center gap-3 w-full"
-                  >
-                    <div className="flex-1 w-full">
-                      <div className="bg-white/90 backdrop-blur-sm px-4 py-3 rounded-xl border border-earth-100 shadow-sm flex items-center gap-3 hover:shadow-md transition-shadow">
+                <div className="space-y-4 w-full">
+                  {statements.map((s, index) => (
+                    <motion.div 
+                      key={s.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.08 }}
+                      className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 w-full bg-white/95 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border border-earth-200 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] hover:shadow-md transition-all"
+                    >
+                      <div className="flex-1 flex items-start gap-4">
                         <span className={cn(
-                          "w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-black shrink-0",
-                          isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-earth-100 text-earth-600"
+                          "w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shrink-0 shadow-sm",
+                          isVolcano ? "bg-orange-100 text-orange-700" : isTsunami ? "bg-blue-100 text-blue-700" : "bg-earth-100 text-earth-700"
                         )}>
                           {index + 1}
                         </span>
-                        <p className="text-earth-800 text-base sm:text-lg font-semibold leading-relaxed flex-1">
+                        <p className="text-earth-800 text-base sm:text-lg font-medium leading-relaxed pt-0.5">
                           {s.text}
                         </p>
                       </div>
-                    </div>
-                    <div className="shrink-0 flex items-center justify-center">
-                      <DroppableZone 
-                        id={`drop-zone-${s.id}`}
-                        droppedWord={droppedWords[s.id] || null}
-                        isCorrect={isSubmitted ? droppedWords[s.id] === s.answer : undefined}
-                        isSubmitted={isSubmitted}
-                        onReset={() => setDroppedWords(prev => ({ ...prev, [s.id]: null }))}
-                        isVolcano={true}
-                        className="min-w-[130px] h-12 sm:min-w-[150px] sm:h-14 rounded-xl border-2 shadow-inner bg-earth-50/80 hover:border-earth-400 text-base font-bold"
-                      />
-                    </div>
-                  </motion.div>
-                ))
+                      <div className="shrink-0 flex justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                        <DroppableZone 
+                          id={`drop-zone-${s.id}`}
+                          droppedWord={droppedWords[s.id] || null}
+                          isCorrect={isSubmitted ? droppedWords[s.id] === s.answer : undefined}
+                          isSubmitted={isSubmitted}
+                          onReset={() => setDroppedWords(prev => ({ ...prev, [s.id]: null }))}
+                          isVolcano={true}
+                          className="min-w-[140px] sm:min-w-[160px] h-14 rounded-xl border-2 border-dashed border-earth-400 bg-earth-50 hover:bg-earth-100 hover:border-earth-500 transition-colors !mx-0 flex-shrink-0 shadow-inner"
+                        />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               ) : (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.97 }}
