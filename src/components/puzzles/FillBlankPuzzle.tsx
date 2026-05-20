@@ -195,7 +195,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="w-full flex flex-col gap-4 lg:sticky lg:top-8 h-max"
+              className="w-full flex flex-col gap-4 lg:fixed lg:top-24 lg:w-[260px] z-10"
             >
             {/* Level Badge — Slim */}
             <div className={cn(
