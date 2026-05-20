@@ -12,18 +12,21 @@ const REGIONS = [
     id: 'kalianda',
     name: 'Kalianda',
     description: 'Kawasan pesisir pantai',
+    disasterName: 'Tsunami',
     image: '/images/quizregion/lampung-selatan(menara-siger-kalianda).jpg',
   },
   {
-    id: 'pidada',
-    name: 'Pidada',
+    id: 'panjang',
+    name: 'Panjang',
     description: 'Kawasan industri dan pemukiman',
+    disasterName: 'Tanah Longsor',
     image: '/images/quizregion/lampung-barat-(danau-suoh).png',
   },
   {
     id: 'rajabasa',
     name: 'Rajabasa',
     description: 'Kawasan pegunungan vulkanik',
+    disasterName: 'Gunung Api',
     image: '/images/quizregion/lampung-tengah(bukit-batubara).jpg',
   },
 ];
@@ -78,18 +81,23 @@ export default function RegionSelection() {
                 <div className="absolute inset-0 bg-linear-to-t from-earth-900/90 via-earth-900/40 to-transparent" />
                 
                 <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold text-white">{region.name}</h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-3xl font-black text-white drop-shadow-lg">{region.name}</h3>
                     {!isUnlocked && (
                       <div className="p-2 bg-white/20 backdrop-blur-sm rounded-full">
                         <Lock className="w-5 h-5 text-white" />
                       </div>
                     )}
                   </div>
-                  <p className="text-white/80 text-sm flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    {region.description}
-                  </p>
+                  <div className="flex flex-col gap-2.5">
+                    <div className="inline-block px-3 py-1 bg-earth-900/60 backdrop-blur-md rounded-lg self-start text-xs font-bold text-white border border-earth-400/30 tracking-widest uppercase shadow-sm">
+                      Potensi: <span className="text-leaf-300">{region.disasterName}</span>
+                    </div>
+                    <p className="text-white/90 text-sm flex items-center gap-2 font-medium drop-shadow-md">
+                      <MapPin className="w-4 h-4 text-leaf-400" />
+                      {region.description}
+                    </p>
+                  </div>
                 </div>
 
                 {isUnlocked && (

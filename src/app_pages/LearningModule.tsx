@@ -22,7 +22,7 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
       { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
     ]
   },
-  'pidada': {
+  'panjang': {
     'gunung-api': [
       { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
       { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }

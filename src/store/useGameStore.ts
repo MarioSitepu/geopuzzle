@@ -15,10 +15,10 @@ interface GameState {
 export const useGameStore = create<GameState>()(
   persist(
     (set) => ({
-      unlockedRegions: ['kalianda', 'pidada', 'rajabasa'], // Default unlocked
+      unlockedRegions: ['kalianda', 'panjang', 'rajabasa'], // Default unlocked
       unlockedDisasters: {
         'kalianda': ['tsunami'],
-        'pidada': ['longsor'],
+        'panjang': ['longsor'],
         'rajabasa': ['gunung-api'],
       },
       scores: {},

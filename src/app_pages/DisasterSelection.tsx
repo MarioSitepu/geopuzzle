@@ -9,7 +9,7 @@ import { cn } from '../lib/utils';
 
 const REGION_DISASTER_MAP: Record<string, string> = {
   'kalianda': 'tsunami',
-  'pidada': 'longsor',
+  'panjang': 'longsor',
   'rajabasa': 'gunung-api'
 };
 
@@ -61,7 +61,7 @@ export default function DisasterSelection() {
 
   const regionNames: Record<string, string> = {
     'kalianda': 'Kalianda',
-    'pidada': 'Pidada',
+    'panjang': 'Panjang',
     'rajabasa': 'Rajabasa'
   };
 
