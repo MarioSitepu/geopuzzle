@@ -14,8 +14,8 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
       { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
     ],
     'tsunami': [
-      { title: 'Jurnal Geologi Tsunami Vol. 1', size: '1.2 MB', url: '#' },
-      { title: 'Jurnal Geologi Tsunami Vol. 2', size: '2.5 MB', url: '#' }
+      { title: 'Jurnal Geologi Tsunami 1', size: '2.8 MB', url: '/journal/tsunami/1.pdf' },
+      { title: 'Jurnal Geologi Tsunami 2', size: '3.0 MB', url: '/journal/tsunami/2.docx' }
     ],
     'longsor': [
       { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
@@ -28,8 +28,8 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
       { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
     ],
     'tsunami': [
-      { title: 'Jurnal Geologi Tsunami Vol. 1', size: '1.2 MB', url: '#' },
-      { title: 'Jurnal Geologi Tsunami Vol. 2', size: '2.5 MB', url: '#' }
+      { title: 'Jurnal Geologi Tsunami 1', size: '2.8 MB', url: '/journal/tsunami/1.pdf' },
+      { title: 'Jurnal Geologi Tsunami 2', size: '3.0 MB', url: '/journal/tsunami/2.docx' }
     ],
     'longsor': [
       { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
@@ -42,8 +42,8 @@ const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size:
       { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
     ],
     'tsunami': [
-      { title: 'Jurnal Geologi Tsunami Vol. 1', size: '1.2 MB', url: '#' },
-      { title: 'Jurnal Geologi Tsunami Vol. 2', size: '2.5 MB', url: '#' }
+      { title: 'Jurnal Geologi Tsunami 1', size: '2.8 MB', url: '/journal/tsunami/1.pdf' },
+      { title: 'Jurnal Geologi Tsunami 2', size: '3.0 MB', url: '/journal/tsunami/2.docx' }
     ],
     'longsor': [
       { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },

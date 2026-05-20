@@ -143,7 +143,7 @@ export default function PuzzleGame() {
     } else if (timeLeft === 0 && !isGameOver) {
       handleGameOver();
     }
-  }, [timeLeft, isGameOver]);
+  }, [timeLeft, isGameOver, hasStarted]);
 
   const handleStageComplete = (score: number) => {
     const newTotalScore = totalScore + score;

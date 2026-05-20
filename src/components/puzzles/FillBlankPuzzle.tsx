@@ -378,7 +378,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                         )}>
                           {index + 1}
                         </span>
-                        <p className="text-earth-700 text-sm font-medium leading-snug flex-1">
+                        <p className="text-earth-800 text-base sm:text-lg font-semibold leading-relaxed flex-1">
                           {s.text}
                         </p>
                       </div>
@@ -391,7 +391,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                         isSubmitted={isSubmitted}
                         onReset={() => setDroppedWords(prev => ({ ...prev, [s.id]: null }))}
                         isVolcano={true}
-                        className="min-w-[110px] h-11 sm:min-w-[120px] sm:h-12 rounded-xl text-sm"
+                        className="min-w-[130px] h-12 sm:min-w-[150px] sm:h-14 rounded-xl border-2 shadow-inner bg-earth-50/80 hover:border-earth-400 text-base font-bold"
                       />
                     </div>
                   </motion.div>
