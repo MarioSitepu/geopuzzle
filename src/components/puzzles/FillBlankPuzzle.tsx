@@ -190,12 +190,13 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex flex-col lg:flex-row gap-5 items-start">
           
-          {/* Left Sidebar — Compact & Refined */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="lg:w-[260px] w-full flex flex-col gap-4 sticky top-6"
-          >
+          {/* Left Sidebar Wrapper (ensures layout space is kept) */}
+          <div className="lg:w-[260px] w-full flex-shrink-0 relative">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="w-full flex flex-col gap-4 lg:sticky lg:top-8 h-max"
+            >
             {/* Level Badge — Slim */}
             <div className={cn(
               "relative overflow-hidden px-5 py-4 rounded-2xl shadow-lg text-white",
@@ -250,6 +251,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
               &quot;Pahami setiap pernyataan dengan teliti. Tarik pilihan yang tepat untuk melengkapi konsep geologi.&quot;
             </div>
           </motion.div>
+          </div>
 
           {/* Main Content Area */}
           <div className="flex-1 w-full flex flex-col gap-5">
