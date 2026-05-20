@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, BookOpen, Puzzle, MapPin, ChevronLeft, ChevronRight, Info, ExternalLink, Activity, Map, AlertTriangle } from 'lucide-react';
+import { Play, BookOpen, Puzzle, MapPin, ChevronLeft, ChevronRight, Info, ExternalLink, Activity, Map, AlertTriangle, Menu, X } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 const GEOLOGY_FACTS = [
@@ -36,6 +36,7 @@ const GEOLOGY_FACTS = [
 export default function LandingPage() {
   const [currentFact, setCurrentFact] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const nextFact = useCallback(() => {
     setCurrentFact((prev) => (prev + 1) % GEOLOGY_FACTS.length);
@@ -53,6 +54,91 @@ export default function LandingPage() {
 
   return (
     <PageTransition className="justify-center items-center p-4 sm:p-8 relative min-h-screen overflow-hidden">
+      {/* Mobile Hamburger Button */}
+      <div className="lg:hidden fixed top-5 right-5 z-50">
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-3 bg-white/80 backdrop-blur-md border border-white rounded-full shadow-lg text-earth-800 transition-all hover:scale-105 active:scale-95"
+          aria-label="Toggle Menu"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Sidebar Overlay & Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-earth-900/60 backdrop-blur-sm z-40 lg:hidden"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-white/95 backdrop-blur-xl z-50 p-6 flex flex-col gap-6 lg:hidden shadow-2xl border-l border-white overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-2 mt-4">
+                <span className="font-black text-2xl text-earth-900 tracking-tighter">GeoPuzzle<span className="text-leaf-600">.</span></span>
+              </div>
+              
+              <div className="flex flex-col gap-4">
+                <Link
+                  href="/intro"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-4 p-4 bg-leaf-50 text-leaf-700 rounded-2xl font-bold transition-all hover:bg-leaf-100 active:scale-95"
+                >
+                  <div className="p-2 bg-white rounded-xl shadow-sm">
+                    <Play className="w-5 h-5 fill-current" />
+                  </div>
+                  Mulai Belajar
+                </Link>
+                <Link
+                  href="/mitigation"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-4 p-4 bg-earth-50 text-earth-700 rounded-2xl font-bold hover:bg-earth-100 transition-all active:scale-95"
+                >
+                  <div className="p-2 bg-white rounded-xl shadow-sm">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  Mitigasi Bencana
+                </Link>
+                <div className="h-px w-full bg-earth-100 my-2" />
+                <a
+                  href="https://petabencana.id/map"
+                  target="_blank"
+                  className="flex items-center gap-4 p-4 bg-amber-50 text-amber-700 rounded-2xl font-bold hover:bg-amber-100 transition-all active:scale-95"
+                >
+                  <div className="p-2 bg-white rounded-xl shadow-sm">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  Peta Bencana
+                </a>
+                <a
+                  href="https://lampung.bmkg.go.id/geo/map_seis.php"
+                  target="_blank"
+                  className="flex items-center gap-4 p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold hover:bg-blue-100 transition-all active:scale-95"
+                >
+                  <div className="p-2 bg-white rounded-xl shadow-sm">
+                    <Map className="w-5 h-5" />
+                  </div>
+                  Gempa Realtime
+                </a>
+              </div>
+              
+              <div className="mt-auto pt-8 pb-4">
+                <p className="text-sm text-earth-500 font-medium text-center">Platform Edukasi Bencana Geologi Lampung</p>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Background Orbs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-20 pointer-events-none">
         <motion.div 
