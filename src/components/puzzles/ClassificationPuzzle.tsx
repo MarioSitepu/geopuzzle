@@ -221,10 +221,10 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
   ] : [
     { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '18%', left: '67%', width: '18%', height: '14%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '25%', left: '32%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '30%', left: '35%', width: '18%', height: '14%' } },
     { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '43%', left: '76%', width: '18%', height: '14%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '61%', left: '14%', width: '18%', height: '14%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '61%', left: '48%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '65%', left: '17%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '64%', left: '48%', width: '18%', height: '14%' } },
   ]) : (isLandscapes && level === 'atas') ? [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
