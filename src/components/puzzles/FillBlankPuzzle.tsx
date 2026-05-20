@@ -121,7 +121,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
 
   const caseStudyCorrectAnswers = isVolcanoLanjut2
     ? ['Efusif', 'Eksplosif']
-    : ['Mengajak Warga Lain untuk Mengungsi', 'Tetap melanjutkan aktifitas'];
+    : ['Mengajak Warga Lain untuk Mengungsi', 'Mencari tempat Ketinggian'];
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveWord(event.active.data.current?.word);
