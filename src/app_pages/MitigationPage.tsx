@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { ShieldAlert, Home, Trees, AlertTriangle, Users, PhoneCall, Ambulance, Flame, LifeBuoy, Tent } from 'lucide-react';
+import { ShieldAlert, Home, Trees, AlertTriangle, Users, PhoneCall, Ambulance, Flame, LifeBuoy, Tent, Shield } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 const MITIGATION_TIPS = [
@@ -96,7 +96,7 @@ export default function MitigationPage() {
           <p className="text-white/80 mb-8 max-w-xl mx-auto">
             Keselamatan publik bergantung pada kecepatan informasi dan ketepatan tindakan. Simpan dan hubungi kontak darurat resmi berikut jika Anda menemukan indikasi bahaya atau memerlukan bantuan segera di lapangan.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
             <a href="tel:112" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
               <div className="w-12 h-12 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <PhoneCall className="w-6 h-6" />
@@ -129,12 +129,20 @@ export default function MitigationPage() {
               <span className="text-sm text-white/70">115</span>
             </a>
 
-            <a href="tel:129" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center col-span-2 md:col-span-1 lg:col-span-1">
+            <a href="tel:129" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
               <div className="w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <Tent className="w-6 h-6" />
               </div>
               <span className="font-bold text-white mb-1">Posko Bencana</span>
               <span className="text-sm text-white/70">129</span>
+            </a>
+
+            <a href="tel:0721240766" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all group backdrop-blur-sm text-center">
+              <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6" />
+              </div>
+              <span className="font-bold text-white mb-1">BPBD Lampung</span>
+              <span className="text-sm text-white/70">0721-240766</span>
             </a>
           </div>
         </div>
