@@ -73,7 +73,7 @@ function DraggableItem({ item, isTsunami, isVolcano, isLandscapes, level, stageI
           )}
 
           {/* Glass overlay and text on hover */}
-          {!isTransparentPlaced && (
+          {!isTransparentPlaced && !(isPlaced && isTsunamiLanjut1) && (
             <>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -427,39 +427,56 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   const isBoardStyle = isVolcanoLanjut1 || isTsunamiLanjut1 || (((isLandscapes && level === 'awal') || (isVolcano && level === 'awal')) && stageIndex !== 2) || (isLandscapes && level === 'atas');
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12">
-      <div className="text-center flex flex-col items-center">
-        <h2 className="text-3xl font-black text-earth-900 tracking-tight">
-          {isBoardStyle ? "Lengkapi Papan Puzzle" : "Klasifikasi Fenomena"}
-        </h2>
-
-        {isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1) ? (
-          <div className="mt-4 space-y-4 max-w-4xl mx-auto w-full px-4">
-            <p className="text-earth-600 font-medium italic">
-              <span className="font-bold">Instruksi Soal:</span> Tarik dan taruh kepingan pilihan elemen yang telah disediakan ke posisi yang tepat pada papan!
-            </p>
-            <div className="bg-earth-100/60 backdrop-blur-sm border-2 border-earth-200 p-5 rounded-2xl shadow-sm text-center">
-              <p className="text-earth-900 font-bold text-lg md:text-xl leading-relaxed">
-                {stageIndex === 0
-                  ? "Kondisi lereng curam di tepi jalan raya dengan pelapukan batuan intensif yang sering hadir genangan air, kombinasi mitigasi bencana apa yang mudah dilakukan olehmu?"
-                  : "Kondisi lereng curam di tepi jalan raya dengan jenis batuan yang mengalami pelapukan kuat dan sering terjadi jatuhan batuan (rockfall). Kombinasi Penanggulangan cepat apa yang sebaiknya dilakukan?"}
-              </p>
+    <div className={cn("mx-auto", isTsunamiLanjut1 ? "max-w-7xl space-y-6" : "max-w-7xl space-y-12")}>
+      {/* Header */}
+      {isTsunamiLanjut1 ? (
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 shadow-lg">
+              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
             </div>
+            <h2 className="text-2xl font-black text-earth-900 tracking-tight">Mitigasi Tsunami — Selamatkan Keluarga!</h2>
           </div>
-        ) : (
-          <p className="text-earth-600 mt-2 font-medium italic max-w-3xl mx-auto">
-            {isVolcano && level === 'awal'
-              ? (stageIndex === 2
-                ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
-                : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
-              : isTsunamiLanjut1
-                ? "BERDASARKAN KONDISI DI BAWAH INI AKAN ADA TSUNAMI YANG MENGENAI PEMUKIMAN KAMU, TEMPAT MANA YANG AKAN KAMU PILIH UNTUK MENYELAMATKAN KELUARGA INI, LAKUKAN UNTUK BISA MITIGASI BENCANA DI KASUS INI!"
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl px-6 py-3 max-w-3xl text-center shadow-sm">
+            <p className="text-blue-900 font-semibold text-sm leading-relaxed">
+              🌊 Tsunami akan menerjang pemukiman! Seret gambar keluarga ke lokasi yang paling aman untuk menyelamatkan mereka.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="text-center flex flex-col items-center">
+          <h2 className="text-3xl font-black text-earth-900 tracking-tight">
+            {isBoardStyle ? "Lengkapi Papan Puzzle" : "Klasifikasi Fenomena"}
+          </h2>
+
+          {isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1) ? (
+            <div className="mt-4 space-y-4 max-w-4xl mx-auto w-full px-4">
+              <p className="text-earth-600 font-medium italic">
+                <span className="font-bold">Instruksi Soal:</span> Tarik dan taruh kepingan pilihan elemen yang telah disediakan ke posisi yang tepat pada papan!
+              </p>
+              <div className="bg-earth-100/60 backdrop-blur-sm border-2 border-earth-200 p-5 rounded-2xl shadow-sm text-center">
+                <p className="text-earth-900 font-bold text-lg md:text-xl leading-relaxed">
+                  {stageIndex === 0
+                    ? "Kondisi lereng curam di tepi jalan raya dengan pelapukan batuan intensif yang sering hadir genangan air, kombinasi mitigasi bencana apa yang mudah dilakukan olehmu?"
+                    : "Kondisi lereng curam di tepi jalan raya dengan jenis batuan yang mengalami pelapukan kuat dan sering terjadi jatuhan batuan (rockfall). Kombinasi Penanggulangan cepat apa yang sebaiknya dilakukan?"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-earth-600 mt-2 font-medium italic max-w-3xl mx-auto">
+              {isVolcano && level === 'awal'
+                ? (stageIndex === 2
+                  ? "Level kesiagaan gunung api di Indonesia dibagi menjadi 4 tingkatan oleh PVMBG, pasangkan tindakan yang cocok dilakukan pada status-status gunung api tertentu dibawah ini."
+                  : "Urutkan kepingan puzzle berdasarkan proses terbentuknya gunung api dari awal hingga erupsi.")
                 : isBoardStyle
                   ? "Tarik kepingan puzzle ke posisi yang tepat pada papan."
                   : "Klasifikasikan kepingan ke dalam kategori yang sesuai."}
-          </p>
-        )}
-      </div>
+            </p>
+          )}
+        </div>
+      )}
 
       <DndContext
         sensors={sensors}
@@ -467,25 +484,44 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
         onDragEnd={handleDragEnd}
         collisionDetection={closestCenter}
       >
-  <div className={cn("flex flex-col gap-8 items-start w-full", !isBoardStyle && "lg:flex-row")}>
+        <div className={cn(
+          "flex gap-6 items-start w-full",
+          isTsunamiLanjut1 ? "flex-col lg:flex-row-reverse" : (!isBoardStyle ? "flex-col lg:flex-row" : "flex-col")
+        )}>
           {/* Choices Panel */}
-          <div className="lg:w-1/3 w-full bg-white/60 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center overflow-y-auto max-h-[75vh] relative">
+          <div className={cn(
+            "bg-white/60 backdrop-blur-xl rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center relative",
+            isTsunamiLanjut1
+              ? "lg:w-72 w-full p-6 overflow-y-auto max-h-[75vh]"
+              : "lg:w-1/3 w-full p-8 overflow-y-auto max-h-[75vh]"
+          )}>
             {/* Glossy highlight effect */}
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/30 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative mb-8 text-center w-full">
-              <span className={cn(
-                "inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-3 shadow-sm",
-                isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-leaf-100 text-leaf-600"
-              )}>
-                PUZZLE ASSETS
-              </span>
-              <h3 className="text-xl font-black text-earth-900 leading-tight">
-                {isBoardStyle ? "PILIH DAN TARIK KEPINGANNYA" : "Pilihan Item"}
-              </h3>
-            </div>
+            {isTsunamiLanjut1 ? (
+              /* Compact header for tsunami lanjutan */
+              <div className="relative mb-5 text-center w-full">
+                <span className="inline-block px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-2 shadow-sm bg-blue-100 text-blue-600">
+                  PILIHAN
+                </span>
+                <h3 className="text-base font-black text-earth-900 leading-tight">Seret ke Peta</h3>
+                <p className="text-[11px] text-earth-500 mt-1 leading-snug">Taruh keluarga ke lokasi yang paling aman</p>
+              </div>
+            ) : (
+              <div className="relative mb-8 text-center w-full">
+                <span className={cn(
+                  "inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-3 shadow-sm",
+                  isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-leaf-100 text-leaf-600"
+                )}>
+                  PUZZLE ASSETS
+                </span>
+                <h3 className="text-xl font-black text-earth-900 leading-tight">
+                  {isBoardStyle ? "PILIH DAN TARIK KEPINGANNYA" : "Pilihan Item"}
+                </h3>
+              </div>
+            )}
 
-            <div className="flex flex-wrap gap-5 justify-center w-full">
+            <div className={cn("flex justify-center w-full", isTsunamiLanjut1 ? "flex-col items-center gap-4" : "flex-wrap gap-5")}>
               {unassignedItems.map((item) => (
                 <DraggableItem
                   key={item.id}
@@ -507,19 +543,33 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center gap-4 py-10"
+                  className="flex flex-col items-center gap-4 py-6"
                 >
                   <div className={cn(
-                    "w-16 h-16 rounded-full flex items-center justify-center shadow-lg",
+                    "w-14 h-14 rounded-full flex items-center justify-center shadow-lg",
                     isVolcano ? "bg-orange-500" : isTsunami ? "bg-blue-500" : "bg-leaf-500"
                   )}>
-                    <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <p className="text-earth-500 font-bold text-center px-4">
-                    Hebat! Semua kepingan telah terpasang pada papan.
+                  <p className={cn("font-bold text-center", isTsunamiLanjut1 ? "text-blue-600 text-sm px-2" : "text-earth-500 px-4")}>
+                    {isTsunamiLanjut1 ? "Keluarga sudah dipindahkan! Periksa jawabanmu." : "Hebat! Semua kepingan telah terpasang pada papan."}
                   </p>
+                </motion.div>
+              )}
+
+              {/* Drag hint for tsunami lanjutan */}
+              {isTsunamiLanjut1 && unassignedItems.length > 0 && (
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ repeat: Infinity, duration: 2.5 }}
+                  className="mt-3 flex flex-col items-center gap-1 text-center"
+                >
+                  <svg className="w-8 h-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225M13.684 16.6l2.224-2.51M6.37 15.042l5.072-1.358m0 0L9.218 11.17M11.443 13.684l2.225-2.51M3 3l3.659 3.659M21 21l-3.66-3.659" />
+                  </svg>
+                  <span className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Drag ke peta</span>
                 </motion.div>
               )}
             </div>
@@ -527,7 +577,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
           {/* Board Area Wrapper for horizontal scroll on mobile */}
           <div className={cn(
-            isBoardStyle ? "w-full lg:w-2/3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200" : "lg:w-2/3 w-full"
+            isTsunamiLanjut1
+              ? "flex-1 min-w-0 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200"
+              : isBoardStyle ? "w-full lg:w-2/3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200" : "lg:w-2/3 w-full"
           )}>
             <div className={cn(
               "rounded-3xl shadow-2xl border-4 overflow-hidden relative",
