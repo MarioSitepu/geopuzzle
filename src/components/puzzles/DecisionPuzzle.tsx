@@ -208,11 +208,19 @@ export default function DecisionPuzzle({
         <div className="flex flex-col gap-4">
           
           {/* Top Instruction Box */}
-          <div className="bg-slate-100/90 border border-slate-300 rounded-xl p-4 sm:p-6 text-center shadow-sm">
-            <h3 className="font-black text-slate-800 mb-2 tracking-widest text-sm uppercase">INSTRUKSI</h3>
-            <p className="text-slate-900 font-medium text-sm sm:text-base">
-              sebuah keluarga memilih untuk pergi ke tengah laut ketika tsunami akan tiba, menurutmu apakah tindakan itu adalah tindakan yang ceroboh? dan kenapa?
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-7 text-center shadow-lg">
+            <h3 className="font-black text-white mb-3 tracking-widest text-xs sm:text-sm uppercase flex items-center justify-center gap-2">
+              <span className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">?</span>
+              INSTRUKSI SOAL
+            </h3>
+            <p className="text-white font-semibold text-base sm:text-xl leading-relaxed">
+              Sebuah keluarga memilih untuk pergi ke tengah laut ketika tsunami akan tiba. Menurutmu, apakah tindakan itu adalah tindakan yang <span className="text-yellow-400 font-black">ceroboh?</span> Dan kenapa?
             </p>
+            <div className="flex items-center justify-center gap-6 mt-4">
+              <span className="px-3 py-1.5 bg-blue-500/30 border border-blue-400/50 text-blue-300 text-xs font-black rounded-full uppercase tracking-wider">IYA = 50 poin</span>
+              <span className="px-3 py-1.5 bg-blue-500/30 border border-blue-400/50 text-blue-300 text-xs font-black rounded-full uppercase tracking-wider">Alasan Benar = 50 poin</span>
+              <span className="px-3 py-1.5 bg-green-500/30 border border-green-400/50 text-green-300 text-xs font-black rounded-full uppercase tracking-wider">Total = 100 poin</span>
+            </div>
           </div>
 
           {/* Middle Section */}

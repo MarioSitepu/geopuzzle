@@ -430,19 +430,20 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     <div className={cn("mx-auto", isTsunamiLanjut1 ? "max-w-7xl space-y-6" : "max-w-7xl space-y-12")}>
       {/* Header */}
       {isTsunamiLanjut1 ? (
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 shadow-lg">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 shadow-lg">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-black text-earth-900 tracking-tight">Mitigasi Tsunami — Selamatkan Keluarga!</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-earth-900 tracking-tight">Mitigasi Tsunami — Selamatkan Keluarga!</h2>
           </div>
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl px-6 py-3 max-w-3xl text-center shadow-sm">
-            <p className="text-blue-900 font-semibold text-sm leading-relaxed">
-              🌊 Tsunami akan menerjang pemukiman! Seret gambar keluarga ke lokasi yang paling aman untuk menyelamatkan mereka.
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl px-6 py-4 max-w-3xl text-center shadow-sm">
+            <p className="text-blue-900 font-bold text-base sm:text-lg leading-relaxed">
+              🌊 Tsunami akan menerjang pemukiman! Seret gambar keluarga ke lokasi yang <span className="text-blue-700 font-black underline">paling aman</span> untuk menyelamatkan mereka.
             </p>
+            <p className="text-blue-600 text-sm font-semibold mt-2">⚠️ Jawaban benar = 100 poin · Jawaban salah = 0 poin</p>
           </div>
         </div>
       ) : (
