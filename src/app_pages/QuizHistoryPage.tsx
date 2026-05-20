@@ -102,8 +102,15 @@ export default function QuizHistoryPage() {
                     <AlertTriangle className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-earth-900 capitalize text-lg">
+                    <h3 className="font-bold text-earth-900 capitalize text-lg flex items-center gap-2">
                       {item.disasterId.replace('-', ' ')}
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                        item.score >= 80 ? 'bg-leaf-100 text-leaf-700' :
+                        item.score >= 50 ? 'bg-amber-100 text-amber-700' :
+                        'bg-red-100 text-red-700'
+                      }`}>
+                        {item.score >= 80 ? 'Tingkat Lanjutan' : item.score >= 50 ? 'Tingkat Menengah' : 'Tingkat Awal'}
+                      </span>
                     </h3>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-earth-500 mt-1">
                       <span className="flex items-center gap-1 font-medium text-earth-700">
