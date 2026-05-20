@@ -23,11 +23,10 @@ export default function PuzzleGame() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const level = searchParams.get('level') || 'awal';
-  const { setScore, isMuted, toggleMute } = useGameStore();
+  const { setScore, isMuted, toggleMute, playerName, setPlayerName } = useGameStore();
   
   const { data: session } = useSession();
   const [hasStarted, setHasStarted] = useState(false);
-  const [playerName, setPlayerName] = useState("");
   const [currentStage, setCurrentStage] = useState(0);
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
   const [isGameOver, setIsGameOver] = useState(false);
@@ -215,38 +214,18 @@ export default function PuzzleGame() {
   };
 
   if (!hasStarted) {
+    // Auto-start the game using the global playerName, or fallback to 'Anonim' if somehow missing
+    setTimeout(() => {
+      if (!playerName && session?.user?.name) {
+        setPlayerName(session.user.name);
+      }
+      setHasStarted(true);
+    }, 0);
+
     return (
-      <PageTransition className="p-4 sm:p-8 max-w-xl mx-auto w-full flex flex-col items-center justify-center min-h-[80vh]">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass p-8 sm:p-12 rounded-4xl w-full text-center"
-        >
-          <div className="w-16 h-16 bg-leaf-100 text-leaf-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Trophy className="w-8 h-8" />
-          </div>
-          <h2 className="text-3xl font-bold text-earth-900 mb-2">Siap Memulai?</h2>
-          <p className="text-earth-600 mb-8">Masukkan namamu untuk dicatat di riwayat kuis.</p>
-          
-          <form onSubmit={(e) => { e.preventDefault(); if(playerName.trim()) setHasStarted(true); }}>
-            <input 
-              type="text" 
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              placeholder="Nama Pemain"
-              className="w-full px-6 py-4 rounded-xl border-2 border-earth-200 focus:border-leaf-500 focus:outline-none mb-6 text-center font-bold text-earth-800 text-xl"
-              required
-            />
-            <button 
-              type="submit"
-              disabled={!playerName.trim()}
-              className="w-full py-4 bg-leaf-600 hover:bg-leaf-700 text-white rounded-xl font-bold transition-colors disabled:opacity-50"
-            >
-              Mulai Kuis
-            </button>
-          </form>
-        </motion.div>
-      </PageTransition>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-4 rounded-full animate-spin border-earth-200 border-t-earth-600" />
+      </div>
     );
   }
   // Dynamic styles for the floating Scroll-to-Top button based on disaster type

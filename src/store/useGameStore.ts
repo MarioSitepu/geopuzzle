@@ -5,6 +5,8 @@ interface GameState {
   unlockedRegions: string[];
   unlockedDisasters: Record<string, string[]>; // regionId -> disasterIds
   scores: Record<string, number>; // puzzleId -> score
+  playerName: string | null;
+  setPlayerName: (name: string) => void;
   isMuted: boolean;
   toggleMute: () => void;
   unlockRegion: (regionId: string) => void;
@@ -22,6 +24,8 @@ export const useGameStore = create<GameState>()(
         'rajabasa': ['gunung-api'],
       },
       scores: {},
+      playerName: null,
+      setPlayerName: (name) => set({ playerName: name }),
       isMuted: false,
       toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
       unlockRegion: (regionId) =>

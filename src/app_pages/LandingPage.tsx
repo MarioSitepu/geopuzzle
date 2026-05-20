@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, BookOpen, Puzzle, MapPin, ChevronLeft, ChevronRight, Info, ExternalLink, Activity, Map, AlertTriangle, Menu, X } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import { useGameStore } from '../store/useGameStore';
 
 const GEOLOGY_FACTS = [
   {
@@ -38,6 +39,17 @@ export default function LandingPage() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const { playerName, setPlayerName } = useGameStore();
+  const [localName, setLocalName] = useState('');
+  const [showNameModal, setShowNameModal] = useState(false);
+
+  useEffect(() => {
+    // Show modal if the user hasn't set their name globally yet
+    if (playerName === null) {
+      setShowNameModal(true);
+    }
+  }, [playerName]);
+
   const nextFact = useCallback(() => {
     setCurrentFact((prev) => (prev + 1) % GEOLOGY_FACTS.length);
   }, []);
@@ -54,6 +66,62 @@ export default function LandingPage() {
 
   return (
     <PageTransition className="justify-center items-center p-4 sm:p-8 relative min-h-screen overflow-hidden">
+      
+      {/* Username Modal */}
+      <AnimatePresence>
+        {showNameModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-earth-950/80 backdrop-blur-xl z-[100] flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white p-8 sm:p-12 rounded-[2.5rem] shadow-2xl max-w-md w-full text-center relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-leaf-100/50 rounded-full -mr-20 -mt-20 blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-100/30 rounded-full -ml-16 -mb-16 blur-2xl" />
+              
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-leaf-50 text-leaf-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-leaf-100">
+                  <Play className="w-8 h-8 fill-current" />
+                </div>
+                <h2 className="text-3xl font-black text-earth-900 mb-2 tracking-tight">Selamat Datang!</h2>
+                <p className="text-earth-600 mb-8 font-medium">Silakan masukkan nama Anda untuk menyimpan riwayat permainan.</p>
+                
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  if (localName.trim()) {
+                    setPlayerName(localName.trim());
+                    setShowNameModal(false);
+                  }
+                }}>
+                  <input 
+                    type="text" 
+                    value={localName}
+                    onChange={(e) => setLocalName(e.target.value)}
+                    placeholder="Ketik namamu di sini..."
+                    className="w-full px-6 py-4 rounded-xl border-2 border-earth-200 focus:border-leaf-500 focus:ring-4 focus:ring-leaf-500/20 focus:outline-none mb-6 text-center font-bold text-earth-800 text-xl transition-all shadow-inner"
+                    required
+                    autoFocus
+                  />
+                  <button 
+                    type="submit"
+                    disabled={!localName.trim()}
+                    className="w-full py-4 bg-leaf-600 hover:bg-leaf-700 text-white rounded-xl font-bold transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-leaf-600/30"
+                  >
+                    Mulai Eksplorasi
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mobile Hamburger Button */}
       <div className="lg:hidden fixed top-5 right-5 z-50">
         <button
