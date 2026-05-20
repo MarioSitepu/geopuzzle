@@ -56,7 +56,13 @@ export default function PuzzleGame() {
     if (session?.user?.name && !playerName) {
       setPlayerName(session.user.name);
     }
-  }, [session, playerName]);
+  }, [session, playerName, setPlayerName]);
+
+  useEffect(() => {
+    if (!hasStarted) {
+      setHasStarted(true);
+    }
+  }, [hasStarted, setHasStarted]);
 
   const stages = disasterId === 'longsor' && level === 'awal' 
     ? [
@@ -66,9 +72,9 @@ export default function PuzzleGame() {
       ]
     : (disasterId === 'gunung-api' && level === 'awal')
     ? [
-        { id: 'fill-blank', component: FillBlankPuzzle },
-        { id: 'classification-1', component: ClassificationPuzzle },
-        { id: 'classification-2', component: ClassificationPuzzle },
+        { id: 'fill-blank', component: FillBlankPuzzle, stageIndex: 0 },
+        { id: 'classification-1', component: ClassificationPuzzle, stageIndex: 0 },
+        { id: 'classification-2', component: ClassificationPuzzle, stageIndex: 1 },
       ]
     : (disasterId === 'tsunami' && level === 'awal')
     ? [
@@ -214,14 +220,6 @@ export default function PuzzleGame() {
   };
 
   if (!hasStarted) {
-    // Auto-start the game using the global playerName, or fallback to 'Anonim' if somehow missing
-    setTimeout(() => {
-      if (!playerName && session?.user?.name) {
-        setPlayerName(session.user.name);
-      }
-      setHasStarted(true);
-    }, 0);
-
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-12 h-12 border-4 rounded-full animate-spin border-earth-200 border-t-earth-600" />

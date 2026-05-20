@@ -247,7 +247,7 @@ export default function MatchingPuzzle({ onComplete, disasterId, level }: { onCo
       }
     });
 
-    const score = Math.round((correct / boards.length) * 100);
+    const score = correct === boards.length ? 100 : (correct * (100 / 3));
     onComplete(score);
   };
 

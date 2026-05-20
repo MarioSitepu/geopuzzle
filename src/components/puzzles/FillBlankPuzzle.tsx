@@ -267,7 +267,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
               )}>
                 <RotateCcw className="w-6 h-6" />
               </div>
-              <p className="text-earth-800 font-extrabold text-base sm:text-lg leading-relaxed flex-1">
+              <p className="text-earth-800 font-extrabold text-lg sm:text-xl leading-relaxed flex-1">
                 {isCaseStudyMode ? "Tarik dan taruh pilihan yang ada di bawah ini dengan mengisi jawaban yang cocok!" : (
                   <>Tarik dan taruh pilihan <span className="text-green-600">benar</span> atau <span className="text-red-600">salah</span> mengenai pernyataan geologi berikut ini.</>
                 )}
@@ -364,27 +364,27 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                   </motion.div>
                 </div>
               ) : isTrueFalseMode ? (
-                <div className="space-y-4 w-full">
+                <div className="space-y-4 w-full max-w-2xl mx-auto">
                   {statements.map((s, index) => (
                     <motion.div 
                       key={s.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.08 }}
-                      className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 w-full bg-white/95 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border border-earth-200 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] hover:shadow-md transition-all"
+                      className="flex flex-col gap-3 w-full bg-white/95 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border border-earth-200 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] hover:shadow-md transition-all"
                     >
-                      <div className="flex-1 flex items-start gap-4">
+                      <div className="flex items-start gap-4">
                         <span className={cn(
                           "w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shrink-0 shadow-sm",
                           isVolcano ? "bg-orange-100 text-orange-700" : isTsunami ? "bg-blue-100 text-blue-700" : "bg-earth-100 text-earth-700"
                         )}>
                           {index + 1}
                         </span>
-                        <p className="text-earth-800 text-base sm:text-lg font-medium leading-relaxed pt-0.5">
+                        <p className="text-earth-800 text-lg sm:text-xl font-semibold leading-relaxed pt-0.5">
                           {s.text}
                         </p>
                       </div>
-                      <div className="shrink-0 flex justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                      <div className="flex justify-center pt-2">
                         <DroppableZone 
                           id={`drop-zone-${s.id}`}
                           droppedWord={droppedWords[s.id] || null}
