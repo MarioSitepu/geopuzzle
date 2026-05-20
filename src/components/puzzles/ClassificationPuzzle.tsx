@@ -214,11 +214,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'vulkanik', title: 'Pemicu Vulkanik' },
     { id: 'meteor', title: 'Pemicu Ekstraterestrial' },
   ] : (isLandscapes && level === 'awal') ? (stageIndex === 1 ? [
-    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '36.6%', left: '68.6%', width: '16.4%', height: '14.0%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '40.8%', left: '44.8%', width: '16.4%', height: '14.0%' } },
-    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '47.0%', left: '81.6%', width: '16.4%', height: '14.0%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '22%', left: '60%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '37%', left: '22%', width: '18%', height: '14%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '50%', left: '72%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '63%', left: '25%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '65%', left: '50%', width: '18%', height: '14%' } },
   ] : [
     { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '18%', left: '67%', width: '18%', height: '14%' } },
     { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '30%', left: '50%', width: '18%', height: '14%' } },
