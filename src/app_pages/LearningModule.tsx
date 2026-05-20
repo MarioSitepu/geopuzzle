@@ -10,45 +10,60 @@ import { cn } from '../lib/utils';
 const SUPPORTING_MATERIALS: Record<string, Record<string, { title: string; size: string; url: string }[]>> = {
   'kalianda': {
     'gunung-api': [
-      { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
-      { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
+      { title: 'Jurnal Gunung Api', size: '984 KB', url: '/journal/gunung-api/1.pdf' }
     ],
     'tsunami': [
       { title: 'Jurnal Geologi Tsunami 1', size: '2.8 MB', url: '/journal/tsunami/1.pdf' },
       { title: 'Jurnal Geologi Tsunami 2', size: '3.0 MB', url: '/journal/tsunami/2.docx' }
     ],
     'longsor': [
-      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
-      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
+      { title: 'Jurnal Longsor 1', size: '38 MB', url: '/journal/longsor/1.pdf' },
+      { title: 'Jurnal Longsor 2', size: '27 MB', url: '/journal/longsor/2.pdf' }
     ]
   },
   'panjang': {
     'gunung-api': [
-      { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
-      { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
+      { title: 'Jurnal Gunung Api', size: '984 KB', url: '/journal/gunung-api/1.pdf' }
     ],
     'tsunami': [
       { title: 'Jurnal Geologi Tsunami 1', size: '2.8 MB', url: '/journal/tsunami/1.pdf' },
       { title: 'Jurnal Geologi Tsunami 2', size: '3.0 MB', url: '/journal/tsunami/2.docx' }
     ],
     'longsor': [
-      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
-      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
+      { title: 'Jurnal Longsor 1', size: '38 MB', url: '/journal/longsor/1.pdf' },
+      { title: 'Jurnal Longsor 2', size: '27 MB', url: '/journal/longsor/2.pdf' }
     ]
   },
   'rajabasa': {
     'gunung-api': [
-      { title: 'Jurnal Geologi Gunung Api Vol. 1', size: '3.9 MB', url: '#' },
-      { title: 'Jurnal Geologi Gunung Api Vol. 2', size: '365 KB', url: '#' }
+      { title: 'Jurnal Gunung Api', size: '984 KB', url: '/journal/gunung-api/1.pdf' }
     ],
     'tsunami': [
       { title: 'Jurnal Geologi Tsunami 1', size: '2.8 MB', url: '/journal/tsunami/1.pdf' },
       { title: 'Jurnal Geologi Tsunami 2', size: '3.0 MB', url: '/journal/tsunami/2.docx' }
     ],
     'longsor': [
-      { title: 'Jurnal Geologi Longsor Vol. 1', size: '365 KB', url: '#' },
-      { title: 'Jurnal Geologi Longsor Vol. 2', size: '3.9 MB', url: '#' }
+      { title: 'Jurnal Longsor 1', size: '38 MB', url: '/journal/longsor/1.pdf' },
+      { title: 'Jurnal Longsor 2', size: '27 MB', url: '/journal/longsor/2.pdf' }
     ]
+  }
+};
+
+const VIDEO_URLS: Record<string, Record<string, string>> = {
+  'awal': {
+    'longsor': 'https://www.youtube.com/embed/jwH5UZXrs4c',
+    'gunung-api': 'https://www.youtube.com/embed/RgrwpPYUi6g',
+    'tsunami': 'https://www.youtube.com/embed/JL-77KQgklY'
+  },
+  'atas': {
+    'longsor': 'https://www.youtube.com/embed/Yhj7jsXFisw',
+    'gunung-api': 'https://www.youtube.com/embed/mBNrEWq70y0',
+    'tsunami': 'https://www.youtube.com/embed/9wx8e2F_Wbk'
+  },
+  'lanjutan': {
+    'longsor': 'https://www.youtube.com/embed/Yhj7jsXFisw',
+    'gunung-api': 'https://www.youtube.com/embed/mBNrEWq70y0',
+    'tsunami': 'https://www.youtube.com/embed/9wx8e2F_Wbk'
   }
 };
 
@@ -159,33 +174,14 @@ export default function LearningModule() {
               </div>
             </div>
             
-            <div className="aspect-video rounded-4xl overflow-hidden bg-earth-900 relative group/video shadow-2xl border-4 border-white/50">
-              {/* Play Button Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <motion.div 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center cursor-pointer group-hover/video:bg-white/40 transition-all border border-white/30"
-                >
-                  <Play className="w-10 h-10 text-white ml-1 fill-white" />
-                </motion.div>
-              </div>
-
-              {/* Thumbnail Image */}
-              <img 
-                src={disasterId === 'gunung-api' 
-                  ? "https://images.unsplash.com/photo-1518414911976-95e2ba07aa4c?auto=format&fit=crop&q=80&w=1000"
-                  : disasterId === 'tsunami'
-                    ? "https://images.unsplash.com/photo-1502933691298-84fc14542831?auto=format&fit=crop&q=80&w=1000"
-                    : "https://images.unsplash.com/photo-1622542796254-5b9c46ab0d2f?auto=format&fit=crop&q=80&w=1000"
-                } 
-                alt="Video thumbnail" 
-                className="w-full h-full object-cover opacity-80 group-hover/video:scale-105 transition-transform duration-700"
-                referrerPolicy="no-referrer"
-              />
-              
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-linear-to-t from-earth-950/70 via-transparent to-transparent pointer-events-none" />
+            <div className="aspect-video rounded-4xl overflow-hidden bg-earth-900 relative shadow-2xl border-4 border-white/50">
+              <iframe
+                src={VIDEO_URLS[level]?.[disasterId] || "https://www.youtube.com/embed/dQw4w9WgXcQ"}
+                title="Video Pembelajaran"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
 
             <div className="mt-10 border-t border-earth-100 pt-10">
