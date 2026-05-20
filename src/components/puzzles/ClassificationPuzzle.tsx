@@ -221,17 +221,17 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'vulkanik', title: 'Pemicu Vulkanik' },
     { id: 'meteor', title: 'Pemicu Ekstraterestrial' },
   ] : (isLandscapes && level === 'awal' && stageIndex === 1) ? [
-    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '22%', left: '60%', width: '18%', height: '14%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '37%', left: '22%', width: '18%', height: '14%' } },
-    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '50%', left: '72%', width: '18%', height: '14%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '63%', left: '25%', width: '18%', height: '14%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '65%', left: '50%', width: '18%', height: '14%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '14%', left: '60%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '31%', left: '22%', width: '18%', height: '14%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '47%', left: '73%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '55%', left: '28%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '58%', left: '54%', width: '18%', height: '14%' } },
   ] : (isLandscapes && level === 'awal') ? [
-    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '18%', left: '67%', width: '18%', height: '14%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '30%', left: '50%', width: '18%', height: '14%' } },
-    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '43%', left: '76%', width: '18%', height: '14%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '65%', left: '38%', width: '18%', height: '14%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '64%', left: '62%', width: '18%', height: '14%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '11%', left: '62%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '20%', left: '36%', width: '18%', height: '14%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '35%', left: '76%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '56%', left: '22%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56%', left: '53%', width: '18%', height: '14%' } },
   ] : (isLandscapes && level === 'atas') ? [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
@@ -650,8 +650,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             <div className={cn(
               "rounded-3xl shadow-2xl border-4 overflow-hidden relative",
               isBoardStyle
-                ? "border-earth-200 bg-earth-50 w-full min-h-[420px]"
-                : "w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100"
+                ? "border-earth-200 bg-earth-50 w-full"
+                : "w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100",
+              (isVolcano && level === 'awal') && "aspect-[1478/1064]",
+              (isLandscapes && level === 'awal') && "aspect-[1269/1110]",
+              isBoardStyle && !(isVolcano && level === 'awal') && !(isLandscapes && level === 'awal') && "min-h-[420px]"
             )}>
             {isBoardStyle && (
               <div className="absolute inset-0 z-0 flex items-center justify-center">
