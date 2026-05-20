@@ -220,11 +220,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
     { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
   ] : [
-    { id: 'top-1', title: 'Slot Atas 1', position: { top: '36.6%', left: '68.6%', width: '16.4%', height: '14.0%' } },
-    { id: 'top-2', title: 'Slot Atas 2', position: { top: '39.0%', left: '46.0%', width: '16.4%', height: '14.0%' } }, // Changed slightly to show the effect!
-    { id: 'top-3', title: 'Slot Atas 3', position: { top: '47.0%', left: '81.6%', width: '16.4%', height: '14.0%' } },
-    { id: 'bottom-1', title: 'Slot Bawah 1', position: { top: '57.5%', left: '32.0%', width: '16.4%', height: '14.0%' } },
-    { id: 'bottom-2', title: 'Slot Bawah 2', position: { top: '56.8%', left: '60.8%', width: '16.4%', height: '14.0%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '18%', left: '67%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '25%', left: '32%', width: '18%', height: '14%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '43%', left: '76%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '61%', left: '14%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '61%', left: '48%', width: '18%', height: '14%' } },
   ]) : (isLandscapes && level === 'atas') ? [
     { id: 'falls', title: 'Falls (Jatuhan)' },
     { id: 'slides', title: 'Slides (Longsoran)' },
@@ -476,15 +476,6 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                     ? "Kondisi lereng curam di tepi jalan raya dengan pelapukan batuan intensif yang sering hadir genangan air, kombinasi mitigasi bencana apa yang mudah dilakukan olehmu?"
                     : "Kondisi lereng curam di tepi jalan raya dengan jenis batuan yang mengalami pelapukan kuat dan sering terjadi jatuhan batuan (rockfall). Kombinasi Penanggulangan cepat apa yang sebaiknya dilakukan?"}
                 </p>
-              </div>
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <span className="px-3 py-1.5 bg-leaf-100 border border-leaf-300 text-leaf-700 text-xs font-black rounded-full uppercase tracking-wider">
-                  {stageIndex === 0 ? 'Pohon (Slot Atas) = 50 poin' : 'Penguatan (Slot Atas) = 50 poin'}
-                </span>
-                <span className="px-3 py-1.5 bg-earth-100 border border-earth-300 text-earth-700 text-xs font-black rounded-full uppercase tracking-wider">
-                  {stageIndex === 0 ? 'Drainase (Slot Bawah) = 50 poin' : 'Penahan (Slot Bawah) = 50 poin'}
-                </span>
-                <span className="px-3 py-1.5 bg-green-100 border border-green-300 text-green-700 text-xs font-black rounded-full uppercase tracking-wider">Total = 100 poin</span>
               </div>
             </div>
           ) : (
