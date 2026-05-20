@@ -398,19 +398,32 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     let correct = 0;
     let total = initialItems.length;
 
+    // Special scoring for Longsor Awal: 50 per category group (top = pohon/penguatan, bottom = drainase/penahan)
+    if (level === 'awal' && isLandscapes) {
+      let topGroupCorrect = 0;
+      let bottomGroupCorrect = 0;
+      const topCategory = stageIndex === 1 ? 'penguatan' : 'pohon';
+      const bottomCategory = stageIndex === 1 ? 'penahan' : 'drainase';
+      const topSlotCount = categories.filter(c => c.id.startsWith('top')).length;
+      const bottomSlotCount = categories.filter(c => c.id.startsWith('bottom')).length;
+
+      Object.entries(assignedItems).forEach(([catId, items]) => {
+        (items as Item[]).forEach(item => {
+          if (catId.startsWith('top') && item.category === topCategory) topGroupCorrect++;
+          else if (catId.startsWith('bottom') && item.category === bottomCategory) bottomGroupCorrect++;
+        });
+      });
+
+      const topScore = topSlotCount > 0 ? Math.round((topGroupCorrect / topSlotCount) * 50) : 0;
+      const bottomScore = bottomSlotCount > 0 ? Math.round((bottomGroupCorrect / bottomSlotCount) * 50) : 0;
+      const score = topScore + bottomScore;
+      onComplete(score);
+      return;
+    }
+
     Object.entries(assignedItems).forEach(([catId, items]) => {
       (items as Item[]).forEach(item => {
-        if (level === 'awal' && isLandscapes) {
-          if (stageIndex === 1) {
-            if (catId.startsWith('top') && item.category === 'penguatan') correct++;
-            else if (catId.startsWith('bottom') && item.category === 'penahan') correct++;
-          } else {
-            if (catId.startsWith('top') && item.category === 'pohon') correct++;
-            else if (catId.startsWith('bottom') && item.category === 'drainase') correct++;
-          }
-        } else {
-          if (item.category === catId) correct++;
-        }
+        if (item.category === catId) correct++;
       });
     });
 
@@ -464,6 +477,15 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                     : "Kondisi lereng curam di tepi jalan raya dengan jenis batuan yang mengalami pelapukan kuat dan sering terjadi jatuhan batuan (rockfall). Kombinasi Penanggulangan cepat apa yang sebaiknya dilakukan?"}
                 </p>
               </div>
+              <div className="flex items-center justify-center gap-4 flex-wrap">
+                <span className="px-3 py-1.5 bg-leaf-100 border border-leaf-300 text-leaf-700 text-xs font-black rounded-full uppercase tracking-wider">
+                  {stageIndex === 0 ? 'Pohon (Slot Atas) = 50 poin' : 'Penguatan (Slot Atas) = 50 poin'}
+                </span>
+                <span className="px-3 py-1.5 bg-earth-100 border border-earth-300 text-earth-700 text-xs font-black rounded-full uppercase tracking-wider">
+                  {stageIndex === 0 ? 'Drainase (Slot Bawah) = 50 poin' : 'Penahan (Slot Bawah) = 50 poin'}
+                </span>
+                <span className="px-3 py-1.5 bg-green-100 border border-green-300 text-green-700 text-xs font-black rounded-full uppercase tracking-wider">Total = 100 poin</span>
+              </div>
             </div>
           ) : (
             <p className="text-earth-600 mt-2 font-medium italic max-w-3xl mx-auto">
@@ -487,7 +509,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
       >
         <div className={cn(
           "flex gap-6 items-start w-full",
-          isTsunamiLanjut1 ? "flex-col lg:flex-row-reverse" : (!isBoardStyle ? "flex-col lg:flex-row" : "flex-col")
+          isTsunamiLanjut1 ? "flex-col lg:flex-row-reverse" :
+          (isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1)) ? "flex-col lg:flex-row" :
+          (!isBoardStyle ? "flex-col lg:flex-row" : "flex-col")
         )}>
           {/* Choices Panel */}
           <div className={cn(
