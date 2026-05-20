@@ -147,7 +147,7 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
       const answers = [droppedWords['drop-1'], droppedWords['drop-2']];
       const correctCount = (answers.includes(caseStudyCorrectAnswers[0]) ? 1 : 0) + (answers.includes(caseStudyCorrectAnswers[1]) ? 1 : 0);
       
-      const score = Math.round((correctCount / 2) * 100);
+      const score = correctCount * 50;
       setTimeout(() => onComplete(score), 1500);
     } else if (isTrueFalseMode) {
       if (Object.keys(droppedWords).length < statements.length) return;
@@ -287,41 +287,57 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                     {/* Premium Header Indicator */}
                     <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-400 to-red-500" />
                     
-                    {/* sea level monitor badge */}
-                    <div className="flex items-center justify-between relative z-10 border-b border-earth-100 pb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-                        <span className="text-xs font-black text-red-600 uppercase tracking-widest">Studi Kasus Tsunami</span>
+                    {/* Header Badge */}
+                    {isVolcanoLanjut2 ? (
+                      <div className="flex items-center justify-between relative z-10 border-b border-earth-100 pb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping" />
+                          <span className="text-xs font-black text-orange-600 uppercase tracking-widest">Definisi Geologi</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-orange-50/80 px-3 py-1 rounded-full border border-orange-100/50 shadow-inner">
+                          <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                          <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">Karakteristik Erupsi</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1.5 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100/50 shadow-inner">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Sensor Pesisir Aktif</span>
+                    ) : (
+                      <div className="flex items-center justify-between relative z-10 border-b border-earth-100 pb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                          <span className="text-xs font-black text-red-600 uppercase tracking-widest">Studi Kasus Tsunami</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100/50 shadow-inner">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                          <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Sensor Pesisir Aktif</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     {/* Scenario Text Area */}
                     <div className="relative z-10 bg-gradient-to-br from-earth-50 to-orange-50/20 p-5 rounded-2xl border border-earth-100">
                       <span className="absolute -top-3 left-4 bg-earth-900 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md shadow-sm">
-                        Laporan Kejadian
+                        {isVolcanoLanjut2 ? "Narasi Materi" : "Laporan Kejadian"}
                       </span>
                       <p className="text-earth-800 text-sm sm:text-base font-semibold leading-relaxed text-left italic">
-                        "Warga di pesisir Teluk X sedang bersantai di sore hari tanpa merasakan guncangan gempa sedikit pun. Tiba-tiba, permukaan air laut naik dengan sangat cepat and menggenang ke pemukiman. Berdasarkan data geologi, terdapat tebing curam di bawah laut yang baru saja runtuh."
+                        {isVolcanoLanjut2
+                          ? `"Erupsi gunung api memiliki karakteristik yang berbeda-beda tergantung pada tekanan gas dan sifat magmanya. Ada letusan yang mengeluarkan lava secara perlahan dan mengalir, serta ada pula letusan yang menghasilkan ledakan dahsyat memuntahkan material vulkanik ke udara."`
+                          : `"Warga di pesisir Teluk X sedang bersantai di sore hari tanpa merasakan guncangan gempa sedikit pun. Tiba-tiba, permukaan air laut naik dengan sangat cepat and menggenang ke pemukiman. Berdasarkan data geologi, terdapat tebing curam di bawah laut yang baru saja runtuh."`
+                        }
                       </p>
                     </div>
 
                     {/* Question Header */}
                     <div className="text-center relative z-10 py-1">
                       <h4 className="text-earth-900 text-base sm:text-lg font-black tracking-tight uppercase">
-                        Apa rencana aksi darurat yang paling tepat?
+                        {isVolcanoLanjut2 ? "Apa dua jenis utama erupsi tersebut?" : "Apa rencana aksi darurat yang paling tepat?"}
                       </h4>
-                      <p className="text-xs text-earth-400 mt-1 font-semibold">Tarik 2 tindakan mitigasi terbaik dari kotak pilihan di sebelah kiri.</p>
+                      <p className="text-xs text-earth-400 mt-1 font-semibold">Tarik 2 {isVolcanoLanjut2 ? 'istilah' : 'tindakan'} dari kotak pilihan di sebelah kiri.</p>
                     </div>
 
                     {/* Unified Slotted Action Board */}
                     <div className="relative z-10 bg-slate-950 text-white rounded-3xl p-5 border border-slate-800 shadow-inner flex flex-col gap-4">
                       <div className="text-center border-b border-white/5 pb-3">
                         <span className="text-xs font-black text-amber-400 uppercase tracking-widest bg-white/5 px-4 py-1.5 rounded-full border border-amber-500/30 shadow-inner">
-                          Rencana Evakuasi Mandiri
+                          {isVolcanoLanjut2 ? "Klasifikasi Erupsi" : "Rencana Evakuasi Mandiri"}
                         </span>
                       </div>
                       
@@ -329,8 +345,8 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                         {/* Slot 1 */}
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center justify-between px-1">
-                            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">Tindakan 1</span>
-                            <span className="text-[9px] font-black text-slate-950 uppercase bg-amber-400 px-2.5 py-0.5 rounded shadow-sm">Prioritas Utama</span>
+                            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">{isVolcanoLanjut2 ? "Jenis Erupsi 1" : "Tindakan 1"}</span>
+                            <span className="text-[9px] font-black text-slate-950 uppercase bg-amber-400 px-2.5 py-0.5 rounded shadow-sm">{isVolcanoLanjut2 ? "Sifat Utama" : "Prioritas Utama"}</span>
                           </div>
                           <DroppableZone 
                             id="drop-1"
@@ -346,8 +362,8 @@ export default function FillBlankPuzzle({ onComplete, disasterId, level, stageIn
                         {/* Slot 2 */}
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center justify-between px-1">
-                            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">Tindakan 2</span>
-                            <span className="text-[9px] font-black text-slate-950 uppercase bg-amber-400 px-2.5 py-0.5 rounded shadow-sm">Prioritas Utama</span>
+                            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">{isVolcanoLanjut2 ? "Jenis Erupsi 2" : "Tindakan 2"}</span>
+                            <span className="text-[9px] font-black text-slate-950 uppercase bg-amber-400 px-2.5 py-0.5 rounded shadow-sm">{isVolcanoLanjut2 ? "Sifat Utama" : "Prioritas Utama"}</span>
                           </div>
                           <DroppableZone 
                             id="drop-2"
