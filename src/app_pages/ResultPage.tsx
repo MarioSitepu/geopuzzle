@@ -62,15 +62,15 @@ export default function ResultPage() {
         </motion.div>
 
         <h1 className="text-4xl font-bold text-earth-900 mb-2">
-          {isSuccess ? 'Selamat Kamu Berhasil!' : 'Jangan Menyerah!'}
+          {isSuccess ? 'Selamat, Kamu Hebat!' : 'Jangan Menyerah!'}
         </h1>
         
-        <p className="text-earth-600 mb-8 text-lg">
+        <p className="text-earth-600 mb-8 text-lg max-w-lg mx-auto">
           {isTimeout 
             ? 'Waktu kamu habis. Coba kerjakan lebih cepat di kesempatan berikutnya.'
             : isSuccess 
-              ? 'Kamu telah memahami materi dengan sangat baik.' 
-              : 'Masih ada beberapa konsep yang perlu dipelajari lagi.'}
+              ? 'Luar biasa! Kamu berhasil mencapai batas nilai ketuntasan (KKM 75) dan telah memahami materi geologi ini dengan sangat baik.' 
+              : 'Skor kamu masih di bawah batas ketuntasan (KKM 75). Terus semangat dan pelajari lagi konsepnya!'}
         </p>
 
         <div className="inline-block bg-white px-8 py-4 rounded-2xl shadow-sm border border-earth-100 mb-10">

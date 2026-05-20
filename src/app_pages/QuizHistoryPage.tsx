@@ -132,7 +132,7 @@ export default function QuizHistoryPage() {
                 <div className="flex items-center gap-4 sm:border-l border-earth-200 sm:pl-6">
                   <div className="text-left sm:text-right">
                     <p className="text-xs text-earth-500 uppercase font-bold tracking-wider mb-1">Skor</p>
-                    <div className={`text-3xl font-black ${item.score >= 70 ? 'text-leaf-600' : 'text-red-500'}`}>
+                    <div className={`text-3xl font-black ${item.score >= 75 ? 'text-leaf-600' : 'text-red-500'}`}>
                       {item.score}
                     </div>
                   </div>
