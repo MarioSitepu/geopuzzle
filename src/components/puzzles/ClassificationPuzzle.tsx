@@ -652,9 +652,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
               isBoardStyle
                 ? "border-earth-200 bg-earth-50 w-full"
                 : "w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100",
-              (isVolcano && level === 'awal') && "aspect-[1478/1064]",
+              (isVolcano && level === 'awal' && stageIndex !== 2) && "aspect-[1478/1064]",
               (isLandscapes && level === 'awal') && "aspect-[1269/1110]",
-              isBoardStyle && !(isVolcano && level === 'awal') && !(isLandscapes && level === 'awal') && "min-h-[420px]"
+              isBoardStyle && !(isVolcano && level === 'awal' && stageIndex !== 2) && !(isLandscapes && level === 'awal') && "min-h-[420px]"
             )}>
             {isBoardStyle && (
               <div className="absolute inset-0 z-0 flex items-center justify-center">
