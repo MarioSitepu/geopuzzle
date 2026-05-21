@@ -202,14 +202,14 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   ] : (isVolcano && level === 'awal' && stageIndex === 1) ? [
     { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
     { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
+    { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '31.2%', width: '25%', height: '24.3%' } },
+    { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '57.2%', width: '25%', height: '24.3%' } },
+  ] : (isVolcano && level === 'awal') ? [
+    { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
+    { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
     { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '19.5%', width: '23.3%', height: '24.3%' } },
     { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '43.3%', width: '20.0%', height: '24.3%' } },
     { id: 'slot-5', title: 'Tahap 5', position: { top: '78.6%', left: '65.2%', width: '19.4%', height: '24.3%' } },
-  ] : (isVolcano && level === 'awal' && stageIndex === 0) ? [
-    { id: 'magmatik', title: 'Erupsi Magmatik' },
-    { id: 'freatik', title: 'Erupsi Freatik' },
-    { id: 'freatomagmatik', title: 'Erupsi Freatomagmatik' },
-    { id: 'efusif', title: 'Erupsi Efusif' },
   ] : isVolcano ? [
     { id: 'magmatik', title: 'Erupsi Magmatik' },
     { id: 'freatik', title: 'Erupsi Freatik' },
@@ -258,12 +258,12 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'vol-2', content: 'Akumulasi', image: '/images/quiz/eruption/awal/2/2.png', category: 'slot-2' },
     { id: 'vol-3', content: 'Erupsi Awal', image: '/images/quiz/eruption/awal/2/4.png', category: 'slot-3' },
     { id: 'vol-4', content: 'Pertumbuhan', image: '/images/quiz/eruption/awal/2/3.png', category: 'slot-4' },
+  ] : (isVolcano && level === 'awal') ? [
+    { id: 'vol-1', content: 'Subduksi', image: '/images/quiz/eruption/awal/2/5.png', category: 'slot-1' },
+    { id: 'vol-2', content: 'Akumulasi', image: '/images/quiz/eruption/awal/2/2.png', category: 'slot-2' },
+    { id: 'vol-3', content: 'Erupsi Awal', image: '/images/quiz/eruption/awal/2/4.png', category: 'slot-3' },
+    { id: 'vol-4', content: 'Pertumbuhan', image: '/images/quiz/eruption/awal/2/3.png', category: 'slot-4' },
     { id: 'vol-5', content: 'Aktif', image: '/images/quiz/eruption/awal/2/1.png', category: 'slot-5' },
-  ] : (isVolcano && level === 'awal' && stageIndex === 0) ? [
-    { id: 'item-1', content: 'Melibatkan keluarnya magma segar ke permukaan', category: 'magmatik' },
-    { id: 'item-2', content: 'Ledakan akibat interaksi air dengan batuan panas tanpa magma baru', category: 'freatik' },
-    { id: 'item-3', content: 'Interaksi langsung antara magma dengan air eksternal', category: 'freatomagmatik' },
-    { id: 'item-4', content: 'Magma keluar perlahan tanpa ledakan dahsyat', category: 'efusif' },
   ] : isVolcano ? [
     { id: 'item-1', content: 'Melibatkan keluarnya magma segar ke permukaan', category: 'magmatik' },
     { id: 'item-2', content: 'Ledakan akibat interaksi air dengan batuan panas tanpa magma baru', category: 'freatik' },
