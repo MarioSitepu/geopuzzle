@@ -202,14 +202,14 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
   ] : (isVolcano && level === 'awal' && stageIndex === 1) ? [
     { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
     { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
-    { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '31.2%', width: '25%', height: '24.3%' } },
-    { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '57.2%', width: '25%', height: '24.3%' } },
-  ] : (isVolcano && level === 'awal') ? [
-    { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
-    { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
     { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '19.5%', width: '23.3%', height: '24.3%' } },
     { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '43.3%', width: '20.0%', height: '24.3%' } },
     { id: 'slot-5', title: 'Tahap 5', position: { top: '78.6%', left: '65.2%', width: '19.4%', height: '24.3%' } },
+  ] : (isVolcano && level === 'awal' && stageIndex === 0) ? [
+    { id: 'magmatik', title: 'Erupsi Magmatik' },
+    { id: 'freatik', title: 'Erupsi Freatik' },
+    { id: 'freatomagmatik', title: 'Erupsi Freatomagmatik' },
+    { id: 'efusif', title: 'Erupsi Efusif' },
   ] : isVolcano ? [
     { id: 'magmatik', title: 'Erupsi Magmatik' },
     { id: 'freatik', title: 'Erupsi Freatik' },
@@ -258,12 +258,12 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'vol-2', content: 'Akumulasi', image: '/images/quiz/eruption/awal/2/2.png', category: 'slot-2' },
     { id: 'vol-3', content: 'Erupsi Awal', image: '/images/quiz/eruption/awal/2/4.png', category: 'slot-3' },
     { id: 'vol-4', content: 'Pertumbuhan', image: '/images/quiz/eruption/awal/2/3.png', category: 'slot-4' },
-  ] : (isVolcano && level === 'awal') ? [
-    { id: 'vol-1', content: 'Subduksi', image: '/images/quiz/eruption/awal/2/5.png', category: 'slot-1' },
-    { id: 'vol-2', content: 'Akumulasi', image: '/images/quiz/eruption/awal/2/2.png', category: 'slot-2' },
-    { id: 'vol-3', content: 'Erupsi Awal', image: '/images/quiz/eruption/awal/2/4.png', category: 'slot-3' },
-    { id: 'vol-4', content: 'Pertumbuhan', image: '/images/quiz/eruption/awal/2/3.png', category: 'slot-4' },
     { id: 'vol-5', content: 'Aktif', image: '/images/quiz/eruption/awal/2/1.png', category: 'slot-5' },
+  ] : (isVolcano && level === 'awal' && stageIndex === 0) ? [
+    { id: 'item-1', content: 'Melibatkan keluarnya magma segar ke permukaan', category: 'magmatik' },
+    { id: 'item-2', content: 'Ledakan akibat interaksi air dengan batuan panas tanpa magma baru', category: 'freatik' },
+    { id: 'item-3', content: 'Interaksi langsung antara magma dengan air eksternal', category: 'freatomagmatik' },
+    { id: 'item-4', content: 'Magma keluar perlahan tanpa ledakan dahsyat', category: 'efusif' },
   ] : isVolcano ? [
     { id: 'item-1', content: 'Melibatkan keluarnya magma segar ke permukaan', category: 'magmatik' },
     { id: 'item-2', content: 'Ledakan akibat interaksi air dengan batuan panas tanpa magma baru', category: 'freatik' },
@@ -673,34 +673,27 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
             )}>
               {categories.map((category, idx) => (
                 <div key={category.id} className={cn(
-                  (isVolcano && level === 'awal' && stageIndex === 2) ? "flex items-center gap-8 group" : "contents"
+                  (isVolcano && level === 'awal' && stageIndex === 2) ? "flex items-center gap-6 group" : "contents"
                 )}>
                   {isVolcano && level === 'awal' && stageIndex === 2 && (
                     <>
                       {/* Level Label */}
                       <div className={cn(
-                        "w-44 sm:w-56 py-4 sm:py-5 px-4 sm:px-6 rounded-2xl shadow-md border-t-2 border-white/50 text-center font-bold text-xs sm:text-sm tracking-widest transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg",
-                        idx === 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white" :
-                          idx === 1 ? "bg-gradient-to-br from-amber-500 to-yellow-600 text-white" :
-                            idx === 2 ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white" :
-                              "bg-gradient-to-br from-rose-600 to-red-700 text-white"
+                        "w-40 sm:w-56 py-3 sm:py-5 px-3 sm:px-6 rounded-2xl shadow-lg border-2 text-center font-black text-xs sm:text-base tracking-wider transition-all duration-300 group-hover:scale-105",
+                        idx === 0 ? "bg-emerald-100 border-emerald-300 text-emerald-700 shadow-emerald-200/50" :
+                        idx === 1 ? "bg-amber-100 border-amber-300 text-amber-700 shadow-amber-200/50" :
+                        idx === 2 ? "bg-orange-100 border-orange-300 text-orange-700 shadow-orange-200/50" :
+                        "bg-red-100 border-red-300 text-red-700 shadow-red-200/50"
                       )}>
                         {category.title}
-                        <div className="mt-0.5 opacity-70 text-[8px] uppercase font-bold tracking-[0.1em]">Mitigasi</div>
                       </div>
 
-                      {/* Elegant Single Arrow */}
-                      <div className="flex-shrink-0">
-                        <motion.div
-                          animate={{ x: [0, 5, 0] }}
-                          transition={{ repeat: Infinity, duration: 2.5 }}
-                          className="text-earth-300 hidden sm:block opacity-60"
-                        >
-                          <svg className="w-12 h-6" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M30 7l5 5-5 5" />
-                            <line x1="0" y1="12" x2="35" y2="12" />
-                          </svg>
-                        </motion.div>
+                      {/* Arrow */}
+                      <div className="flex-shrink-0 animate-pulse text-earth-300 hidden sm:block">
+                        <svg className="w-12 h-8" fill="none" viewBox="0 0 40 24" stroke="currentColor" strokeWidth={4}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M18 7l5 5-5 5" />
+                          <line x1="0" y1="12" x2="18" y2="12" stroke="currentColor" strokeWidth="4" />
+                        </svg>
                       </div>
                     </>
                   )}
