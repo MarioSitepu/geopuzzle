@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import LearningModule from "@/app_pages/LearningModule";
 
 export default function LearnPage() {
-  return <LearningModule />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LearningModule />
+    </Suspense>
+  );
 }

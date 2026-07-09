@@ -108,7 +108,7 @@ function DroppableZone({ category, items, isTsunami, isVolcano, isLandscapes, le
           "relative flex items-center justify-center transition-all duration-500 rounded-2xl overflow-hidden",
           !items.length && "border border-white/40 bg-white/5 hover:bg-white/10 shadow-[inset_0_2px_8px_rgba(0,0,0,0.02)]",
           isOver && "bg-white/20 border-orange-400 ring-4 ring-orange-400/10 z-30 scale-[1.02]",
-          category.position ? "absolute" : "min-h-[70px] w-full"
+          category.position ? "absolute" : ((isLandscapes && level === 'atas') ? "w-full aspect-square max-w-[200px]" : "min-h-[70px] w-full")
         )}
         style={category.position ? {
           top: category.position.top,
@@ -177,6 +177,8 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
   const isVolcanoLanjut1 = isVolcano && level === 'atas' && stageIndex === 0;
   const isTsunamiLanjut1 = isTsunami && level === 'atas' && stageIndex === 0;
+  const isVolcanoAwalMitigation = isVolcano && level === 'awal' && stageIndex === 2;
+  const isVolcanoAwalSoal3 = isVolcano && level === 'awal' && stageIndex === 1;
   const isVolcanoAwalSoal2 = isVolcano && level === 'awal' && stageIndex === 0;
   const isLongsorLanjut = isLandscapes && level === 'atas';
   const isLongsorAwalStages = isLandscapes && level === 'awal' && (stageIndex === 0 || stageIndex === 1);
@@ -200,16 +202,17 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'level-3', title: 'LEVEL 3 (SIAGA)' },
     { id: 'level-4', title: 'LEVEL 4 (AWAS)' },
   ] : (isVolcano && level === 'awal' && stageIndex === 1) ? [
-    { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
-    { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
-    { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '31.2%', width: '25%', height: '24.3%' } },
-    { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '57.2%', width: '25%', height: '24.3%' } },
+    { id: 'slot-1', title: 'Tahap 1', position: { top: '25%', left: '19.5%', width: '25%', height: '27%' } },
+    { id: 'slot-2', title: 'Tahap 2', position: { top: '54.5%', left: '19.5%', width: '25%', height: '27%' } },
+    { id: 'slot-3', title: 'Tahap 3', position: { top: '83%', left: '19.5%', width: '25%', height: '27%' } },
+    { id: 'slot-4', title: 'Tahap 4', position: { top: '83%', left: '44%', width: '22%', height: '27%' } },
+    { id: 'slot-5', title: 'Tahap 5', position: { top: '83%', left: '66%', width: '20%', height: '27%' } },
   ] : (isVolcano && level === 'awal') ? [
-    { id: 'slot-1', title: 'Tahap 1', position: { top: '27.5%', left: '19.3%', width: '23.3%', height: '27.6%' } },
-    { id: 'slot-2', title: 'Tahap 2', position: { top: '54.1%', left: '19.3%', width: '23.3%', height: '27.6%' } },
-    { id: 'slot-3', title: 'Tahap 3', position: { top: '78.6%', left: '19.5%', width: '23.3%', height: '24.3%' } },
-    { id: 'slot-4', title: 'Tahap 4', position: { top: '78.6%', left: '43.3%', width: '20.0%', height: '24.3%' } },
-    { id: 'slot-5', title: 'Tahap 5', position: { top: '78.6%', left: '65.2%', width: '19.4%', height: '24.3%' } },
+    { id: 'slot-1', title: 'Tahap 1', position: { top: '25%', left: '19.5%', width: '25%', height: '27%' } },
+    { id: 'slot-2', title: 'Tahap 2', position: { top: '54.5%', left: '19.5%', width: '25%', height: '27%' } },
+    { id: 'slot-3', title: 'Tahap 3', position: { top: '83%', left: '19.5%', width: '25%', height: '27%' } },
+    { id: 'slot-4', title: 'Tahap 4', position: { top: '83%', left: '44%', width: '22%', height: '27%' } },
+    { id: 'slot-5', title: 'Tahap 5', position: { top: '83%', left: '66%', width: '20%', height: '27%' } },
   ] : isVolcano ? [
     { id: 'magmatik', title: 'Erupsi Magmatik' },
     { id: 'freatik', title: 'Erupsi Freatik' },
@@ -221,22 +224,22 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'vulkanik', title: 'Pemicu Vulkanik' },
     { id: 'meteor', title: 'Pemicu Ekstraterestrial' },
   ] : (isLandscapes && level === 'awal' && stageIndex === 1) ? [
-    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '14%', left: '60%', width: '18%', height: '14%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '31%', left: '22%', width: '18%', height: '14%' } },
-    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '47%', left: '73%', width: '18%', height: '14%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '55%', left: '28%', width: '18%', height: '14%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '58%', left: '54%', width: '18%', height: '14%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '22%', left: '69%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '39%', left: '31%', width: '18%', height: '14%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '55%', left: '82%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '63%', left: '37%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '67%', left: '63%', width: '18%', height: '14%' } },
   ] : (isLandscapes && level === 'awal') ? [
-    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '11%', left: '62%', width: '18%', height: '14%' } },
-    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '20%', left: '36%', width: '18%', height: '14%' } },
-    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '35%', left: '76%', width: '18%', height: '14%' } },
-    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '56%', left: '22%', width: '18%', height: '14%' } },
-    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '56%', left: '53%', width: '18%', height: '14%' } },
+    { id: 'top-1', title: 'Slot Kanan Atas', position: { top: '18%', left: '70%', width: '18%', height: '14%' } },
+    { id: 'top-2', title: 'Slot Kiri Atas', position: { top: '27%', left: '44%', width: '18%', height: '14%' } },
+    { id: 'top-3', title: 'Slot Kanan Tengah', position: { top: '42%', left: '84%', width: '18%', height: '14%' } },
+    { id: 'bottom-1', title: 'Slot Kiri Bawah', position: { top: '66%', left: '30%', width: '18%', height: '14%' } },
+    { id: 'bottom-2', title: 'Slot Tengah Bawah', position: { top: '64%', left: '62%', width: '18%', height: '14%' } },
   ] : (isLandscapes && level === 'atas') ? [
-    { id: 'falls', title: 'Falls (Jatuhan)' },
-    { id: 'slides', title: 'Slides (Longsoran)' },
-    { id: 'flows', title: 'Flows (Aliran)' },
-    { id: 'creep', title: 'Creep (Rayapan)' },
+    { id: 'falls', title: 'Falls (Jatuhan)', position: { top: '58%', left: '16%', width: '18%', height: '35%' } },
+    { id: 'slides', title: 'Slides (Longsoran)', position: { top: '58%', left: '39%', width: '18%', height: '35%' } },
+    { id: 'flows', title: 'Flows (Aliran)', position: { top: '58%', left: '61%', width: '18%', height: '35%' } },
+    { id: 'creep', title: 'Creep (Rayapan)', position: { top: '58%', left: '84%', width: '18%', height: '35%' } },
   ] : [];
 
   const initialItems: Item[] = isTsunamiLanjut1 ? [
@@ -281,11 +284,12 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'item-4', content: 'Drainase Air', image: '/images/quiz/landscape/lanjutan/3/drainase-air.png', category: 'penahan' },
     { id: 'item-5', content: 'Tembok Beton', image: '/images/quiz/landscape/lanjutan/3/tembok-beton.png', category: 'penahan' },
   ] : (isLandscapes && level === 'awal') ? [
-    { id: 'tree-1', content: 'Akar Kuat', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-cabang-akar-kuat.png', category: 'pohon' },
-    { id: 'tree-2', content: 'Akar Lemah', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-serabut-akar-lemah.png', category: 'pohon' },
-    { id: 'tree-3', content: 'Tanaman Perdu', image: '/images/quiz/landscape/lanjutan/2/jaring-kawat.png', category: 'pohon' }, // Using jaring as a placeholder for 3rd tree or as requested
-    { id: 'drain-1', content: 'Drainase Air A', image: '/images/quiz/landscape/lanjutan/2/drainase-air.png', category: 'drainase' },
-    { id: 'drain-2', content: 'Drainase Air B', image: '/images/quiz/landscape/lanjutan/2/tembok-beton.png', category: 'drainase' }, // Using beton as 2nd drainage placeholder
+    { id: 'tree-1', content: 'Pohon Akar Kuat', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-cabang-akar-kuat.png', category: 'pohon' },
+    { id: 'tree-2', content: 'Pohon Akar Lemah', image: '/images/quiz/landscape/lanjutan/2/pohon-akar-serabut-akar-lemah.png', category: 'pohon' },
+    { id: 'tree-3', content: 'Jaring Kawat', image: '/images/quiz/landscape/lanjutan/2/jaring-kawat.png', category: 'pohon' },
+    { id: 'drain-1', content: 'Drainase Air', image: '/images/quiz/landscape/lanjutan/2/drainase-air.png', category: 'drainase' },
+    { id: 'drain-2', content: 'Tembok Beton', image: '/images/quiz/landscape/lanjutan/2/tembok-beton.png', category: 'drainase' },
+
   ] : (isLandscapes && level === 'atas') ? [
     { id: 'item-1', content: 'Runtuhan (Falls)', image: '/images/quiz/landscapes/2.png', category: 'falls' },
     { id: 'item-2', content: 'Longsoran (Slides)', image: '/images/quiz/landscapes/3.png', category: 'slides' },
@@ -525,9 +529,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
         <div className={cn(
           "flex gap-6 items-start w-full",
           isTsunamiLanjut1 ? "flex-col lg:flex-row-reverse" :
-          isLongsorLanjut ? "flex-col items-center gap-8" :
-          isVolcanoAwalSoal2 ? "flex-col items-center gap-8" :
-          isLongsorAwalStages ? "flex-col items-center gap-8" :
+          isLongsorLanjut ? "flex-col items-center gap-12" :
+          isVolcanoAwalMitigation ? "flex-col items-center gap-12" :
+          (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3) ? "flex-col items-center gap-8" :
           (!isBoardStyle ? "flex-col lg:flex-row" : "flex-col")
         )}>
           {/* Choices Panel */}
@@ -537,10 +541,10 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
               ? "lg:w-72 w-full p-6 overflow-y-auto max-h-[75vh]"
               : isLongsorLanjut
                 ? "w-full max-w-sm sm:max-w-2xl lg:max-w-5xl p-8 overflow-y-auto max-h-[75vh] mx-auto"
-                : isVolcanoAwalSoal2
-                  ? "w-full max-w-sm sm:max-w-2xl lg:max-w-5xl p-8 overflow-y-auto max-h-[75vh] mx-auto"
-                  : isLongsorAwalStages
-                    ? "w-full max-w-sm p-8 overflow-y-auto max-h-[75vh] mx-auto"
+                : isVolcanoAwalMitigation
+                  ? "w-full max-w-sm sm:max-w-3xl lg:max-w-5xl p-8 overflow-y-auto max-h-[75vh] mx-auto"
+                  : (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3)
+                    ? "w-full max-w-4xl p-6 mx-auto overflow-x-auto"
                     : "lg:w-1/3 w-full p-8 overflow-y-auto max-h-[75vh]"
           )}>
             {/* Glossy highlight effect */}
@@ -556,7 +560,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                 <p className="text-[11px] text-earth-500 mt-1 leading-snug">Taruh keluarga ke lokasi yang paling aman</p>
               </div>
             ) : (
-              <div className="relative mb-8 text-center w-full">
+              <div className="relative mb-4 text-center w-full">
                 <span className={cn(
                   "inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-3 shadow-sm",
                   isVolcano ? "bg-orange-100 text-orange-600" : isTsunami ? "bg-blue-100 text-blue-600" : "bg-leaf-100 text-leaf-600"
@@ -576,8 +580,10 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                   ? "flex-col items-center gap-4"
                   : isLongsorLanjut
                     ? "grid grid-cols-2 sm:grid-cols-4 gap-4 w-full pt-6"
-                    : isVolcanoAwalSoal2
-                      ? "grid grid-cols-2 sm:grid-cols-4 gap-4 w-full pt-6"
+                    : isVolcanoAwalMitigation
+                      ? "flex flex-row justify-center gap-4 w-full pt-4 flex-wrap"
+                      : (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3)
+                        ? "flex flex-row justify-center gap-4 w-full flex-wrap"
                       : isBoardStyle
                         ? "grid grid-cols-2 gap-3 w-full"
                         : "flex-wrap gap-5"
@@ -668,7 +674,6 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
 
             <div className={cn(
               isBoardStyle ? "absolute inset-0 z-10" : "relative z-10 w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]",
-              (isLandscapes && level === 'atas') && "grid grid-cols-4 px-[6%] pb-[6%] pt-[6%] gap-[3%]",
               (isVolcano && level === 'awal' && stageIndex === 2) ? "flex flex-col gap-6 max-w-4xl mx-auto py-10 px-8 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl mt-4" : (!isVolcanoAwalSoal2 && !(isLandscapes && level === 'atas') && !isBoardStyle && "grid grid-cols-1 md:grid-cols-2 gap-8")
             )}>
               {categories.map((category, idx) => (
