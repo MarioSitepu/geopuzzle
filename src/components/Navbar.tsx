@@ -73,8 +73,12 @@ export default function Navbar() {
                 <p className="text-[10px] text-earth-500 line-clamp-1">{user.email}</p>
               </div>
               <div className="relative group">
-                <div className="w-10 h-10 rounded-full border-2 border-leaf-200 overflow-hidden shadow-sm">
-                  <img src={user.image || ''} alt={user.name || 'User'} className="w-full h-full object-cover" />
+                <div className="w-10 h-10 rounded-full border-2 border-leaf-200 overflow-hidden shadow-sm flex items-center justify-center bg-white text-earth-400">
+                  {user.image ? (
+                    <img src={user.image} alt={user.name || 'User'} className="w-full h-full object-cover" />
+                  ) : (
+                    <UserIcon className="w-6 h-6" />
+                  )}
                 </div>
                 <button
                   onClick={() => signOut()}
