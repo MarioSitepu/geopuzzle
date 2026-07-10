@@ -194,11 +194,11 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
     { id: 'slot-beach', title: 'Pemukiman Pantai', position: { top: '72.0%', left: '47.0%', width: '10.5%', height: '9.5%' } },
     { id: 'slot-golf', title: 'Lapangan Golf', position: { top: '76.5%', left: '89.3%', width: '10.5%', height: '9.5%' } },
   ] : isVolcanoLanjut1 ? [
-    { id: 'slot-1', title: 'Kerucut Berlapis (Strato)', position: { top: '26%', left: '20%', width: '16%', height: '20%' } },
-    { id: 'slot-2', title: 'Kaldera', position: { top: '26%', left: '52%', width: '16%', height: '20%' } },
-    { id: 'slot-3', title: 'Maar', position: { top: '26%', left: '82%', width: '16%', height: '20%' } },
-    { id: 'slot-4', title: 'Kubah (Dome)', position: { top: '64%', left: '37%', width: '16%', height: '20%' } },
-    { id: 'slot-5', title: 'Perisai (Shield)', position: { top: '64%', left: '65%', width: '16%', height: '20%' } },
+    { id: 'slot-1', title: 'Kerucut Berlapis (Strato)', position: { top: '25%', left: '25%', width: '16%', height: '20%' } },
+    { id: 'slot-2', title: 'Kaldera', position: { top: '25%', left: '52%', width: '16%', height: '20%' } },
+    { id: 'slot-3', title: 'Maar', position: { top: '25%', left: '78%', width: '16%', height: '20%' } },
+    { id: 'slot-4', title: 'Kubah (Dome)', position: { top: '65%', left: '40%', width: '16%', height: '20%' } },
+    { id: 'slot-5', title: 'Perisai (Shield)', position: { top: '65%', left: '65%', width: '16%', height: '20%' } },
   ] : (isVolcano && level === 'awal' && stageIndex === 2) ? [
     { id: 'level-1', title: 'LEVEL 1 NORMAL' },
     { id: 'level-2', title: 'LEVEL 2 (WASPADA)' },
@@ -534,19 +534,19 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           isTsunamiLanjut1 ? "flex-col lg:flex-row-reverse" :
           isLongsorLanjut ? "flex-col items-center gap-12" :
           isVolcanoAwalMitigation ? "flex-col lg:flex-row items-start gap-8" :
-          (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3) ? "flex-col items-center gap-8" :
+          (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3 || isVolcanoLanjut1) ? "flex-col items-center gap-8" :
           (!isBoardStyle ? "flex-col lg:flex-row" : "flex-col")
         )}>
           {/* Choices Panel */}
           <div className={cn(
-            "bg-white/60 backdrop-blur-xl rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center relative",
+            "bg-white/60 backdrop-blur-xl rounded-[2.5rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.1)] sticky top-8 flex flex-col items-center z-50",
             isTsunamiLanjut1
               ? "lg:w-72 w-full p-6 overflow-y-auto max-h-[75vh]"
               : isLongsorLanjut
                 ? "w-full max-w-sm sm:max-w-2xl lg:max-w-5xl p-8 overflow-y-auto max-h-[75vh] mx-auto"
                 : isVolcanoAwalMitigation
                   ? "lg:w-1/3 w-full p-6 sm:p-8 overflow-y-auto max-h-[75vh]"
-                  : (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3)
+                  : (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3 || isVolcanoLanjut1)
                     ? "w-full max-w-4xl p-6 mx-auto overflow-x-auto"
                     : "lg:w-1/3 w-full p-8 overflow-y-auto max-h-[75vh]"
           )}>
@@ -585,7 +585,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
                     ? "grid grid-cols-2 sm:grid-cols-4 gap-4 w-full pt-6"
                     : isVolcanoAwalMitigation
                       ? "flex flex-col items-stretch gap-4 w-full pt-4"
-                      : (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3)
+                      : (isLongsorAwalStages || isVolcanoAwalSoal2 || isVolcanoAwalSoal3 || isVolcanoLanjut1)
                         ? "flex flex-row justify-center gap-4 w-full flex-wrap"
                       : isBoardStyle
                         ? "grid grid-cols-2 gap-3 w-full"
@@ -649,7 +649,7 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
           <div className={cn(
             isTsunamiLanjut1
               ? "flex-1 min-w-0 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200"
-              : isVolcanoAwalSoal2
+              : (isVolcanoAwalSoal2 || isVolcanoLanjut1)
                 ? "w-full max-w-4xl mx-auto overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200"
                 : isLongsorLanjut
                   ? "w-full max-w-4xl mx-auto overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-earth-200"
@@ -661,9 +661,9 @@ export default function ClassificationPuzzle({ onComplete, disasterId, level, st
               isBoardStyle
                 ? "border-earth-200 bg-earth-50 w-full"
                 : "w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] bg-white/40 backdrop-blur-md p-8 border-earth-100",
-              (isVolcano && level === 'awal' && stageIndex !== 2) && "aspect-[1478/1064]",
+              ((isVolcano && level === 'awal' && stageIndex !== 2) || isVolcanoLanjut1) && "aspect-[1478/1064]",
               (isLandscapes && level === 'awal') && "aspect-[1269/1110]",
-              isBoardStyle && !(isVolcano && level === 'awal' && stageIndex !== 2) && !(isLandscapes && level === 'awal') && "min-h-[420px]"
+              isBoardStyle && !((isVolcano && level === 'awal' && stageIndex !== 2) || isVolcanoLanjut1) && !(isLandscapes && level === 'awal') && "min-h-[420px]"
             )}>
             {isBoardStyle && (
               <div className="absolute inset-0 z-0 flex items-center justify-center">
